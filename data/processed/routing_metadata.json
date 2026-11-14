@@ -1,0 +1,25 @@
+{
+  "generated_at_utc": "2026-11-14T18:49:03.657481+00:00",
+  "engine": "OSRM public demonstration server",
+  "profile": "driving",
+  "network_source": "OpenStreetMap",
+  "data_version": null,
+  "fallback_speed_used": false,
+  "directed_matrix": true,
+  "dimensions": [
+    19,
+    19
+  ],
+  "disconnected_pairs": 0,
+  "off_diagonal_distance_min_km": 0.4728,
+  "off_diagonal_distance_max_km": 35.6359,
+  "off_diagonal_duration_min_min": 0.5966666666666666,
+  "off_diagonal_duration_max_min": 40.875,
+  "max_distance_asymmetry_km": 0.00930000000000291,
+  "nearest_neighbor_distance_km": 91.5095,
+  "nearest_neighbor_duration_min": 126.8,
+  "two_opt_distance_km": 91.5093,
+  "two_opt_duration_min": 126.485,
+  "two_opt_passes": 2,
+  "warning": "Los tiempos no representan tráfico, lluvias, cierres ni transitabilidad de campo."
+}

@@ -1,0 +1,116 @@
+# Planificación de inspecciones preventivas — ODS 13.1
+
+Proyecto académico para planificar recorridos de inspección preventiva en puntos críticos ante inundaciones, flujo de detritos y erosión fluvial en la cuenca del río Chillón mediante algoritmos genéticos y métodos de referencia.
+
+El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planificación y simulación. No es un sistema operativo oficial y no atribuye a una ruta corta una reducción directa del riesgo de inundación.
+
+## Estado de implementación
+
+- Los datos geográficos y documentales del piloto están organizados.
+- El backend y el frontend tienen estructuras iniciales, pero todavía no contienen una implementación funcional.
+- No existe aún motor genético, API REST, interfaz web ni persistencia.
+- La implementación seguirá el [plan técnico del backend](docs/IMPLEMENTATION_PLAN.md).
+- Primera entrega prevista: dominio, carga de matrices, validación de escenarios e instancia sintética; todavía sin API.
+
+## Contenido verificado
+
+- 19 registros FTR del piloto en Santa Rosa de Quives.
+- 15 PDF oficiales recuperados desde ANA/SIGRID.
+- 4 registros auditados —FTR 0407 a 0410— sin originales recuperables. El identificador `SIGRID-22556` fue atribuido previamente, pero no está verificado y actualmente devuelve HTTP 404.
+- 18 paradas únicas: 16 de categoría A y 2 de categoría B.
+- Escenario conservador calculado: 13 paradas categoría A con originales documentales recuperados.
+- Escenario ampliado: 18 paradas A+B, conservando advertencias.
+- Un origen experimental en Yangas.
+- Matrices dirigidas de distancia y duración de 19 × 19.
+- Recorridos de referencia por vecino más cercano y 2-opt dirigido.
+- Manifiestos SHA-256 y 46 comprobaciones automáticas de integridad.
+
+Ninguna parada está declarada como acceso operativamente validado.
+
+## Organización
+
+```text
+config/                     decisiones auditadas y catálogo de fuentes
+data/raw/                   ZIP, PDF, anexos y manifiestos originales
+data/processed/             FTR consolidadas, paradas, matrices y rutas
+docs/                       fuentes, metodología y limitaciones
+scripts/                    descarga, extracción, preparación y validación
+backend/                    futuro dominio, optimización, AG, servicios y API
+frontend/                   reservado para una fase posterior
+```
+
+Los archivos originales se mantienen separados de los derivados. `data/raw/` no debe editarse manualmente.
+
+## Reproducción
+
+Requisitos: Python 3.12 y las dependencias de `requirements.txt`.
+
+```powershell
+python -m pip install -r requirements.txt
+python scripts/rebuild_all.py
+```
+
+La ejecución anterior reconstruye los datos procesados usando los originales ya guardados. Para volver a consultar las fuentes y la red vial:
+
+```powershell
+python scripts/rebuild_all.py --download --routing
+```
+
+Las opciones con red no son completamente deterministas: SIGRID puede retirar archivos y la red OpenStreetMap/OSRM puede cambiar. Después de cualquier regeneración debe revisarse `data/processed/integrity_report.json`.
+
+El backend futuro no dependerá de estas consultas para sus pruebas normales: utilizará las matrices locales auditadas.
+
+## Modelos previstos
+
+### Modelo A — TSP dirigido
+
+Será el núcleo inicial. Visita cada parada seleccionada exactamente una vez, parte del origen experimental en Yangas y regresa a él. Minimiza distancia vial dirigida; el tiempo de conducción es una métrica secundaria.
+
+Métodos de comparación:
+
+- Vecino más cercano.
+- 2-opt dirigido.
+- Método exacto para instancias viables.
+- Algoritmo genético de permutaciones.
+
+### Modelo B — Jornada limitada
+
+Se incorporará después del Modelo A. Seleccionará y ordenará inspecciones dentro de un tiempo disponible. Jornada y tiempos de inspección seguirán identificados como parámetros experimentales mientras no existan valores oficiales.
+
+## Resultados de referencia actuales
+
+| Método | Distancia | Tiempo vial estimado |
+|---|---:|---:|
+| Vecino más cercano | 91.5095 km | 126.8 min |
+| 2-opt dirigido | 91.5093 km | 126.485 min |
+
+Son resultados heurísticos de referencia; no se presentan como óptimos.
+
+## Archivos principales
+
+- `data/processed/ftr_pilot.csv`: 19 registros de fichas y coordenadas oficiales.
+- `data/processed/ftr_geometries.csv`: tramos oficiales, incluida la geometría múltiple de FTR 0490.
+- `data/processed/stops.csv`: 18 paradas derivadas y advertencias.
+- `data/processed/origin.csv`: origen experimental.
+- `data/processed/matrices/distance_km.csv`: matriz vial dirigida.
+- `data/processed/matrices/duration_min.csv`: tiempos dirigidos estimados.
+- `data/processed/routes/`: líneas base heurísticas.
+- `data/processed/routing_metadata.json`: método y resumen de la consulta vial.
+- `data/processed/integrity_report.json`: resultado de las comprobaciones.
+
+## Documentación
+
+- [Plan de implementación del backend](docs/IMPLEMENTATION_PLAN.md)
+- [Metodología de preparación](docs/METHODOLOGY.md)
+- [Fuentes y recuperación](docs/SOURCES.md)
+- [Limitaciones](docs/LIMITATIONS.md)
+
+## Advertencias principales
+
+- Ninguna parada está validada físicamente como acceso operativo.
+- P01 y P07 mantienen categoría B.
+- Las FTR 0407–0410 se conservan mediante snapshot auditado, no mediante sus PDF originales.
+- El origen en Yangas es experimental.
+- Los tiempos viales no incorporan tráfico, lluvias, cierres ni condiciones de campo.
+- El algoritmo genético deberá compararse honestamente con heurísticas y un método exacto; no se presupone que será superior.
+

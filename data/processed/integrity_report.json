@@ -1,0 +1,340 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "source_manifest_count",
+      "ok": true,
+      "detail": 6
+    },
+    {
+      "check": "source_availability",
+      "ok": true,
+      "detail": {
+        "available": 5,
+        "unavailable": [
+          "SIGRID-22556"
+        ]
+      }
+    },
+    {
+      "check": "source_exists_SIGRID-22339",
+      "ok": true,
+      "detail": "data/raw/sigrid/lotes/SIGRID-22339.zip"
+    },
+    {
+      "check": "source_zip_SIGRID-22339",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "check": "source_sha256_SIGRID-22339",
+      "ok": true,
+      "detail": "705b00a1ba277ac8c4ea2b6f5817c4eaed18b6645de2823cbc2483fbcd93370e"
+    },
+    {
+      "check": "source_exists_SIGRID-22329",
+      "ok": true,
+      "detail": "data/raw/sigrid/lotes/SIGRID-22329.zip"
+    },
+    {
+      "check": "source_zip_SIGRID-22329",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "check": "source_sha256_SIGRID-22329",
+      "ok": true,
+      "detail": "f0fab176ed8f2062a88b51903be18da3ab7d0bc4a12ebf4f966ccde89b7bd511"
+    },
+    {
+      "check": "source_exists_SIGRID-22463",
+      "ok": true,
+      "detail": "data/raw/sigrid/lotes/SIGRID-22463.zip"
+    },
+    {
+      "check": "source_zip_SIGRID-22463",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "check": "source_sha256_SIGRID-22463",
+      "ok": true,
+      "detail": "cb9b16421fb4c09c5a83c69a0cbccc11d2dc95b011f656e1980df1693bed75f1"
+    },
+    {
+      "check": "source_exists_SIGRID-22635",
+      "ok": true,
+      "detail": "data/raw/sigrid/lotes/SIGRID-22635.zip"
+    },
+    {
+      "check": "source_zip_SIGRID-22635",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "check": "source_sha256_SIGRID-22635",
+      "ok": true,
+      "detail": "8a6e9002bf3aa3303cfc8329e002f5cbf80e47db593bddcf1b7ff316246f89d7"
+    },
+    {
+      "check": "source_exists_SIGRID-22927",
+      "ok": true,
+      "detail": "data/raw/sigrid/lotes/SIGRID-22927.zip"
+    },
+    {
+      "check": "source_zip_SIGRID-22927",
+      "ok": true,
+      "detail": "OK"
+    },
+    {
+      "check": "source_sha256_SIGRID-22927",
+      "ok": true,
+      "detail": "afcf09fdee27a159df1483ad31557120344759f9712dce0ad72a7f5e8735988d"
+    },
+    {
+      "check": "official_ftr_pdf_count",
+      "ok": true,
+      "detail": 15
+    },
+    {
+      "check": "pdf_0316",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22339/FTR-0316-2026.pdf"
+    },
+    {
+      "check": "pdf_0317",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22339/FTR-0317-2026.pdf"
+    },
+    {
+      "check": "pdf_0318",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22339/FTR-0318-2026.pdf"
+    },
+    {
+      "check": "pdf_0319",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22339/FTR-0319-2026.pdf"
+    },
+    {
+      "check": "pdf_0320",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22339/FTR-0320-2026.pdf"
+    },
+    {
+      "check": "pdf_0321",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22339/FTR-0321-2026.pdf"
+    },
+    {
+      "check": "pdf_0476",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22329/FTR-0476-2026.pdf"
+    },
+    {
+      "check": "pdf_0490",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22463/FTR-0490-2026.pdf"
+    },
+    {
+      "check": "pdf_0539",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22635/FTR-0539-2026.pdf"
+    },
+    {
+      "check": "pdf_0540",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22635/FTR-0540-2026.pdf"
+    },
+    {
+      "check": "pdf_0541",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22635/FTR-0541-2026.pdf"
+    },
+    {
+      "check": "pdf_0542",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22635/FTR-0542-2026.pdf"
+    },
+    {
+      "check": "pdf_0543",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22635/FTR-0543-2026.pdf"
+    },
+    {
+      "check": "pdf_0545",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22927/FTR-0545-2026.pdf"
+    },
+    {
+      "check": "pdf_0546",
+      "ok": true,
+      "detail": "data/raw/sigrid/extracted/SIGRID-22927/FTR-0546-2026.pdf"
+    },
+    {
+      "check": "ftr_count",
+      "ok": true,
+      "detail": 19
+    },
+    {
+      "check": "ftr_unique",
+      "ok": true,
+      "detail": [
+        "0316",
+        "0317",
+        "0318",
+        "0319",
+        "0320",
+        "0321",
+        "0407",
+        "0408",
+        "0409",
+        "0410",
+        "0476",
+        "0490",
+        "0539",
+        "0540",
+        "0541",
+        "0542",
+        "0543",
+        "0545",
+        "0546"
+      ]
+    },
+    {
+      "check": "ftr_recovered_vs_snapshot",
+      "ok": true,
+      "detail": {
+        "official_source_recovered": 15,
+        "audited_snapshot_source_unavailable": 4
+      }
+    },
+    {
+      "check": "stop_count",
+      "ok": true,
+      "detail": 18
+    },
+    {
+      "check": "stop_statuses",
+      "ok": true,
+      "detail": {
+        "A": 16,
+        "B": 2,
+        "C": 0
+      }
+    },
+    {
+      "check": "stop_ftr_coverage",
+      "ok": true,
+      "detail": [
+        "0316",
+        "0317",
+        "0318",
+        "0319",
+        "0320",
+        "0321",
+        "0407",
+        "0408",
+        "0409",
+        "0410",
+        "0476",
+        "0490",
+        "0539",
+        "0540",
+        "0541",
+        "0542",
+        "0543",
+        "0545",
+        "0546"
+      ]
+    },
+    {
+      "check": "operational_claims",
+      "ok": true,
+      "detail": "all must be no"
+    },
+    {
+      "check": "matrix_shape_distance_km.csv",
+      "ok": true,
+      "detail": [
+        20,
+        [
+          20
+        ]
+      ]
+    },
+    {
+      "check": "matrix_complete_distance_km.csv",
+      "ok": true,
+      "detail": "no empty cells"
+    },
+    {
+      "check": "matrix_shape_duration_min.csv",
+      "ok": true,
+      "detail": [
+        20,
+        [
+          20
+        ]
+      ]
+    },
+    {
+      "check": "matrix_complete_duration_min.csv",
+      "ok": true,
+      "detail": "no empty cells"
+    },
+    {
+      "check": "route_nearest_neighbor.csv",
+      "ok": true,
+      "detail": [
+        "ORIGEN",
+        "P14",
+        "P15",
+        "P06",
+        "P16",
+        "P17",
+        "P02",
+        "P12",
+        "P13",
+        "P07",
+        "P08",
+        "P18",
+        "P10",
+        "P03",
+        "P09",
+        "P01",
+        "P05",
+        "P04",
+        "P11",
+        "ORIGEN"
+      ]
+    },
+    {
+      "check": "route_two_opt.csv",
+      "ok": true,
+      "detail": [
+        "ORIGEN",
+        "P14",
+        "P06",
+        "P15",
+        "P16",
+        "P17",
+        "P02",
+        "P12",
+        "P13",
+        "P07",
+        "P08",
+        "P09",
+        "P03",
+        "P10",
+        "P18",
+        "P01",
+        "P05",
+        "P04",
+        "P11",
+        "ORIGEN"
+      ]
+    }
+  ],
+  "failures": []
+}

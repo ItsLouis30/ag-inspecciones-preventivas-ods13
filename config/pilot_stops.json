@@ -1,0 +1,42 @@
+{
+  "audit_date": "2026-11-14",
+  "utm_crs": "WGS84 / UTM zone 18S (EPSG:32718)",
+  "classification_rule": {
+    "A": "Ajuste a vía conectada <= 150 m, coordenada oficial válida y sin duplicación exacta.",
+    "B": "Ajuste > 150 m y <= 250 m o ambigüedad cartográfica relevante.",
+    "C": "Ajuste > 250 m, sin conexión, geometría inválida o duplicado inutilizable.",
+    "warning": "La clasificación expresa plausibilidad cartográfica, no accesibilidad operativa validada."
+  },
+  "origin": {
+    "node_id": "ORIGEN",
+    "name": "Sede municipal en Yangas (origen experimental)",
+    "source_url": "https://www.gob.pe/institucion/munisantarosadequives/sedes",
+    "latitude": -11.6948769,
+    "longitude": -76.8462865,
+    "audited_road_latitude": -11.694995,
+    "audited_road_longitude": -76.846298,
+    "audited_snap_distance_m": 13.108,
+    "status": "experimental",
+    "warning": "No ha sido designada por ANA como base de brigada o depósito."
+  },
+  "stops": [
+    {"stop_id":"P01","ftr_numbers":["0316"],"reference":"end","easting":301960,"northing":8707141,"audited_latitude":-11.691600,"audited_longitude":-76.816105,"audited_snap_distance_m":245.0,"road_type":"trunk","road_name":"Carretera Vencedores de Sángrar","status":"B","warning":"Acceso vial distante; requiere revisión de aproximación a pie."},
+    {"stop_id":"P02","ftr_numbers":["0317","0318"],"reference":"0317_end; 0318 merged","easting":290566,"northing":8708006,"audited_latitude":-11.681125,"audited_longitude":-76.921471,"audited_snap_distance_m":18.1,"road_type":"tertiary","road_name":"","status":"A","warning":"Dos FTR consolidadas: los accesos calculados quedaron a 10.9 m."},
+    {"stop_id":"P03","ftr_numbers":["0319"],"reference":"midpoint","easting":284902.5,"northing":8701221,"audited_latitude":-11.742014,"audited_longitude":-76.973473,"audited_snap_distance_m":25.7,"road_type":"trunk","road_name":"PE-20A","status":"A","warning":""},
+    {"stop_id":"P04","ftr_numbers":["0320"],"reference":"start","easting":305941,"northing":8710070,"audited_latitude":-11.663188,"audited_longitude":-76.780336,"audited_snap_distance_m":16.5,"road_type":"tertiary","road_name":"","status":"A","warning":""},
+    {"stop_id":"P05","ftr_numbers":["0321"],"reference":"midpoint","easting":304345.5,"northing":8708854,"audited_latitude":-11.674475,"audited_longitude":-76.794938,"audited_snap_distance_m":32.5,"road_type":"residential","road_name":"","status":"A","warning":""},
+    {"stop_id":"P06","ftr_numbers":["0407"],"reference":"end","easting":293315,"northing":8708837,"audited_latitude":-11.673604,"audited_longitude":-76.895985,"audited_snap_distance_m":13.5,"road_type":"unclassified","road_name":"","status":"A","warning":"PDF original actualmente no recuperable desde SIGRID."},
+    {"stop_id":"P07","ftr_numbers":["0408"],"reference":"end","easting":288660,"northing":8704881,"audited_latitude":-11.708515,"audited_longitude":-76.937662,"audited_snap_distance_m":163.5,"road_type":"residential","road_name":"","status":"B","warning":"Acceso vial distante y PDF original actualmente no recuperable."},
+    {"stop_id":"P08","ftr_numbers":["0409"],"reference":"end","easting":288563,"northing":8705056,"audited_latitude":-11.707697,"audited_longitude":-76.940064,"audited_snap_distance_m":23.6,"road_type":"residential","road_name":"","status":"A","warning":"PDF original actualmente no recuperable desde SIGRID."},
+    {"stop_id":"P09","ftr_numbers":["0410"],"reference":"midpoint","easting":282986.5,"northing":8702165.5,"audited_latitude":-11.733272,"audited_longitude":-76.990563,"audited_snap_distance_m":72.0,"road_type":"tertiary","road_name":"LM-693","status":"A","warning":"Puede requerir aproximación a pie; PDF original actualmente no recuperable."},
+    {"stop_id":"P10","ftr_numbers":["0476"],"reference":"end","easting":284979,"northing":8701878,"audited_latitude":-11.736497,"audited_longitude":-76.972044,"audited_snap_distance_m":111.0,"road_type":"trunk","road_name":"PE-20A","status":"A","warning":"Puede requerir aproximación a pie."},
+    {"stop_id":"P11","ftr_numbers":["0490"],"reference":"second_segment_end","easting":307002,"northing":8716023,"audited_latitude":-11.609484,"audited_longitude":-76.770243,"audited_snap_distance_m":11.6,"road_type":"unclassified","road_name":"Apan Banda","status":"A","warning":"La FTR contiene dos tramos y un dique transversal."},
+    {"stop_id":"P12","ftr_numbers":["0539"],"reference":"end","easting":290044,"northing":8707345,"audited_latitude":-11.686977,"audited_longitude":-76.926093,"audited_snap_distance_m":8.0,"road_type":"unclassified","road_name":"","status":"A","warning":""},
+    {"stop_id":"P13","ftr_numbers":["0540"],"reference":"end","easting":288942,"northing":8706433,"audited_latitude":-11.695366,"audited_longitude":-76.936166,"audited_snap_distance_m":30.1,"road_type":"tertiary","road_name":"LM-694","status":"A","warning":""},
+    {"stop_id":"P14","ftr_numbers":["0541"],"reference":"start","easting":295707,"northing":8707066,"audited_latitude":-11.690915,"audited_longitude":-76.874512,"audited_snap_distance_m":122.6,"road_type":"unclassified","road_name":"","status":"A","warning":"Probable aproximación a pie; requiere validación de campo."},
+    {"stop_id":"P15","ftr_numbers":["0542"],"reference":"start","easting":292856,"northing":8708310,"audited_latitude":-11.678229,"audited_longitude":-76.900354,"audited_snap_distance_m":21.6,"road_type":"tertiary","road_name":"LM-695","status":"A","warning":""},
+    {"stop_id":"P16","ftr_numbers":["0543"],"reference":"end","easting":292286,"northing":8707833,"audited_latitude":-11.682692,"audited_longitude":-76.905576,"audited_snap_distance_m":0.7,"road_type":"residential","road_name":"","status":"A","warning":"Comparte extremo oficial con la FTR 0545."},
+    {"stop_id":"P17","ftr_numbers":["0545"],"reference":"end","easting":292398,"northing":8707473,"audited_latitude":-11.685601,"audited_longitude":-76.903838,"audited_snap_distance_m":89.1,"road_type":"residential","road_name":"","status":"A","warning":"Puede requerir aproximación a pie; comparte extremo con 0543."},
+    {"stop_id":"P18","ftr_numbers":["0546"],"reference":"midpoint","easting":287320,"northing":8703368.5,"audited_latitude":-11.722351,"audited_longitude":-76.950272,"audited_snap_distance_m":130.2,"road_type":"residential","road_name":"","status":"A","warning":"Probable aproximación a pie; requiere validación de campo."}
+  ]
+}

@@ -1,0 +1,19 @@
+﻿stop_id,ftr_numbers,full_codes,reference_rule,official_reference_easting,official_reference_northing,official_reference_latitude_derived,official_reference_longitude_derived,access_latitude_audited,access_longitude_audited,snap_distance_m_audited,road_type_osm_audited,road_name_osm_audited,plausibility_status,warning,operationally_validated
+P01,0316,FTR-MC-PREV N° 0316-2026-ANA-AAA.CF-ALA.CHRL,end,301960,8707141,-11.6895282,-76.816898,-11.6916,-76.816105,245.0,trunk,Carretera Vencedores de Sángrar,B,Acceso vial distante; requiere revisión de aproximación a pie.,no
+P02,0317;0318,FTR-MC-PREV N° 0317-2026-ANA-AAA.CF-ALA.CHRL;FTR-MC-PREV N° 0318-2026-ANA-AAA.CF-ALA.CHRL,0317_end; 0318 merged,290566,8708006,-11.681029,-76.9213373,-11.681125,-76.921471,18.1,tertiary,,A,Dos FTR consolidadas: los accesos calculados quedaron a 10.9 m.,no
+P03,0319,FTR-MC-PREV N° 0319-2026-ANA-AAA.CF-ALA.CHRL,midpoint,284902.5,8701221,-11.7420006,-76.973708,-11.742014,-76.973473,25.7,trunk,PE-20A,A,,no
+P04,0320,FTR-MC-PREV N° 0320-2026-ANA-AAA.CF-ALA.CHRL,start,305941,8710070,-11.6632813,-76.7802182,-11.663188,-76.780336,16.5,tertiary,,A,,no
+P05,0321,FTR-MC-PREV N° 0321-2026-ANA-AAA.CF-ALA.CHRL,midpoint,304345.5,8708854,-11.6741819,-76.7949204,-11.674475,-76.794938,32.5,residential,,A,,no
+P06,0407,FTR-MC-PREV N° 0407-2026-ANA-AAA.CF-ALA.CHRL,end,293315,8708837,-11.6736856,-76.8960768,-11.673604,-76.895985,13.5,unclassified,,A,PDF original actualmente no recuperable desde SIGRID.,no
+P07,0408,FTR-MC-PREV N° 0408-2026-ANA-AAA.CF-ALA.CHRL,end,288660,8704881,-11.7091564,-76.9390126,-11.708515,-76.937662,163.5,residential,,B,Acceso vial distante y PDF original actualmente no recuperable.,no
+P08,0409,FTR-MC-PREV N° 0409-2026-ANA-AAA.CF-ALA.CHRL,end,288563,8705056,-11.7075686,-76.9398912,-11.707697,-76.940064,23.6,residential,,A,PDF original actualmente no recuperable desde SIGRID.,no
+P09,0410,FTR-MC-PREV N° 0410-2026-ANA-AAA.CF-ALA.CHRL,midpoint,282986.5,8702165.5,-11.7333422,-76.9912203,-11.733272,-76.990563,72.0,tertiary,LM-693,A,Puede requerir aproximación a pie; PDF original actualmente no recuperable.,no
+P10,0476,FTR-CB-PREV N° 0476-2026-ANA-AAA.CF-ALA.CHRL,end,284979,8701878,-11.7360674,-76.9729641,-11.736497,-76.972044,111.0,trunk,PE-20A,A,Puede requerir aproximación a pie.,no
+P11,0490,FTR-CB-PREV N° 0490-2026-ANA-AAA.CF-ALA.CHRL,second_segment_end,307002,8716023,-11.6095306,-76.770148,-11.609484,-76.770243,11.6,unclassified,Apan Banda,A,La FTR contiene dos tramos y un dique transversal.,no
+P12,0539,FTR-CB-PREV N° 0539-2026-ANA-AAA.CF-ALA.CHRL,end,290044,8707345,-11.6869713,-76.9261655,-11.686977,-76.926093,8.0,unclassified,,A,,no
+P13,0540,FTR-CB-PREV N° 0540-2026-ANA-AAA.CF-ALA.CHRL,end,288942,8706433,-11.6951463,-76.9363287,-11.695366,-76.936166,30.1,tertiary,LM-694,A,,no
+P14,0541,FTR-CB-PREV N° 0541-2026-ANA-AAA.CF-ALA.CHRL,start,295707,8707066,-11.6898371,-76.874249,-11.690915,-76.874512,122.6,unclassified,,A,Probable aproximación a pie; requiere validación de campo.,no
+P15,0542,FTR-CB-PREV N° 0542-2026-ANA-AAA.CF-ALA.CHRL,start,292856,8708310,-11.6784211,-76.9003184,-11.678229,-76.900354,21.6,tertiary,LM-695,A,,no
+P16,0543,FTR-CB-PREV N° 0543-2026-ANA-AAA.CF-ALA.CHRL,end,292286,8707833,-11.6826978,-76.9055749,-11.682692,-76.905576,0.7,residential,,A,Comparte extremo oficial con la FTR 0545.,no
+P17,0545,FTR-CB-PREV N° 0545-2026-ANA-AAA.CF-ALA.CHRL,end,292398,8707473,-11.6859585,-76.9045701,-11.685601,-76.903838,89.1,residential,,A,Puede requerir aproximación a pie; comparte extremo con 0543.,no
+P18,0546,FTR-CB-PREV N° 0546-2026-ANA-AAA.CF-ALA.CHRL,midpoint,287320,8703368.5,-11.7227433,-76.9513979,-11.722351,-76.950272,130.2,residential,,A,Probable aproximación a pie; requiere validación de campo.,no

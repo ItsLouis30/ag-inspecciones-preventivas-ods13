@@ -1,0 +1,8 @@
+{
+  "0490": [
+    {"geometry_id":"0490-T1","geometry_type":"tramo","start_easting":306692,"start_northing":8716301,"end_easting":306797,"end_northing":8716199,"provenance":"PDF oficial FTR 0490, inspección visual"},
+    {"geometry_id":"0490-T2","geometry_type":"tramo","start_easting":306823,"start_northing":8716192,"end_easting":307002,"end_northing":8716023,"provenance":"PDF oficial FTR 0490, inspección visual"},
+    {"geometry_id":"0490-D1","geometry_type":"dique_transversal","start_easting":306701,"start_northing":8716278,"end_easting":306711,"end_northing":8716286,"provenance":"PDF oficial FTR 0490, inspección visual"}
+  ]
+}
+

@@ -1,0 +1,63 @@
+{
+  "retrieval_date": "2026-11-14",
+  "institution": "Autoridad Nacional del Agua (ANA)",
+  "repository": "SIGRID - CENEPRED",
+  "sources": [
+    {
+      "source_id": "SIGRID-22339",
+      "document_id": 22339,
+      "title": "Fichas técnicas referenciales de puntos críticos 2026 de la provincia Canta, departamento de Lima",
+      "year": 2026,
+      "page_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22339",
+      "download_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22339/descargar",
+      "pilot_ftr_numbers": ["0316", "0317", "0318", "0319", "0320", "0321"]
+    },
+    {
+      "source_id": "SIGRID-22556",
+      "document_id": 22556,
+      "title": "Lote SIGRID 22556 de fichas técnicas referenciales 2026",
+      "year": 2026,
+      "page_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22556",
+      "download_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22556/descargar",
+      "pilot_ftr_numbers": ["0407", "0408", "0409", "0410"],
+      "note": "La descarga fue accesible durante la auditoría; el título y total del lote no pudieron verificarse desde la página pública."
+    },
+    {
+      "source_id": "SIGRID-22329",
+      "document_id": 22329,
+      "title": "Fichas técnicas referenciales de puntos críticos 2026 de los departamentos de Lima y Piura",
+      "year": 2026,
+      "page_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22329",
+      "download_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22329/descargar",
+      "pilot_ftr_numbers": ["0476"]
+    },
+    {
+      "source_id": "SIGRID-22463",
+      "document_id": 22463,
+      "title": "Fichas técnicas referenciales de puntos críticos 2026 de los departamentos de La Libertad y Lima",
+      "year": 2026,
+      "page_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22463",
+      "download_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22463/descargar",
+      "pilot_ftr_numbers": ["0490"]
+    },
+    {
+      "source_id": "SIGRID-22635",
+      "document_id": 22635,
+      "title": "Fichas técnicas referenciales de puntos críticos 2026 de los departamentos de Áncash y Lima",
+      "year": 2026,
+      "page_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22635",
+      "download_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22635/descargar",
+      "pilot_ftr_numbers": ["0539", "0540", "0541", "0542", "0543"]
+    },
+    {
+      "source_id": "SIGRID-22927",
+      "document_id": 22927,
+      "title": "Fichas técnicas referenciales puntos críticos 2026 de los departamentos de Lambayeque, Cajamarca, Áncash y Lima",
+      "year": 2026,
+      "page_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22927",
+      "download_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22927/descargar",
+      "pilot_ftr_numbers": ["0545", "0546"]
+    }
+  ]
+}
+
