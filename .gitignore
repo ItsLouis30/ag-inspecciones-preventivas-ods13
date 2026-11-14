@@ -1,4 +1,17 @@
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
 .venv/
-data/raw/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Configuración local y persistencia temporal
+.env
+*.sqlite3
+backend/runs/
+data/work/
+
+# Fuentes oficiales pesadas: se conservan localmente, no en Git
+data/raw/sigrid/lotes/
+data/raw/sigrid/extracted/
