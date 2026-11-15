@@ -6,11 +6,13 @@ from pathlib import Path
 import subprocess
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api.dependencies import ApiContext
 from app.api.router import api_router
 from app.domain.errors import DataValidationError
+from app.core.settings import load_api_settings
 from app.experiments import load_experiment_protocol
 from app.geography import load_reference_dataset
 
@@ -41,11 +43,13 @@ def _code_revision(project_root: Path) -> str:
 
 def create_app(project_root: Path | None = None) -> FastAPI:
     root = (project_root or DEFAULT_PROJECT_ROOT).resolve()
+    settings = load_api_settings()
     context = ApiContext(
         project_root=root,
         dataset=load_reference_dataset(root),
         experiment_protocol=load_experiment_protocol(root / "config" / "ga_experiment_v1.json"),
         code_revision=_code_revision(root),
+        settings=settings,
     )
     application = FastAPI(
         title="Planificación académica de inspecciones preventivas — ODS 13.1",
@@ -56,6 +60,13 @@ def create_app(project_root: Path | None = None) -> FastAPI:
         version="0.6.0",
     )
     application.state.context = context
+    application.add_middleware(
+        CORSMiddleware,
+        allow_origins=list(settings.cors_origins),
+        allow_credentials=False,
+        allow_methods=["GET", "POST", "OPTIONS"],
+        allow_headers=["Content-Type"],
+    )
     application.include_router(api_router, prefix="/api/v1")
 
     @application.exception_handler(DataValidationError)

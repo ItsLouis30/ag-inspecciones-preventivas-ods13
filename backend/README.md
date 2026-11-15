@@ -1,4 +1,4 @@
-# Backend — Fases 1 a 6
+# Backend — Fases 1 a 7
 
 Base matemática offline para cargar, validar y representar escenarios ATSP, y compararlos mediante métodos heurísticos y exactos.
 
@@ -24,6 +24,7 @@ Base matemática offline para cargar, validar y representar escenarios ATSP, y c
 - Modelo B lexicográfico para seleccionar y ordenar inspecciones bajo una jornada experimental.
 - Línea base voraz y referencia exacta dirigida para el Modelo B.
 - API FastAPI versionada con contratos Pydantic y documentación OpenAPI.
+- DTO cartográficos, planes de ruta, historiales normalizados, CORS restringido y CSV stateless.
 - Pruebas unitarias y de integración.
 
 No contiene frontend, autenticación ni persistencia.
@@ -127,10 +128,12 @@ La referencia exacta probó un máximo de 11 paradas Muy Alto. El mejor AG de la
 
 ```powershell
 cd backend
-python -m uvicorn app.main:app --reload
+python -m app.server
 ```
 
-La API carga el dataset auditado al iniciar y funciona sin Internet. Expone escenarios, paradas, Modelo A, Modelo B y el protocolo experimental. Véase la [documentación de la API](../docs/API.md).
+La API carga el dataset auditado al iniciar y funciona sin Internet. Expone escenarios, paradas, Modelo A, Modelo B, mapas de puntos, exportaciones y el protocolo experimental. Véase la [documentación de la API](../docs/API.md).
+
+El servidor se liga a `127.0.0.1` y permite por defecto únicamente los orígenes de desarrollo `localhost:5173` y `127.0.0.1:5173`. No se utiliza CORS con comodín.
 
 ## Entradas canónicas versionables
 

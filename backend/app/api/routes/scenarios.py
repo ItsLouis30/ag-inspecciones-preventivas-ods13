@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 
 from app.api.dependencies import ApiContext, get_context
-from app.api.schemas.scenarios import ScenarioSpec, ScenarioSummary, StopListResponse, StopResponse
+from app.api.schemas.scenarios import ScenarioMapResponse, ScenarioSpec, ScenarioSummary, StopListResponse
 from app.api.services import build_scenario, summarize_scenario
-from app.limited_day.priority import priority_of
+from app.api.visualization import NO_ROAD_GEOMETRY_WARNING, origin_response, stop_response
 
 
 router = APIRouter(prefix="/scenarios", tags=["scenarios"])
@@ -24,22 +24,23 @@ async def resolve_scenario(spec: ScenarioSpec, context: ApiContext = Depends(get
 
 @router.get("/stops", response_model=StopListResponse)
 async def list_stops(context: ApiContext = Depends(get_context)) -> StopListResponse:
-    stops = tuple(
-        StopResponse(
-            stop_id=stop.stop_id,
-            latitude=stop.access_latitude,
-            longitude=stop.access_longitude,
-            plausibility=stop.plausibility.value,
-            priority=priority_of(stop).value,
-            ftr_codes=tuple(reference.full_code for reference in stop.ftr_references),
-            original_documents_available=stop.original_documents_available,
-            operationally_validated=stop.operationally_validated,
-            warning=stop.warning,
-        )
-        for stop in context.dataset.stops
-    )
+    stops = tuple(stop_response(stop) for stop in context.dataset.stops)
     return StopListResponse(
         dataset_id=context.dataset.manifest.dataset_id,
         count=len(stops),
         stops=stops,
+    )
+
+
+@router.post("/map", response_model=ScenarioMapResponse)
+async def scenario_map(
+    spec: ScenarioSpec,
+    context: ApiContext = Depends(get_context),
+) -> ScenarioMapResponse:
+    scenario = build_scenario(context.dataset, spec)
+    return ScenarioMapResponse(
+        scenario=summarize_scenario(scenario),
+        origin=origin_response(scenario.origin),
+        stops=tuple(stop_response(stop) for stop in scenario.stops),
+        geometry_warning=NO_ROAD_GEOMETRY_WARNING,
     )

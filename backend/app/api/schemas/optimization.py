@@ -7,7 +7,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .scenarios import ScenarioSpec
+from .scenarios import CoordinateResponse, ScenarioSpec, ScenarioSummary, StopResponse
 
 
 class EvolutionParameters(BaseModel):
@@ -59,12 +59,83 @@ class LimitedDayOptimizationRequest(BaseModel):
 
 class OptimizationResponse(BaseModel):
     model: str
+    method: str
     dataset_id: str
     scenario_id: str
+    scenario: ScenarioSummary
     objective: tuple[str, ...]
     matrix_hashes: dict[str, str]
     result: dict[str, Any]
+    route_plan: "RoutePlanResponse"
+    genetic_history: "GeneticHistoryResponse | None" = None
     warnings: tuple[str, ...]
+
+
+class RouteVisitResponse(BaseModel):
+    visit_index: int = Field(ge=0)
+    node_id: str
+    role: Literal["origin_start", "inspection", "origin_return"]
+    display_name: str
+    coordinates: CoordinateResponse
+    inbound_distance_km: str
+    inbound_duration_min: str
+    cumulative_distance_km: str
+    cumulative_driving_duration_min: str
+
+
+class RouteGeometryResponse(BaseModel):
+    road_geometry: None = None
+    road_geometry_available: Literal[False] = False
+    connection_representation: Literal["schematic_order_only"] = "schematic_order_only"
+    ordered_access_points: tuple[CoordinateResponse, ...]
+    warning: str
+
+
+class RoutePlanResponse(BaseModel):
+    method: str
+    feasible: bool
+    optimality_status: str
+    proven_optimal: bool
+    ordered_node_ids: tuple[str, ...]
+    selected_stop_ids: tuple[str, ...]
+    omitted_stop_ids: tuple[str, ...]
+    visits: tuple[RouteVisitResponse, ...]
+    omitted_stops: tuple[StopResponse, ...]
+    total_distance_km: str
+    driving_duration_min: str
+    service_duration_min: str
+    total_duration_min: str
+    day_limit_min: str | None
+    route_geometry: RouteGeometryResponse
+    warnings: tuple[str, ...]
+
+
+class GeneticGenerationResponse(BaseModel):
+    generation: int
+    evaluations: int
+    best_distance_km: str | None = None
+    mean_distance_km: str | None = None
+    worst_distance_km: str | None = None
+    best_very_high_count: int | None = None
+    best_total_selected: int | None = None
+    best_total_duration_min: str | None = None
+    unique_individuals: int | None = None
+    unique_genotypes: int | None = None
+    unique_phenotypes: int | None = None
+    diversity_ratio: float | None = None
+    stagnation: int
+
+
+class GeneticHistoryResponse(BaseModel):
+    history_kind: Literal["distance_minimization", "lexicographic_limited_day"]
+    objective_description: tuple[str, ...]
+    stop_reason: str
+    generations_completed: int
+    evaluated_candidates: int
+    points: tuple[GeneticGenerationResponse, ...]
+
+
+OptimizationResponse.model_rebuild()
 
 
 class ExperimentRunRequest(BaseModel):

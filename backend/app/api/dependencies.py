@@ -9,6 +9,7 @@ from fastapi import Request
 
 from app.domain.models import ReferenceDataset
 from app.experiments import ExperimentProtocol
+from app.core.settings import ApiSettings
 
 
 @dataclass(frozen=True, slots=True)
@@ -17,6 +18,7 @@ class ApiContext:
     dataset: ReferenceDataset
     experiment_protocol: ExperimentProtocol
     code_revision: str
+    settings: ApiSettings
 
 
 async def get_context(request: Request) -> ApiContext:

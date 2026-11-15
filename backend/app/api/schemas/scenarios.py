@@ -35,15 +35,71 @@ class ScenarioSummary(BaseModel):
     warnings: tuple[str, ...]
 
 
-class StopResponse(BaseModel):
-    stop_id: str
+class CoordinateResponse(BaseModel):
     latitude: float
     longitude: float
+
+
+class LocationPointResponse(BaseModel):
+    kind: Literal["critical_reference", "vehicle_access", "origin_reference", "origin_routing"]
+    coordinates: CoordinateResponse
+    coordinate_status: Literal[
+        "derived_from_official_utm",
+        "audited_derived_access",
+        "experimental_origin",
+        "audited_road_snap",
+    ]
+    meaning: str
+
+
+class HazardResponse(BaseModel):
+    hazard: str
+    level: str
+
+
+class DocumentReferenceResponse(BaseModel):
+    ftr_number: str
+    full_code: str
+    record_status: str
+    original_document_available: bool
+    source_id: str
+    source_url: str
+
+
+class StopResponse(BaseModel):
+    stop_id: str
+    display_name: str
+    sectors: tuple[str, ...]
+    department: str
+    province: str
+    district: str
+    basin: str
+    latitude: float
+    longitude: float
+    critical_reference: LocationPointResponse
+    vehicle_access: LocationPointResponse
+    hazards: tuple[HazardResponse, ...]
     plausibility: str
     priority: str
+    road_type: str
+    road_name: str
+    snap_distance_m: float
     ftr_codes: tuple[str, ...]
+    provenance: tuple[DocumentReferenceResponse, ...]
     original_documents_available: bool
     operationally_validated: bool
+    verification_status: Literal["not_field_validated"] = "not_field_validated"
+    warning: str
+
+
+class OriginResponse(BaseModel):
+    node_id: str
+    display_name: str
+    reference_location: LocationPointResponse
+    routing_location: LocationPointResponse
+    status: str
+    source_url: str
+    operationally_validated: bool = False
     warning: str
 
 
@@ -51,3 +107,12 @@ class StopListResponse(BaseModel):
     dataset_id: str
     count: int = Field(ge=0)
     stops: tuple[StopResponse, ...]
+
+
+class ScenarioMapResponse(BaseModel):
+    scenario: ScenarioSummary
+    origin: OriginResponse
+    stops: tuple[StopResponse, ...]
+    road_geometry_available: Literal[False] = False
+    connection_representation: Literal["schematic_order_only"] = "schematic_order_only"
+    geometry_warning: str

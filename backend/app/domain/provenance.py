@@ -23,6 +23,13 @@ class FTRReference:
     source_url: str
     hazard: str
     hazard_level: str
+    department: str = ""
+    province: str = ""
+    district: str = ""
+    sector: str = ""
+    basin: str = ""
+    natural_source_type: str = ""
+    natural_source_name: str = ""
 
     @property
     def original_document_available(self) -> bool:

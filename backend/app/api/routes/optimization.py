@@ -9,6 +9,8 @@ from app.api.schemas.optimization import (
     TspOptimizationRequest,
 )
 from app.api.services import build_scenario, evolution_config, without_history
+from app.api.services import summarize_scenario
+from app.api.visualization import build_genetic_history, build_route_plan
 from app.genetic_algorithm import run_genetic_algorithm
 from app.limited_day import (
     LimitedDayPolicy,
@@ -22,19 +24,23 @@ from app.optimization import solve_directed_two_opt, solve_held_karp, solve_near
 router = APIRouter(prefix="/optimize", tags=["optimization"])
 
 
-def _base_response(model: str, scenario, objective, result) -> OptimizationResponse:
-    warnings = tuple(dict.fromkeys((*scenario.warnings, *result.get("warnings", ()))))
+def _base_response(model: str, scenario, objective, result, genetic_history=None) -> OptimizationResponse:
+    route_plan = build_route_plan(scenario, result)
     return OptimizationResponse(
         model=model,
+        method=str(result["method"]),
         dataset_id=scenario.manifest.dataset_id,
         scenario_id=scenario.scenario_id,
+        scenario=summarize_scenario(scenario),
         objective=objective,
         matrix_hashes={
             "distance": scenario.distance_matrix.sha256,
             "duration": scenario.duration_matrix.sha256,
         },
         result=result,
-        warnings=warnings,
+        route_plan=route_plan,
+        genetic_history=genetic_history,
+        warnings=route_plan.warnings,
     )
 
 
@@ -56,9 +62,21 @@ def _optimize_tsp_sync(
             memory_limit_mb=limits.memory_limit_mb if limits else 256.0,
         ).as_dict()
     else:
-        result = without_history(
-            run_genetic_algorithm(scenario, evolution_config(request.evolution)).as_dict(),
-            request.include_history,
+        raw_result = run_genetic_algorithm(
+            scenario, evolution_config(request.evolution)
+        ).as_dict()
+        history = (
+            build_genetic_history(raw_result, limited_day=False)
+            if request.include_history
+            else None
+        )
+        result = without_history(raw_result, False)
+        return _base_response(
+            "directed_tsp",
+            scenario,
+            ("minimize_directed_road_distance_km",),
+            result,
+            history,
         )
     return _base_response(
         "directed_tsp",
@@ -98,13 +116,28 @@ def _optimize_limited_day_sync(
             memory_limit_mb=limits.memory_limit_mb if limits else 256.0,
         ).as_dict()
     else:
-        result = without_history(
-            run_limited_genetic_algorithm(
-                scenario,
-                policy,
-                evolution_config(request.evolution),
-            ).as_dict(),
-            request.include_history,
+        raw_result = run_limited_genetic_algorithm(
+            scenario,
+            policy,
+            evolution_config(request.evolution),
+        ).as_dict()
+        history = (
+            build_genetic_history(raw_result, limited_day=True)
+            if request.include_history
+            else None
+        )
+        result = without_history(raw_result, False)
+        return _base_response(
+            "limited_inspection_day",
+            scenario,
+            (
+                "maximize_very_high_stops",
+                "maximize_total_stops",
+                "minimize_total_time",
+                "minimize_distance",
+            ),
+            result,
+            history,
         )
     return _base_response(
         "limited_inspection_day",

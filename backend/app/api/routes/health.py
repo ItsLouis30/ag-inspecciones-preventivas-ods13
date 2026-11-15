@@ -13,4 +13,5 @@ async def health(context: ApiContext = Depends(get_context)) -> dict[str, object
         "dataset_id": context.dataset.manifest.dataset_id,
         "offline_ready": True,
         "code_revision": context.code_revision,
+        "cors_origins": context.settings.cors_origins,
     }

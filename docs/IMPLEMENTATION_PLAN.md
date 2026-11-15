@@ -612,9 +612,10 @@ SQLite seguirá diferido hasta existir una necesidad de persistencia demostrable
 
 ### Fase 7 — Preparación para frontend
 
+**Estado: implementada y verificada.** Los contratos incluyen puntos cartográficos con procedencia, plan de ruta común para ambos modelos, historial genético opcional, CORS local restringido y exportación CSV sin persistencia.
+
 - **Objetivo:** contratos para mapas, tablas y gráficos.
-- **Existentes:** coordenadas y metadatos.
-- **Previstos:** DTO de mapas, evolución y exportación.
+- **Implementados:** DTO de mapas, evolución normalizada, rutas/omitidas, geometría explícitamente no disponible y exportación CSV.
 - **Dependencias:** API estable.
 - **Riesgos:** presentar accesibilidad como validada.
 - **Pruebas:** schemas y advertencias obligatorias.

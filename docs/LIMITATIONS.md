@@ -27,3 +27,13 @@ No se crearon PDF sustitutos. Hasta recuperar los originales, esas cuatro fichas
 - El recorrido no demuestra prevención efectiva ni reducción cuantificada del riesgo.
 
 El conjunto es adecuado para un prototipo académico y comparación de algoritmos, no para despliegue operativo sin validación de campo e institucional.
+
+## Representación en frontend
+
+- La API no contiene polilíneas viales auditadas.
+- La secuencia de coordenadas de acceso solo indica orden de visita.
+- El frontend no debe representar conexiones rectas como carreteras reales.
+- La ubicación crítica convertida desde UTM y la parada vehicular derivada son conceptos diferentes y deben tener simbología distinta.
+- Las categorías A y B y el estado `not_field_validated` deben permanecer visibles.
+- Los valores de jornada y servicio del Modelo B deben etiquetarse como experimentales.
+- Distancias y tiempos son estimaciones de la matriz local, no telemetría en tiempo real.

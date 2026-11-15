@@ -18,7 +18,9 @@ from .matrix_loader import load_matrix_csv
 DEFAULT_MANIFEST_PATH = Path(__file__).resolve().parents[1] / "core" / "reference_dataset_manifest.json"
 
 FTR_COLUMNS = {
-    "ftr_number", "full_code", "hazard", "hazard_level", "source_id", "source_url", "record_status"
+    "ftr_number", "full_code", "hazard", "hazard_level", "source_id", "source_url", "record_status",
+    "department", "province", "district", "sector", "basin", "natural_source_type",
+    "natural_source_name",
 }
 STOP_COLUMNS = {
     "stop_id", "ftr_numbers", "full_codes", "reference_rule",
@@ -139,6 +141,13 @@ def _load_ftr(path: Path) -> tuple[FTRReference, ...]:
                 source_url=row["source_url"].strip(),
                 hazard=row["hazard"].strip(),
                 hazard_level=row["hazard_level"].strip(),
+                department=row["department"].strip(),
+                province=row["province"].strip(),
+                district=row["district"].strip(),
+                sector=row["sector"].strip(),
+                basin=row["basin"].strip(),
+                natural_source_type=row["natural_source_type"].strip(),
+                natural_source_name=row["natural_source_name"].strip(),
             )
         )
     return tuple(references)

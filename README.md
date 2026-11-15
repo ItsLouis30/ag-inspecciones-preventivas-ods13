@@ -7,11 +7,11 @@ El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planifi
 ## Estado de implementación
 
 - Los datos geográficos y documentales del piloto están organizados.
-- Las Fases 1 a 6 del backend están implementadas: dominio, optimización, evaluación experimental, jornada limitada y API REST.
+- Las Fases 1 a 7 del backend están implementadas: dominio, optimización, evaluación, API REST y contratos preparados para frontend.
 - El frontend continúa vacío.
 - No existe aún frontend ni persistencia.
 - La implementación seguirá el [plan técnico del backend](docs/IMPLEMENTATION_PLAN.md).
-- El backend funciona completamente offline y dispone de 86 pruebas automatizadas.
+- El backend funciona completamente offline y dispone de 103 pruebas automatizadas.
 
 ## Contenido verificado
 
@@ -61,7 +61,7 @@ Las opciones con red no son completamente deterministas: SIGRID puede retirar ar
 
 El backend futuro no dependerá de estas consultas para sus pruebas normales: utilizará las matrices locales auditadas.
 
-## Backend — Fases 1 a 6
+## Backend — Fases 1 a 7
 
 Instalación y pruebas:
 
@@ -111,7 +111,7 @@ API REST local:
 
 ```powershell
 cd backend
-python -m uvicorn app.main:app --reload
+python -m app.server
 ```
 
 La especificación OpenAPI queda disponible en `http://127.0.0.1:8000/docs`.
@@ -163,7 +163,7 @@ En las cuatro corridas congeladas, el AG obtuvo entre 91.5092 y 91.5094 km, con 
 ## Documentación
 
 - [Plan de implementación del backend](docs/IMPLEMENTATION_PLAN.md)
-- [Backend — Fases 1 a 6](backend/README.md)
+- [Backend — Fases 1 a 7](backend/README.md)
 - [Evaluación experimental](docs/EXPERIMENTAL_EVALUATION.md)
 - [Modelo B — Jornada limitada](docs/LIMITED_DAY_MODEL.md)
 - [API REST](docs/API.md)
