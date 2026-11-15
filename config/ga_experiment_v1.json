@@ -1,0 +1,22 @@
+{
+  "protocol_id": "atsp-expanded-ga-v1",
+  "dataset_id": "chillon-santa-rosa-quives-2026-v1",
+  "scenario": "expanded",
+  "objective": "minimize_directed_road_distance_km",
+  "seeds": [11, 22, 33, 44],
+  "evolution": {
+    "population_size": 100,
+    "tournament_size": 3,
+    "elite_count": 2,
+    "max_generations": 500,
+    "max_evaluations": 50000,
+    "stagnation_generations": 100,
+    "crossover_probability": 0.9,
+    "mutation_probability": 0.2,
+    "crossover_operator": "ox",
+    "mutation_operator": "inversion",
+    "seed": 11
+  },
+  "exact_time_limit_s": 30.0,
+  "exact_memory_limit_mb": 256.0
+}

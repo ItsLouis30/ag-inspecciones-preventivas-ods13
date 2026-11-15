@@ -7,11 +7,11 @@ El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planifi
 ## Estado de implementación
 
 - Los datos geográficos y documentales del piloto están organizados.
-- Las Fases 1, 2 y 3 del backend están implementadas: dominio, carga validada, métodos de referencia y motor genético reproducible.
+- Las Fases 1 a 4 del backend están implementadas: dominio, carga validada, métodos de referencia, motor genético y evaluación experimental reproducible.
 - El frontend continúa vacío.
-- No existe aún evaluación experimental de cuatro corridas, API REST ni persistencia.
+- No existe aún Modelo B, API REST ni persistencia.
 - La implementación seguirá el [plan técnico del backend](docs/IMPLEMENTATION_PLAN.md).
-- El backend funciona completamente offline y dispone de 59 pruebas automatizadas.
+- El backend funciona completamente offline y dispone de 65 pruebas automatizadas.
 
 ## Contenido verificado
 
@@ -61,7 +61,7 @@ Las opciones con red no son completamente deterministas: SIGRID puede retirar ar
 
 El backend futuro no dependerá de estas consultas para sus pruebas normales: utilizará las matrices locales auditadas.
 
-## Backend — Fases 1, 2 y 3
+## Backend — Fases 1 a 4
 
 Instalación y pruebas:
 
@@ -95,6 +95,12 @@ python -m app.ga_cli --project-root .. --scenario expanded --seed 11
 
 Los parámetros avanzados son opcionales y están destinados a la evaluación académica.
 
+Evaluación congelada de cuatro corridas:
+
+```powershell
+python -m app.experiment_cli --project-root .. --output runs/ga_experiment_v1.json
+```
+
 ## Modelos previstos
 
 ### Modelo A — TSP dirigido
@@ -121,7 +127,9 @@ Se incorporará después del Modelo A. Seleccionará y ordenará inspecciones de
 | Held–Karp exacto | 91.5091 km | 126.450 min |
 | AG, semilla 11 y configuración inicial | 91.5094 km | 126.478 min |
 
-Solo Held–Karp tiene optimalidad probada. Vecino más cercano, 2-opt y el AG siguen siendo heurísticas. Esta corrida individual no sustituye la evaluación experimental de la Fase 4.
+Solo Held–Karp tiene optimalidad probada. Vecino más cercano, 2-opt y el AG siguen siendo heurísticas. La fila del AG muestra la semilla 11; el resumen siguiente considera las cuatro corridas congeladas.
+
+En las cuatro corridas congeladas, el AG obtuvo entre 91.5092 y 91.5094 km, con media de 91.509275 km. Dos corridas mejoraron ligeramente a 2-opt, una lo igualó y una quedó por detrás; ninguna alcanzó el óptimo probado de 91.5091 km. Estas diferencias no son operativamente significativas frente a la incertidumbre geográfica del piloto.
 
 ## Archivos principales
 
@@ -138,7 +146,8 @@ Solo Held–Karp tiene optimalidad probada. Vecino más cercano, 2-opt y el AG s
 ## Documentación
 
 - [Plan de implementación del backend](docs/IMPLEMENTATION_PLAN.md)
-- [Backend — Fases 1, 2 y 3](backend/README.md)
+- [Backend — Fases 1 a 4](backend/README.md)
+- [Evaluación experimental](docs/EXPERIMENTAL_EVALUATION.md)
 - [Metodología de preparación](docs/METHODOLOGY.md)
 - [Fuentes y recuperación](docs/SOURCES.md)
 - [Limitaciones](docs/LIMITATIONS.md)

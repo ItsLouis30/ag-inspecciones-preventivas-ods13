@@ -574,8 +574,10 @@ Las cuatro semillas se congelarán antes de observar resultados. Propuesta inici
 
 ### Fase 4 — Evaluación experimental
 
+**Estado: implementada y verificada.** El protocolo versionado congela cuatro semillas, configuración, escenario, objetivo y límites exactos; el reporte conserva hashes, entorno, referencias, corridas, historiales y brechas.
+
 - **Objetivo:** comparar AG y referencias honestamente.
-- **Previstos:** servicio de experimentos y reportes.
+- **Implementados:** servicio de experimentos, CLI, protocolo congelado y reporte JSON regenerable.
 - **Dependencias:** Fases 2 y 3.
 - **Riesgos:** elegir retrospectivamente parámetros o semillas.
 - **Pruebas:** congelación y reproducción de corridas.

@@ -1,4 +1,4 @@
-# Backend — Fases 1, 2 y 3
+# Backend — Fases 1 a 4
 
 Base matemática offline para cargar, validar y representar escenarios ATSP, y compararlos mediante métodos heurísticos y exactos.
 
@@ -19,9 +19,11 @@ Base matemática offline para cargar, validar y representar escenarios ATSP, y c
 - Motor genético de permutaciones con OX/PMX, mutación por inversión/intercambio, torneo y elitismo.
 - Semilla local reproducible, historial generacional, diversidad y criterios explícitos de parada.
 - CLI genética offline con trazabilidad del dataset, configuración y resultado.
+- Protocolo congelado de cuatro semillas y servicio de evaluación comparativa.
+- Estadísticas de calidad, dispersión, brecha óptima y comparación con 2-opt.
 - Pruebas unitarias y de integración.
 
-No contiene FastAPI, frontend, persistencia, Modelo B ni la evaluación formal de cuatro corridas.
+No contiene FastAPI, frontend, persistencia ni Modelo B.
 
 ## Instalación
 
@@ -97,6 +99,15 @@ Operadores alternativos:
 ```powershell
 python -m app.ga_cli --project-root .. --scenario conservative --seed 22 --crossover pmx --mutation swap
 ```
+
+## Evaluación experimental
+
+```powershell
+cd backend
+python -m app.experiment_cli --project-root .. --output runs/ga_experiment_v1.json
+```
+
+El protocolo versionado fija las semillas 11, 22, 33 y 44. Las cuatro corridas del escenario ampliado produjeron una media de 91.509275 km, un rango de 91.5092–91.5094 km y una brecha media de 0.000175 km respecto al óptimo. Consultar [la metodología y resultados](../docs/EXPERIMENTAL_EVALUATION.md).
 
 ## Entradas canónicas versionables
 
