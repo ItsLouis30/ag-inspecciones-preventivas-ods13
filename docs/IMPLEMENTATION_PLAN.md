@@ -598,9 +598,10 @@ Las cuatro semillas se congelarán antes de observar resultados. Propuesta inici
 
 ### Fase 6 — API REST
 
+**Estado: implementada y verificada.** La API versionada carga el dataset local al iniciar y delega los cálculos a los servicios matemáticos existentes.
+
 - **Objetivo:** exponer servicios ya validados.
-- **Existentes:** carpetas API vacías.
-- **Previstos:** schemas Pydantic y rutas FastAPI.
+- **Implementados:** schemas Pydantic, escenarios, optimización, experimentos, manejo de errores y OpenAPI.
 - **Dependencias:** núcleo estable.
 - **Riesgos:** duplicar lógica o bloquear peticiones largas.
 - **Pruebas:** contratos y errores HTTP.

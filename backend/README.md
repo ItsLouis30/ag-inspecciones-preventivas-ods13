@@ -1,4 +1,4 @@
-# Backend — Fases 1 a 5
+# Backend — Fases 1 a 6
 
 Base matemática offline para cargar, validar y representar escenarios ATSP, y compararlos mediante métodos heurísticos y exactos.
 
@@ -23,9 +23,10 @@ Base matemática offline para cargar, validar y representar escenarios ATSP, y c
 - Estadísticas de calidad, dispersión, brecha óptima y comparación con 2-opt.
 - Modelo B lexicográfico para seleccionar y ordenar inspecciones bajo una jornada experimental.
 - Línea base voraz y referencia exacta dirigida para el Modelo B.
+- API FastAPI versionada con contratos Pydantic y documentación OpenAPI.
 - Pruebas unitarias y de integración.
 
-No contiene FastAPI, frontend ni persistencia.
+No contiene frontend, autenticación ni persistencia.
 
 ## Instalación
 
@@ -121,6 +122,15 @@ python -m app.limited_day_cli --project-root .. --scenario expanded --day-minute
 Los tiempos de jornada y servicio son experimentales. El objetivo se evalúa lexicográficamente: cobertura Muy Alto, cobertura total, tiempo total y distancia. No se mezclan minutos, kilómetros y prioridad mediante pesos.
 
 La referencia exacta probó un máximo de 11 paradas Muy Alto. El mejor AG de las semillas 11, 22, 33 y 44 mantuvo esa cobertura con 223.068333 minutos, frente a 232.186666 del voraz y 219.893333 del óptimo. Véase [Modelo B](../docs/LIMITED_DAY_MODEL.md).
+
+## API REST
+
+```powershell
+cd backend
+python -m uvicorn app.main:app --reload
+```
+
+La API carga el dataset auditado al iniciar y funciona sin Internet. Expone escenarios, paradas, Modelo A, Modelo B y el protocolo experimental. Véase la [documentación de la API](../docs/API.md).
 
 ## Entradas canónicas versionables
 

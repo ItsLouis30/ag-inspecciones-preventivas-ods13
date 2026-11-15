@@ -7,11 +7,11 @@ El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planifi
 ## Estado de implementación
 
 - Los datos geográficos y documentales del piloto están organizados.
-- Las Fases 1 a 5 del backend están implementadas: dominio, métodos de referencia, motor genético, evaluación experimental y jornada limitada.
+- Las Fases 1 a 6 del backend están implementadas: dominio, optimización, evaluación experimental, jornada limitada y API REST.
 - El frontend continúa vacío.
-- No existe aún API REST, frontend ni persistencia.
+- No existe aún frontend ni persistencia.
 - La implementación seguirá el [plan técnico del backend](docs/IMPLEMENTATION_PLAN.md).
-- El backend funciona completamente offline y dispone de 78 pruebas automatizadas.
+- El backend funciona completamente offline y dispone de 86 pruebas automatizadas.
 
 ## Contenido verificado
 
@@ -61,7 +61,7 @@ Las opciones con red no son completamente deterministas: SIGRID puede retirar ar
 
 El backend futuro no dependerá de estas consultas para sus pruebas normales: utilizará las matrices locales auditadas.
 
-## Backend — Fases 1 a 5
+## Backend — Fases 1 a 6
 
 Instalación y pruebas:
 
@@ -106,6 +106,15 @@ Modelo B con jornada limitada experimental:
 ```powershell
 python -m app.limited_day_cli --project-root .. --scenario expanded --day-minutes 240 --service-minutes 15 --seed 11
 ```
+
+API REST local:
+
+```powershell
+cd backend
+python -m uvicorn app.main:app --reload
+```
+
+La especificación OpenAPI queda disponible en `http://127.0.0.1:8000/docs`.
 
 ## Modelos previstos
 
@@ -154,9 +163,10 @@ En las cuatro corridas congeladas, el AG obtuvo entre 91.5092 y 91.5094 km, con 
 ## Documentación
 
 - [Plan de implementación del backend](docs/IMPLEMENTATION_PLAN.md)
-- [Backend — Fases 1 a 5](backend/README.md)
+- [Backend — Fases 1 a 6](backend/README.md)
 - [Evaluación experimental](docs/EXPERIMENTAL_EVALUATION.md)
 - [Modelo B — Jornada limitada](docs/LIMITED_DAY_MODEL.md)
+- [API REST](docs/API.md)
 - [Metodología de preparación](docs/METHODOLOGY.md)
 - [Fuentes y recuperación](docs/SOURCES.md)
 - [Limitaciones](docs/LIMITATIONS.md)
