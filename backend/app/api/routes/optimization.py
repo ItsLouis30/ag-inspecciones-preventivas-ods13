@@ -13,6 +13,7 @@ from app.api.services import summarize_scenario
 from app.api.visualization import build_genetic_history, build_route_plan
 from app.genetic_algorithm import run_genetic_algorithm
 from app.limited_day import (
+    DecoderStrategy,
     LimitedDayPolicy,
     run_limited_genetic_algorithm,
     solve_limited_exact,
@@ -120,6 +121,7 @@ def _optimize_limited_day_sync(
             scenario,
             policy,
             evolution_config(request.evolution),
+            DecoderStrategy(request.decoder_strategy),
         ).as_dict()
         history = (
             build_genetic_history(raw_result, limited_day=True)

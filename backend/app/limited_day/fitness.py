@@ -5,8 +5,8 @@ from dataclasses import dataclass
 from app.domain.scenario import Scenario
 from app.genetic_algorithm import Chromosome
 
-from .decoder import decode_priority_prefix
-from .models import LimitedDayPolicy, LimitedRouteEvaluation
+from .decoder import decode_limited_route
+from .models import DecoderStrategy, LimitedDayPolicy, LimitedRouteEvaluation
 
 
 @dataclass(frozen=True, slots=True)
@@ -23,8 +23,9 @@ def evaluate_limited_fitness(
     chromosome: Chromosome,
     scenario: Scenario,
     policy: LimitedDayPolicy,
+    strategy: DecoderStrategy = DecoderStrategy.PREFIX,
 ) -> LimitedIndividual:
-    evaluation = decode_priority_prefix(chromosome, scenario, policy)
+    evaluation = decode_limited_route(chromosome, scenario, policy, strategy)
     if not evaluation.feasible:
         raise RuntimeError("El decodificador de jornada limitada produjo una solución inviable.")
     return LimitedIndividual(chromosome=chromosome, evaluation=evaluation)

@@ -46,12 +46,29 @@ La programación dinámica todavía es viable para 18 paradas, pero su costo cre
 
 Estos resultados solo validan el comportamiento matemático del prototipo. No demuestran que 11 inspecciones puedan ejecutarse realmente en cuatro horas ni que una visita reduzca el riesgo de inundación.
 
+## Variante experimental de inserción factible
+
+El decodificador original `prefix` y los resultados anteriores permanecen intactos. Se añadió `feasible_insertion` como alternativa opcional: recorre toda la lista genética, intenta insertar cada parada en la posición factible de menor incremento temporal y continúa cuando una parada no cabe. Esta variante cambia la interpretación del cromosoma a un orden de consideración y puede favorecer paradas de bajo costo marginal.
+
+La comparación factorial de 64 corridas, incluidas todas las semillas y políticas ensayadas, está documentada en [Comparación de decodificadores](LIMITED_DAY_DECODER_COMPARISON.md). No se declara superioridad universal.
+
 ## Reproducción
 
 ```powershell
 cd backend
 python -m app.limited_day_cli --project-root .. `
   --scenario expanded `
+  --day-minutes 240 `
+  --service-minutes 15 `
+  --seed 11
+```
+
+Para ejecutar explícitamente la variante experimental:
+
+```powershell
+python -m app.limited_day_cli --project-root .. `
+  --scenario expanded `
+  --decoder-strategy feasible_insertion `
   --day-minutes 240 `
   --service-minutes 15 `
   --seed 11

@@ -5,7 +5,7 @@ from __future__ import annotations
 from decimal import Decimal
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .scenarios import CoordinateResponse, ScenarioSpec, ScenarioSummary, StopResponse
 
@@ -55,6 +55,18 @@ class LimitedDayOptimizationRequest(BaseModel):
     evolution: EvolutionParameters | None = None
     exact_limits: ExactLimits | None = None
     include_history: bool = False
+    decoder_strategy: Literal["prefix", "feasible_insertion"] = "prefix"
+
+    @model_validator(mode="after")
+    def validate_decoder_strategy(self) -> "LimitedDayOptimizationRequest":
+        if (
+            self.method != "limited_day_genetic_algorithm"
+            and self.decoder_strategy != "prefix"
+        ):
+            raise ValueError(
+                "decoder_strategy solo se aplica a limited_day_genetic_algorithm."
+            )
+        return self
 
 
 class OptimizationResponse(BaseModel):

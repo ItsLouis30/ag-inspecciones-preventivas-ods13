@@ -122,7 +122,23 @@ python -m app.limited_day_cli --project-root .. --scenario expanded --day-minute
 
 Los tiempos de jornada y servicio son experimentales. El objetivo se evalúa lexicográficamente: cobertura Muy Alto, cobertura total, tiempo total y distancia. No se mezclan minutos, kilómetros y prioridad mediante pesos.
 
-La referencia exacta probó un máximo de 11 paradas Muy Alto. El mejor AG de las semillas 11, 22, 33 y 44 mantuvo esa cobertura con 223.068333 minutos, frente a 232.186666 del voraz y 219.893333 del óptimo. Véase [Modelo B](../docs/LIMITED_DAY_MODEL.md).
+El decodificador predeterminado sigue siendo `prefix`. La variante experimental `feasible_insertion` continúa después de genes inviables e inserta cada parada donde menos aumente el tiempo dirigido:
+
+```powershell
+python -m app.limited_day_cli --project-root .. --scenario expanded `
+  --decoder-strategy feasible_insertion --day-minutes 240 `
+  --service-minutes 15 --seed 11
+```
+
+La matriz completa de 64 corridas se reproduce con:
+
+```powershell
+python -m app.limited_day_decoder_comparison_cli --project-root .. `
+  --output-json runs/limited_day_decoder_comparison_v1.json `
+  --output-csv runs/limited_day_decoder_comparison_v1.csv
+```
+
+La referencia exacta probó un máximo de 11 paradas Muy Alto. El mejor AG original con `prefix` de las semillas 11, 22, 33 y 44 mantuvo esa cobertura con 223.068333 minutos, frente a 232.186666 del voraz y 219.893333 del óptimo. Véanse [Modelo B](../docs/LIMITED_DAY_MODEL.md) y la [comparación experimental de decodificadores](../docs/LIMITED_DAY_DECODER_COMPARISON.md).
 
 ## API REST
 

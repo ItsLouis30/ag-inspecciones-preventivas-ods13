@@ -13,7 +13,7 @@ from app.genetic_algorithm.mutation import inversion_mutation, swap_mutation
 from app.genetic_algorithm.population import initialize_population
 
 from .fitness import LimitedIndividual, evaluate_limited_fitness
-from .models import LimitedDayPolicy, LimitedRouteEvaluation
+from .models import DecoderStrategy, LimitedDayPolicy, LimitedRouteEvaluation
 
 
 @dataclass(frozen=True, slots=True)
@@ -42,10 +42,12 @@ class LimitedGeneticResult:
     generations_completed: int
     evaluated_candidates: int
     runtime_ms: float
+    decoder_strategy: DecoderStrategy = DecoderStrategy.PREFIX
 
     def as_dict(self) -> dict[str, object]:
         return {
             "method": "limited_day_genetic_algorithm",
+            "decoder_strategy": self.decoder_strategy.value,
             **self.evaluation.as_dict(),
             "runtime_ms": round(self.runtime_ms, 3),
             "evaluated_candidates": self.evaluated_candidates,
@@ -122,6 +124,7 @@ def run_limited_genetic_algorithm(
     scenario: Scenario,
     policy: LimitedDayPolicy,
     config: EvolutionConfig | None = None,
+    decoder_strategy: DecoderStrategy = DecoderStrategy.PREFIX,
 ) -> LimitedGeneticResult:
     config = config or EvolutionConfig()
     started = perf_counter()
@@ -129,7 +132,12 @@ def run_limited_genetic_algorithm(
     chromosomes = initialize_population(scenario, config.population_size, rng)
     population = tuple(
         sorted(
-            (evaluate_limited_fitness(chromosome, scenario, policy) for chromosome in chromosomes),
+            (
+                evaluate_limited_fitness(
+                    chromosome, scenario, policy, decoder_strategy
+                )
+                for chromosome in chromosomes
+            ),
             key=lambda individual: individual.rank_key,
         )
     )
@@ -146,6 +154,7 @@ def run_limited_genetic_algorithm(
             generations_completed=0,
             evaluated_candidates=evaluations,
             runtime_ms=(perf_counter() - started) * 1000,
+            decoder_strategy=decoder_strategy,
         )
 
     generation = 0
@@ -171,7 +180,9 @@ def run_limited_genetic_algorithm(
 
         elites = population[:elite_count]
         offspring = tuple(
-            evaluate_limited_fitness(chromosome, scenario, policy)
+            evaluate_limited_fitness(
+                chromosome, scenario, policy, decoder_strategy
+            )
             for chromosome in next_chromosomes[elite_count:]
         )
         evaluations += len(offspring)
@@ -203,4 +214,5 @@ def run_limited_genetic_algorithm(
         generations_completed=generation,
         evaluated_candidates=evaluations,
         runtime_ms=(perf_counter() - started) * 1000,
+        decoder_strategy=decoder_strategy,
     )

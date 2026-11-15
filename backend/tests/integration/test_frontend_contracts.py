@@ -175,6 +175,48 @@ async def test_limited_genetic_history_exposes_lexicographic_components(project_
     assert point["unique_phenotypes"] is not None
 
 
+async def test_api_selects_decoder_strategy_without_changing_default(project_root) -> None:
+    base_request = {
+        "scenario": {"mode": "expanded"},
+        "method": "limited_day_genetic_algorithm",
+        "day_limit_min": "60",
+        "service_time_min": "10",
+        "evolution": {
+            "population_size": 20,
+            "elite_count": 2,
+            "max_generations": 5,
+            "max_evaluations": 200,
+            "stagnation_generations": 5,
+            "seed": 11,
+        },
+    }
+    async with client(project_root) as api:
+        default = await api.post("/api/v1/optimize/limited-day", json=base_request)
+        explicit_prefix = await api.post(
+            "/api/v1/optimize/limited-day",
+            json={**base_request, "decoder_strategy": "prefix"},
+        )
+        insertion = await api.post(
+            "/api/v1/optimize/limited-day",
+            json={**base_request, "decoder_strategy": "feasible_insertion"},
+        )
+        invalid = await api.post(
+            "/api/v1/optimize/limited-day",
+            json={
+                "method": "priority_nearest_greedy",
+                "decoder_strategy": "feasible_insertion",
+            },
+        )
+    assert default.status_code == explicit_prefix.status_code == insertion.status_code == 200
+    default_result = default.json()["result"]
+    prefix_result = explicit_prefix.json()["result"]
+    assert default_result["route"] == prefix_result["route"]
+    assert default_result["total_duration_min"] == prefix_result["total_duration_min"]
+    assert default_result["decoder_strategy"] == "prefix"
+    assert insertion.json()["result"]["decoder_strategy"] == "feasible_insertion"
+    assert invalid.status_code == 422
+
+
 async def test_csv_exports_preserve_route_and_omitted_rows(project_root) -> None:
     async with client(project_root) as api:
         tsp = await api.post(

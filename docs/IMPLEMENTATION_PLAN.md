@@ -588,6 +588,8 @@ Las cuatro semillas se congelarán antes de observar resultados. Propuesta inici
 
 **Estado: implementada y verificada.** Se adoptó una representación por lista de prioridad con prefijo factible, retorno obligatorio, prioridad derivada de las FTR y parámetros temporales declarados experimentales.
 
+**Extensión experimental controlada:** `prefix` permanece predeterminado y sin cambios. Se incorporó `feasible_insertion` como decodificador opcional, con protocolo factorial de 64 corridas y sin emplear el solucionador exacto para construir individuos. La variante cambia la interpretación del cromosoma a orden de consideración y se documenta por separado; no reemplaza los resultados originales.
+
 - **Objetivo:** seleccionar y ordenar inspecciones dentro de una jornada.
 - **Implementados:** modelo separado, línea base voraz, AG lexicográfico, referencia exacta y CLI offline.
 - **Dependencias:** núcleo estable.

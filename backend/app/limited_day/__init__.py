@@ -3,10 +3,11 @@
 from .evolution import LimitedGeneticResult, run_limited_genetic_algorithm
 from .exact import LimitedExactResult, solve_limited_exact
 from .greedy import solve_priority_nearest
-from .models import LimitedDayPolicy, LimitedRouteEvaluation, PriorityLevel
+from .models import DecoderStrategy, LimitedDayPolicy, LimitedRouteEvaluation, PriorityLevel
 
 __all__ = [
     "LimitedDayPolicy",
+    "DecoderStrategy",
     "LimitedGeneticResult",
     "LimitedExactResult",
     "LimitedRouteEvaluation",

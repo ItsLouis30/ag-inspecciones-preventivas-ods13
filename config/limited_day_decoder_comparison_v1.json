@@ -1,0 +1,25 @@
+{
+  "protocol_id": "limited-day-decoder-comparison-v1",
+  "scenarios": ["conservative", "expanded"],
+  "policies": [
+    {"day_limit_min": "180", "service_time_min": "10"},
+    {"day_limit_min": "180", "service_time_min": "20"},
+    {"day_limit_min": "240", "service_time_min": "10"},
+    {"day_limit_min": "240", "service_time_min": "20"}
+  ],
+  "strategies": ["prefix", "feasible_insertion"],
+  "seeds": [11, 22, 33, 44],
+  "evolution": {
+    "population_size": 40,
+    "tournament_size": 3,
+    "elite_count": 2,
+    "max_generations": 80,
+    "max_evaluations": 3200,
+    "stagnation_generations": 20,
+    "crossover_probability": 0.9,
+    "mutation_probability": 0.2,
+    "crossover_operator": "ox",
+    "mutation_operator": "inversion",
+    "seed": 11
+  }
+}

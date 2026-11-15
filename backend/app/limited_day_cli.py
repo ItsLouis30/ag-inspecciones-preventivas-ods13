@@ -11,6 +11,7 @@ from app.domain.errors import DataValidationError
 from app.genetic_algorithm import EvolutionConfig
 from app.geography import build_conservative, build_expanded, load_reference_dataset
 from app.limited_day import (
+    DecoderStrategy,
     LimitedDayPolicy,
     run_limited_genetic_algorithm,
     solve_limited_exact,
@@ -30,6 +31,11 @@ def main() -> None:
     parser.add_argument("--day-minutes", default="240")
     parser.add_argument("--service-minutes", default="15")
     parser.add_argument("--seed", type=int, default=11)
+    parser.add_argument(
+        "--decoder-strategy",
+        choices=tuple(strategy.value for strategy in DecoderStrategy),
+        default=DecoderStrategy.PREFIX.value,
+    )
     parser.add_argument("--population", type=int, default=100)
     parser.add_argument("--generations", type=int, default=500)
     parser.add_argument("--max-evaluations", type=int, default=50_000)
@@ -54,7 +60,12 @@ def main() -> None:
             seed=args.seed,
         )
         greedy = solve_priority_nearest(scenario, policy)
-        genetic = run_limited_genetic_algorithm(scenario, policy, config)
+        genetic = run_limited_genetic_algorithm(
+            scenario,
+            policy,
+            config,
+            DecoderStrategy(args.decoder_strategy),
+        )
         results = [greedy.as_dict(), genetic.as_dict()]
         if not args.skip_exact:
             exact = solve_limited_exact(

@@ -12,6 +12,11 @@ class PriorityLevel(StrEnum):
     OTHER = "other"
 
 
+class DecoderStrategy(StrEnum):
+    PREFIX = "prefix"
+    FEASIBLE_INSERTION = "feasible_insertion"
+
+
 @dataclass(frozen=True, slots=True)
 class LimitedDayPolicy:
     day_limit_min: Decimal = Decimal("240")

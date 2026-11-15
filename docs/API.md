@@ -60,6 +60,7 @@ Direcciones locales:
 {
   "scenario": {"mode": "expanded"},
   "method": "limited_day_genetic_algorithm",
+  "decoder_strategy": "prefix",
   "day_limit_min": "240",
   "service_time_min": "15",
   "return_to_origin": true,
@@ -69,6 +70,8 @@ Direcciones locales:
 ```
 
 La API exige que la jornada y el tiempo de servicio permanezcan marcados como experimentales. También conserva las advertencias de accesibilidad, procedencia y ausencia de validación física.
+
+`decoder_strategy` solo se admite con `limited_day_genetic_algorithm`. Su valor predeterminado es `prefix`, que conserva el contrato y los resultados originales. La alternativa `feasible_insertion` es experimental: interpreta la permutación como orden de consideración e inserta cada parada en la posición factible de menor incremento temporal. Ambos valores calculan una ruta cerrada con tiempos dirigidos; la respuesta identifica la estrategia aplicada en `result.decoder_strategy`. Los métodos voraz y exacto rechazan una estrategia distinta de `prefix` porque no usan este decodificador.
 
 ## Contrato geográfico
 

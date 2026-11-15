@@ -9,12 +9,17 @@ from app.genetic_algorithm import Chromosome, EvolutionConfig
 from app.geography.scenario_builder import build_expanded
 from app.geography.synthetic_loader import load_synthetic_scenario
 from app.limited_day import (
+    DecoderStrategy,
     LimitedDayPolicy,
     run_limited_genetic_algorithm,
     solve_limited_exact,
     solve_priority_nearest,
 )
-from app.limited_day.decoder import decode_priority_prefix, evaluate_selected_order
+from app.limited_day.decoder import (
+    decode_feasible_insertion,
+    decode_priority_prefix,
+    evaluate_selected_order,
+)
 from app.limited_day.priority import priority_of
 from app.limited_day.models import PriorityLevel
 
@@ -44,6 +49,34 @@ def test_decoder_always_returns_feasible_prefix(reference_dataset) -> None:
     assert result.route[0] == scenario.origin.node_id == result.route[-1]
     assert not set(result.selected_order) & set(result.excluded_stop_ids)
     assert set(result.selected_order) | set(result.excluded_stop_ids) == set(scenario.stop_ids)
+
+
+def test_feasible_insertion_can_skip_blocking_gene_and_include_later_stop(reference_dataset) -> None:
+    scenario = build_expanded(reference_dataset)
+    chromosome = Chromosome(scenario.stop_ids)
+    policy = LimitedDayPolicy(day_limit_min=Decimal("60"), service_time_min=Decimal("10"))
+    prefix = decode_priority_prefix(chromosome, scenario, policy)
+    insertion = decode_feasible_insertion(chromosome, scenario, policy)
+    assert prefix.selected_order == ("P01", "P02")
+    assert "P12" not in prefix.selected_order
+    assert "P12" in insertion.selected_order
+    assert insertion.total_selected == 3
+    assert insertion.total_selected > prefix.total_selected
+    assert insertion.total_duration_min <= policy.day_limit_min
+
+
+def test_feasible_insertion_is_deterministic_closed_and_complete(reference_dataset) -> None:
+    scenario = build_expanded(reference_dataset)
+    chromosome = Chromosome(tuple(reversed(scenario.stop_ids)))
+    policy = LimitedDayPolicy(day_limit_min=Decimal("180"), service_time_min=Decimal("15"))
+    first = decode_feasible_insertion(chromosome, scenario, policy)
+    second = decode_feasible_insertion(chromosome, scenario, policy)
+    assert first == second
+    assert first.route[0] == scenario.origin.node_id == first.route[-1]
+    assert first.total_duration_min <= policy.day_limit_min
+    assert len(first.selected_order) == len(set(first.selected_order))
+    assert not set(first.selected_order) & set(first.excluded_stop_ids)
+    assert set(first.selected_order) | set(first.excluded_stop_ids) == set(scenario.stop_ids)
 
 
 def test_ample_day_selects_every_stop(reference_dataset) -> None:
@@ -106,6 +139,28 @@ def test_limited_ga_is_reproducible_and_elitist(reference_dataset) -> None:
         for entry in first.history
     ]
     assert all(current <= previous for previous, current in zip(history_keys, history_keys[1:]))
+
+
+@pytest.mark.parametrize(
+    "strategy", [DecoderStrategy.PREFIX, DecoderStrategy.FEASIBLE_INSERTION]
+)
+def test_limited_ga_is_reproducible_for_each_decoder(reference_dataset, strategy) -> None:
+    scenario = build_expanded(reference_dataset)
+    policy = LimitedDayPolicy()
+    config = EvolutionConfig(
+        population_size=20,
+        elite_count=2,
+        max_generations=5,
+        max_evaluations=200,
+        stagnation_generations=5,
+        seed=33,
+    )
+    first = run_limited_genetic_algorithm(scenario, policy, config, strategy)
+    second = run_limited_genetic_algorithm(scenario, policy, config, strategy)
+    assert first.evaluation == second.evaluation
+    assert first.history == second.history
+    assert first.decoder_strategy is strategy
+    assert first.evaluation.total_duration_min <= policy.day_limit_min
 
 
 def test_limited_ga_never_reports_better_than_brute_force_optimum(synthetic_fixture) -> None:
