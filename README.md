@@ -7,11 +7,11 @@ El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planifi
 ## Estado de implementación
 
 - Los datos geográficos y documentales del piloto están organizados.
-- Las Fases 1 a 4 del backend están implementadas: dominio, carga validada, métodos de referencia, motor genético y evaluación experimental reproducible.
+- Las Fases 1 a 5 del backend están implementadas: dominio, métodos de referencia, motor genético, evaluación experimental y jornada limitada.
 - El frontend continúa vacío.
-- No existe aún Modelo B, API REST ni persistencia.
+- No existe aún API REST, frontend ni persistencia.
 - La implementación seguirá el [plan técnico del backend](docs/IMPLEMENTATION_PLAN.md).
-- El backend funciona completamente offline y dispone de 65 pruebas automatizadas.
+- El backend funciona completamente offline y dispone de 78 pruebas automatizadas.
 
 ## Contenido verificado
 
@@ -61,7 +61,7 @@ Las opciones con red no son completamente deterministas: SIGRID puede retirar ar
 
 El backend futuro no dependerá de estas consultas para sus pruebas normales: utilizará las matrices locales auditadas.
 
-## Backend — Fases 1 a 4
+## Backend — Fases 1 a 5
 
 Instalación y pruebas:
 
@@ -101,6 +101,12 @@ Evaluación congelada de cuatro corridas:
 python -m app.experiment_cli --project-root .. --output runs/ga_experiment_v1.json
 ```
 
+Modelo B con jornada limitada experimental:
+
+```powershell
+python -m app.limited_day_cli --project-root .. --scenario expanded --day-minutes 240 --service-minutes 15 --seed 11
+```
+
 ## Modelos previstos
 
 ### Modelo A — TSP dirigido
@@ -116,7 +122,9 @@ Métodos de comparación:
 
 ### Modelo B — Jornada limitada
 
-Se incorporará después del Modelo A. Seleccionará y ordenará inspecciones dentro de un tiempo disponible. Jornada y tiempos de inspección seguirán identificados como parámetros experimentales mientras no existan valores oficiales.
+Selecciona y ordena inspecciones dentro de un tiempo disponible. El escenario académico de referencia usa una jornada de 240 minutos y 15 minutos uniformes por inspección, ambos parámetros experimentales.
+
+El óptimo probado cubre 11 paradas Muy Alto. Las cuatro semillas evaluadas del AG alcanzaron esa misma cobertura; el mejor AG obtuvo 223.068333 minutos frente a 232.186666 del voraz y 219.893333 del método exacto.
 
 ## Resultados de referencia actuales
 
@@ -146,8 +154,9 @@ En las cuatro corridas congeladas, el AG obtuvo entre 91.5092 y 91.5094 km, con 
 ## Documentación
 
 - [Plan de implementación del backend](docs/IMPLEMENTATION_PLAN.md)
-- [Backend — Fases 1 a 4](backend/README.md)
+- [Backend — Fases 1 a 5](backend/README.md)
 - [Evaluación experimental](docs/EXPERIMENTAL_EVALUATION.md)
+- [Modelo B — Jornada limitada](docs/LIMITED_DAY_MODEL.md)
 - [Metodología de preparación](docs/METHODOLOGY.md)
 - [Fuentes y recuperación](docs/SOURCES.md)
 - [Limitaciones](docs/LIMITATIONS.md)

@@ -586,9 +586,10 @@ Las cuatro semillas se congelarán antes de observar resultados. Propuesta inici
 
 ### Fase 5 — Jornada limitada
 
+**Estado: implementada y verificada.** Se adoptó una representación por lista de prioridad con prefijo factible, retorno obligatorio, prioridad derivada de las FTR y parámetros temporales declarados experimentales.
+
 - **Objetivo:** seleccionar y ordenar inspecciones dentro de una jornada.
-- **Existentes:** tiempos y niveles de peligro.
-- **Previstos:** modelo y optimizador separados del TSP.
+- **Implementados:** modelo separado, línea base voraz, AG lexicográfico, referencia exacta y CLI offline.
 - **Dependencias:** núcleo estable.
 - **Riesgos:** parámetros experimentales y prioridad uniforme.
 - **Pruebas:** factibilidad temporal y orden lexicográfico.

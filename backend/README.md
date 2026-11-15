@@ -1,4 +1,4 @@
-# Backend — Fases 1 a 4
+# Backend — Fases 1 a 5
 
 Base matemática offline para cargar, validar y representar escenarios ATSP, y compararlos mediante métodos heurísticos y exactos.
 
@@ -21,9 +21,11 @@ Base matemática offline para cargar, validar y representar escenarios ATSP, y c
 - CLI genética offline con trazabilidad del dataset, configuración y resultado.
 - Protocolo congelado de cuatro semillas y servicio de evaluación comparativa.
 - Estadísticas de calidad, dispersión, brecha óptima y comparación con 2-opt.
+- Modelo B lexicográfico para seleccionar y ordenar inspecciones bajo una jornada experimental.
+- Línea base voraz y referencia exacta dirigida para el Modelo B.
 - Pruebas unitarias y de integración.
 
-No contiene FastAPI, frontend, persistencia ni Modelo B.
+No contiene FastAPI, frontend ni persistencia.
 
 ## Instalación
 
@@ -108,6 +110,17 @@ python -m app.experiment_cli --project-root .. --output runs/ga_experiment_v1.js
 ```
 
 El protocolo versionado fija las semillas 11, 22, 33 y 44. Las cuatro corridas del escenario ampliado produjeron una media de 91.509275 km, un rango de 91.5092–91.5094 km y una brecha media de 0.000175 km respecto al óptimo. Consultar [la metodología y resultados](../docs/EXPERIMENTAL_EVALUATION.md).
+
+## Jornada limitada
+
+```powershell
+cd backend
+python -m app.limited_day_cli --project-root .. --scenario expanded --day-minutes 240 --service-minutes 15 --seed 11
+```
+
+Los tiempos de jornada y servicio son experimentales. El objetivo se evalúa lexicográficamente: cobertura Muy Alto, cobertura total, tiempo total y distancia. No se mezclan minutos, kilómetros y prioridad mediante pesos.
+
+La referencia exacta probó un máximo de 11 paradas Muy Alto. El mejor AG de las semillas 11, 22, 33 y 44 mantuvo esa cobertura con 223.068333 minutos, frente a 232.186666 del voraz y 219.893333 del óptimo. Véase [Modelo B](../docs/LIMITED_DAY_MODEL.md).
 
 ## Entradas canónicas versionables
 
