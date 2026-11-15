@@ -1,6 +1,6 @@
-# Backend — Fase 1
+# Backend — Fases 1 y 2
 
-Base matemática offline para cargar, validar y representar escenarios ATSP del piloto de inspecciones preventivas.
+Base matemática offline para cargar, validar y representar escenarios ATSP, y compararlos mediante métodos heurísticos y exactos.
 
 ## Alcance implementado
 
@@ -12,9 +12,13 @@ Base matemática offline para cargar, validar y representar escenarios ATSP del 
 - Subsección de matrices conservando el origen y orden canónico.
 - Evaluación de una secuencia manual, sin optimizarla.
 - Instancia sintética dirigida de cinco paradas.
+- Vecino más cercano determinista para matriz dirigida.
+- 2-opt dirigido con recálculo completo de cada candidato.
+- Held–Karp exacto con límites explícitos de tiempo y memoria.
+- CLI comparativa que ejecuta todos los métodos sobre la misma instancia.
 - Pruebas unitarias y de integración.
 
-No contiene algoritmo genético, vecino más cercano, 2-opt, método exacto, FastAPI, frontend ni persistencia.
+No contiene algoritmo genético, FastAPI, frontend ni persistencia.
 
 ## Instalación
 
@@ -43,6 +47,23 @@ python -m app.cli --project-root .. --scenario custom --stops P02,P03 --route P0
 ```
 
 Si no se indica `--route`, se evalúa el orden canónico del escenario. El comando no busca ni optimiza una ruta.
+
+## Comparación de métodos de referencia
+
+```powershell
+cd backend
+python -m app.benchmark_cli --project-root .. --scenario conservative
+python -m app.benchmark_cli --project-root .. --scenario expanded --exact-time-limit 30
+```
+
+Resultados verificados para el dataset canónico:
+
+| Escenario | Vecino más cercano | 2-opt dirigido | Óptimo Held–Karp |
+|---|---:|---:|---:|
+| Conservador, 13 paradas | 78.3497 km | 78.3496 km | 78.3495 km |
+| Ampliado, 18 paradas | 91.5095 km | 91.5093 km | 91.5091 km |
+
+Los tiempos de ejecución dependen del equipo. En la verificación local, Held–Karp resolvió las 18 paradas en aproximadamente 6.2 segundos y probó optimalidad.
 
 ## Entradas canónicas versionables
 

@@ -549,6 +549,8 @@ Las cuatro semillas se congelarán antes de observar resultados. Propuesta inici
 
 ### Fase 2 — Métodos de referencia
 
+**Estado: implementada y verificada.** Held–Karp probó el óptimo tanto para 13 como para 18 paradas en el entorno local.
+
 - **Objetivo:** establecer comparaciones confiables.
 - **Existentes:** rutas generadas durante la preparación.
 - **Previstos:** objetivo, vecino, 2-opt dirigido y exacto.

@@ -7,11 +7,11 @@ El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planifi
 ## Estado de implementación
 
 - Los datos geográficos y documentales del piloto están organizados.
-- La Fase 1 del backend está implementada: dominio, carga validada, escenarios, subselección de matrices y evaluación de rutas manuales.
+- Las Fases 1 y 2 del backend están implementadas: dominio, carga validada, escenarios, evaluación manual, vecino más cercano, 2-opt dirigido y Held–Karp exacto.
 - El frontend continúa vacío.
-- No existe aún motor genético, métodos de optimización, API REST ni persistencia.
+- No existe aún motor genético, API REST ni persistencia.
 - La implementación seguirá el [plan técnico del backend](docs/IMPLEMENTATION_PLAN.md).
-- La primera entrega funciona completamente offline y dispone de 30 pruebas automatizadas.
+- El backend funciona completamente offline y dispone de 39 pruebas automatizadas.
 
 ## Contenido verificado
 
@@ -61,7 +61,7 @@ Las opciones con red no son completamente deterministas: SIGRID puede retirar ar
 
 El backend futuro no dependerá de estas consultas para sus pruebas normales: utilizará las matrices locales auditadas.
 
-## Backend — Fase 1
+## Backend — Fases 1 y 2
 
 Instalación y pruebas:
 
@@ -79,6 +79,13 @@ python -m app.cli --project-root .. --scenario expanded
 ```
 
 La CLI evalúa el orden manual recibido o el orden canónico del escenario; no optimiza todavía la secuencia. Consultar la [documentación del backend](backend/README.md).
+
+Comparación de métodos sobre la misma instancia:
+
+```powershell
+python -m app.benchmark_cli --project-root .. --scenario conservative
+python -m app.benchmark_cli --project-root .. --scenario expanded --exact-time-limit 30
+```
 
 ## Modelos previstos
 
@@ -103,8 +110,9 @@ Se incorporará después del Modelo A. Seleccionará y ordenará inspecciones de
 |---|---:|---:|
 | Vecino más cercano | 91.5095 km | 126.8 min |
 | 2-opt dirigido | 91.5093 km | 126.485 min |
+| Held–Karp exacto | 91.5091 km | 126.450 min |
 
-Son resultados heurísticos de referencia; no se presentan como óptimos.
+Solo Held–Karp tiene optimalidad probada. Vecino más cercano y 2-opt siguen siendo heurísticas.
 
 ## Archivos principales
 
@@ -121,7 +129,7 @@ Son resultados heurísticos de referencia; no se presentan como óptimos.
 ## Documentación
 
 - [Plan de implementación del backend](docs/IMPLEMENTATION_PLAN.md)
-- [Backend — Fase 1](backend/README.md)
+- [Backend — Fases 1 y 2](backend/README.md)
 - [Metodología de preparación](docs/METHODOLOGY.md)
 - [Fuentes y recuperación](docs/SOURCES.md)
 - [Limitaciones](docs/LIMITATIONS.md)
