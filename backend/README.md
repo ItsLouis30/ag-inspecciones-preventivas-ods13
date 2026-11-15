@@ -1,4 +1,4 @@
-# Backend — Fases 1 y 2
+# Backend — Fases 1, 2 y 3
 
 Base matemática offline para cargar, validar y representar escenarios ATSP, y compararlos mediante métodos heurísticos y exactos.
 
@@ -16,9 +16,12 @@ Base matemática offline para cargar, validar y representar escenarios ATSP, y c
 - 2-opt dirigido con recálculo completo de cada candidato.
 - Held–Karp exacto con límites explícitos de tiempo y memoria.
 - CLI comparativa que ejecuta todos los métodos sobre la misma instancia.
+- Motor genético de permutaciones con OX/PMX, mutación por inversión/intercambio, torneo y elitismo.
+- Semilla local reproducible, historial generacional, diversidad y criterios explícitos de parada.
+- CLI genética offline con trazabilidad del dataset, configuración y resultado.
 - Pruebas unitarias y de integración.
 
-No contiene algoritmo genético, FastAPI, frontend ni persistencia.
+No contiene FastAPI, frontend, persistencia, Modelo B ni la evaluación formal de cuatro corridas.
 
 ## Instalación
 
@@ -64,6 +67,36 @@ Resultados verificados para el dataset canónico:
 | Ampliado, 18 paradas | 91.5095 km | 91.5093 km | 91.5091 km |
 
 Los tiempos de ejecución dependen del equipo. En la verificación local, Held–Karp resolvió las 18 paradas en aproximadamente 6.2 segundos y probó optimalidad.
+
+## Motor genético
+
+Configuración académica inicial:
+
+| Parámetro | Valor |
+|---|---:|
+| Población | 100 |
+| Torneo | 3 |
+| Elites | 2 |
+| Generaciones máximas | 500 |
+| Evaluaciones máximas | 50 000 |
+| Estancamiento | 100 generaciones |
+| Cruce | OX, 0.90 |
+| Mutación | Inversión, 0.20 |
+
+Demostración:
+
+```powershell
+cd backend
+python -m app.ga_cli --project-root .. --scenario expanded --seed 11
+```
+
+La corrida de verificación con semilla 11 terminó por estancamiento después de 129 generaciones y 12 742 evaluaciones. Obtuvo 91.5094 km y 126.478334 min. No se declara óptima y no se usa como conclusión experimental; las cuatro corridas corresponden a la Fase 4.
+
+Operadores alternativos:
+
+```powershell
+python -m app.ga_cli --project-root .. --scenario conservative --seed 22 --crossover pmx --mutation swap
+```
 
 ## Entradas canónicas versionables
 

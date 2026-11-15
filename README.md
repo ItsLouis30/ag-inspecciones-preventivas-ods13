@@ -7,11 +7,11 @@ El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planifi
 ## Estado de implementación
 
 - Los datos geográficos y documentales del piloto están organizados.
-- Las Fases 1 y 2 del backend están implementadas: dominio, carga validada, escenarios, evaluación manual, vecino más cercano, 2-opt dirigido y Held–Karp exacto.
+- Las Fases 1, 2 y 3 del backend están implementadas: dominio, carga validada, métodos de referencia y motor genético reproducible.
 - El frontend continúa vacío.
-- No existe aún motor genético, API REST ni persistencia.
+- No existe aún evaluación experimental de cuatro corridas, API REST ni persistencia.
 - La implementación seguirá el [plan técnico del backend](docs/IMPLEMENTATION_PLAN.md).
-- El backend funciona completamente offline y dispone de 39 pruebas automatizadas.
+- El backend funciona completamente offline y dispone de 59 pruebas automatizadas.
 
 ## Contenido verificado
 
@@ -61,7 +61,7 @@ Las opciones con red no son completamente deterministas: SIGRID puede retirar ar
 
 El backend futuro no dependerá de estas consultas para sus pruebas normales: utilizará las matrices locales auditadas.
 
-## Backend — Fases 1 y 2
+## Backend — Fases 1, 2 y 3
 
 Instalación y pruebas:
 
@@ -87,6 +87,14 @@ python -m app.benchmark_cli --project-root .. --scenario conservative
 python -m app.benchmark_cli --project-root .. --scenario expanded --exact-time-limit 30
 ```
 
+Ejecución del algoritmo genético sin servidor:
+
+```powershell
+python -m app.ga_cli --project-root .. --scenario expanded --seed 11
+```
+
+Los parámetros avanzados son opcionales y están destinados a la evaluación académica.
+
 ## Modelos previstos
 
 ### Modelo A — TSP dirigido
@@ -111,8 +119,9 @@ Se incorporará después del Modelo A. Seleccionará y ordenará inspecciones de
 | Vecino más cercano | 91.5095 km | 126.8 min |
 | 2-opt dirigido | 91.5093 km | 126.485 min |
 | Held–Karp exacto | 91.5091 km | 126.450 min |
+| AG, semilla 11 y configuración inicial | 91.5094 km | 126.478 min |
 
-Solo Held–Karp tiene optimalidad probada. Vecino más cercano y 2-opt siguen siendo heurísticas.
+Solo Held–Karp tiene optimalidad probada. Vecino más cercano, 2-opt y el AG siguen siendo heurísticas. Esta corrida individual no sustituye la evaluación experimental de la Fase 4.
 
 ## Archivos principales
 
@@ -129,7 +138,7 @@ Solo Held–Karp tiene optimalidad probada. Vecino más cercano y 2-opt siguen s
 ## Documentación
 
 - [Plan de implementación del backend](docs/IMPLEMENTATION_PLAN.md)
-- [Backend — Fases 1 y 2](backend/README.md)
+- [Backend — Fases 1, 2 y 3](backend/README.md)
 - [Metodología de preparación](docs/METHODOLOGY.md)
 - [Fuentes y recuperación](docs/SOURCES.md)
 - [Limitaciones](docs/LIMITATIONS.md)

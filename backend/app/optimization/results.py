@@ -12,6 +12,7 @@ class OptimizationMethod(StrEnum):
     NEAREST_NEIGHBOR = "nearest_neighbor"
     DIRECTED_TWO_OPT = "directed_two_opt"
     HELD_KARP = "held_karp"
+    GENETIC_ALGORITHM = "genetic_algorithm"
 
 
 class OptimalityStatus(StrEnum):

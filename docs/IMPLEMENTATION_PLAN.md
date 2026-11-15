@@ -562,9 +562,10 @@ Las cuatro semillas se congelarán antes de observar resultados. Propuesta inici
 
 ### Fase 3 — Motor genético
 
+**Estado: implementada y verificada.** El motor funciona offline, conserva permutaciones válidas y registra configuración, semilla, historial, diversidad, evaluaciones y motivo de parada.
+
 - **Objetivo:** implementar los siete componentes.
-- **Existentes:** no hay implementación genética.
-- **Previstos:** módulos de `genetic_algorithm`.
+- **Implementados:** módulos de `genetic_algorithm` y CLI genética independiente.
 - **Dependencias:** objetivo y escenarios estables.
 - **Riesgos:** individuos inválidos y falta de reproducibilidad.
 - **Pruebas:** operadores, semilla, elitismo y parada.
