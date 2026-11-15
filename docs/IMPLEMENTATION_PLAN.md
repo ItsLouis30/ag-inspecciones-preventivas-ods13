@@ -535,6 +535,8 @@ Las cuatro semillas se congelarán antes de observar resultados. Propuesta inici
 
 ### Fase 1 — Dominio y carga de datos
 
+**Estado: implementada y verificada.**
+
 - **Objetivo:** cargar y validar escenarios reproducibles.
 - **Existentes:** paradas, origen, matrices y FTR.
 - **Previstos:** módulos `domain` y `geography`.

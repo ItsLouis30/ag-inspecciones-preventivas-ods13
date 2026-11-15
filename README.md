@@ -7,10 +7,11 @@ El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planifi
 ## Estado de implementación
 
 - Los datos geográficos y documentales del piloto están organizados.
-- El backend y el frontend tienen estructuras iniciales, pero todavía no contienen una implementación funcional.
-- No existe aún motor genético, API REST, interfaz web ni persistencia.
+- La Fase 1 del backend está implementada: dominio, carga validada, escenarios, subselección de matrices y evaluación de rutas manuales.
+- El frontend continúa vacío.
+- No existe aún motor genético, métodos de optimización, API REST ni persistencia.
 - La implementación seguirá el [plan técnico del backend](docs/IMPLEMENTATION_PLAN.md).
-- Primera entrega prevista: dominio, carga de matrices, validación de escenarios e instancia sintética; todavía sin API.
+- La primera entrega funciona completamente offline y dispone de 30 pruebas automatizadas.
 
 ## Contenido verificado
 
@@ -60,6 +61,25 @@ Las opciones con red no son completamente deterministas: SIGRID puede retirar ar
 
 El backend futuro no dependerá de estas consultas para sus pruebas normales: utilizará las matrices locales auditadas.
 
+## Backend — Fase 1
+
+Instalación y pruebas:
+
+```powershell
+python -m pip install -r backend\requirements.txt
+cd backend
+python -m pytest
+```
+
+Demostración mínima sin servidor:
+
+```powershell
+python -m app.cli --project-root .. --scenario conservative
+python -m app.cli --project-root .. --scenario expanded
+```
+
+La CLI evalúa el orden manual recibido o el orden canónico del escenario; no optimiza todavía la secuencia. Consultar la [documentación del backend](backend/README.md).
+
 ## Modelos previstos
 
 ### Modelo A — TSP dirigido
@@ -101,6 +121,7 @@ Son resultados heurísticos de referencia; no se presentan como óptimos.
 ## Documentación
 
 - [Plan de implementación del backend](docs/IMPLEMENTATION_PLAN.md)
+- [Backend — Fase 1](backend/README.md)
 - [Metodología de preparación](docs/METHODOLOGY.md)
 - [Fuentes y recuperación](docs/SOURCES.md)
 - [Limitaciones](docs/LIMITATIONS.md)

@@ -1,0 +1,35 @@
+{
+  "dataset_id": "synthetic-directed-5-v1",
+  "schema_version": 1,
+  "origin": {
+    "node_id": "ORIGEN",
+    "name": "Origen sintético",
+    "latitude": 0.0,
+    "longitude": 0.0
+  },
+  "stops": [
+    {"stop_id": "S1", "latitude": 0.01, "longitude": 0.01},
+    {"stop_id": "S2", "latitude": 0.02, "longitude": 0.02},
+    {"stop_id": "S3", "latitude": 0.03, "longitude": 0.03},
+    {"stop_id": "S4", "latitude": 0.04, "longitude": 0.04},
+    {"stop_id": "S5", "latitude": 0.05, "longitude": 0.05}
+  ],
+  "node_order": ["ORIGEN", "S1", "S2", "S3", "S4", "S5"],
+  "distance_km": [
+    [0, 2, 9, 10, 7, 3],
+    [4, 0, 6, 4, 3, 8],
+    [8, 5, 0, 7, 6, 4],
+    [9, 3, 5, 0, 2, 6],
+    [7, 4, 6, 3, 0, 5],
+    [3, 8, 4, 6, 5, 0]
+  ],
+  "duration_min": [
+    [0, 4, 12, 15, 10, 5],
+    [6, 0, 8, 6, 4, 11],
+    [10, 7, 0, 9, 8, 6],
+    [12, 5, 7, 0, 3, 8],
+    [9, 6, 8, 4, 0, 7],
+    [5, 12, 6, 8, 7, 0]
+  ]
+}
+

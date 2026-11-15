@@ -1,0 +1,35 @@
+{
+  "dataset_id": "chillon-santa-rosa-quives-2026-v1",
+  "schema_version": 1,
+  "files": {
+    "ftr": {
+      "path": "data/processed/ftr_pilot.csv",
+      "sha256": "A311DAAE2B8D65F12BF699797D28F07874AB1573556E0A78576CC1389EE0CBBE"
+    },
+    "stops": {
+      "path": "data/processed/stops.csv",
+      "sha256": "96D4A4398BE9BC26BF172D46D4BBAB6ED6840604705F9DA3B14DFBC5E9A3AE1B"
+    },
+    "origin": {
+      "path": "data/processed/origin.csv",
+      "sha256": "5EEFE9A8BC15F00D90FFD3C3E3621E6FE25A7024E375F12FC20938EDD5870560"
+    },
+    "distance_matrix": {
+      "path": "data/processed/matrices/distance_km.csv",
+      "sha256": "633017E935C07BDDEBF30AC48D1B307603970F694818960F2795995C4EFA6019"
+    },
+    "duration_matrix": {
+      "path": "data/processed/matrices/duration_min.csv",
+      "sha256": "38DFCCC2295DB784C6AB9BFA601495C379F08AE6043294493DEEC8FB006ACB13"
+    }
+  },
+  "expected_counts": {
+    "ftr": 19,
+    "stops": 18,
+    "conservative_stops": 13
+  },
+  "node_order": [
+    "ORIGEN", "P01", "P02", "P03", "P04", "P05", "P06", "P07", "P08", "P09",
+    "P10", "P11", "P12", "P13", "P14", "P15", "P16", "P17", "P18"
+  ]
+}
