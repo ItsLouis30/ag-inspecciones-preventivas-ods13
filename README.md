@@ -1,4 +1,4 @@
-# Planificación de inspecciones preventivas — ODS 13.1
+# Sistema basado en algoritmo genético para la planificación de recorridos de inspección preventiva de puntos críticos ante inundaciones y erosión fluvial en la cuenca del río Chillón
 
 Proyecto académico para planificar recorridos de inspección preventiva en puntos críticos ante inundaciones, flujo de detritos y erosión fluvial en la cuenca del río Chillón mediante algoritmos genéticos y métodos de referencia.
 
