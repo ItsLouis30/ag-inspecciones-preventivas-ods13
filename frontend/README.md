@@ -85,7 +85,11 @@ frontend/
 │   │   └── exportsApi.ts
 │   ├── hooks/                        hooks realmente compartidos
 │   ├── lib/                          utilidades puras de presentación
-│   ├── types/                        tipos generados y extensiones locales mínimas
+│   ├── types/
+│   │   ├── api.generated.ts          tipos generados desde OpenAPI; no editar a mano
+│   │   ├── scenarios.ts              alias y modelos de presentación de escenarios
+│   │   ├── optimization.ts           solicitudes y resultados de los Modelos A y B
+│   │   └── maps.ts                   tipos exclusivamente visuales para Leaflet
 │   ├── test/                         configuración, fixtures y handlers simulados
 │   ├── index.css                     tokens y Tailwind
 │   └── main.tsx                      punto de entrada de Vite
@@ -113,6 +117,8 @@ shared components
 - `components/` solo contiene elementos reutilizables por varias features.
 - `services/` conoce HTTP, pero no decide cómo se presenta el resultado.
 - Los tipos de la API deben generarse o reflejar fielmente OpenAPI; no mantener DTO paralelos a mano sin necesidad.
+- `types/` centraliza contratos compartidos; los tipos exclusivos de una feature deben permanecer dentro de esa feature.
+- `api.generated.ts` debe regenerarse desde OpenAPI cuando cambie el backend y nunca contener lógica de negocio.
 
 ## Estructura existente auditada
 
