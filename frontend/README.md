@@ -1,10 +1,72 @@
-# Frontend — Plan de generación e integración
+# Frontend — Planificación de inspecciones preventivas · ODS 13
 
 ## Estado actual
 
-Esta carpeta contiene únicamente una estructura preliminar con archivos vacíos. Todavía no existe una aplicación React ejecutable: no hay `package.json`, configuración de Vite, dependencias instaladas, estilos ni componentes implementados.
+Aplicación React + TypeScript + Vite **implementada y conectada** a la API FastAPI. Consume los once endpoints reales; no contiene datos simulados ni lógica matemática del backend.
 
-Este documento sirve como guía para que otro integrante genere el frontend sin duplicar la lógica matemática del backend.
+### Ejecución
+
+Backend (terminal 1):
+
+```powershell
+cd backend
+python -m app.server
+```
+
+Frontend (terminal 2):
+
+```powershell
+cd frontend
+npm install
+copy .env.example .env.local   # opcional: ajustar VITE_API_BASE_URL
+npm run dev                     # http://127.0.0.1:5173
+```
+
+Si el puerto 8000 está ocupado, levantar la API en otro puerto (`$env:ODS13_API_PORT="8010"`) y fijar `VITE_API_BASE_URL=http://127.0.0.1:8010/api/v1` en `.env.local`. El origen del frontend debe seguir siendo `http://127.0.0.1:5173` o `http://localhost:5173` por CORS.
+
+| Script | Acción |
+|---|---|
+| `npm run dev` | Servidor de desarrollo (puerto 5173 fijo) |
+| `npm run build` | Compilación TypeScript + build de producción en `dist/` |
+| `npm run typecheck` | Solo comprobación de tipos |
+| `npm run lint` | ESLint |
+| `npm test` | Vitest + Testing Library |
+| `npm run gen:api` | Regenera `src/types/api.generated.ts` desde `http://127.0.0.1:8000/openapi.json` |
+
+### Secciones
+
+| Ruta | Contenido |
+|---|---|
+| `/` | Inicio: objetivo, ODS 13 · meta 13.1, estado de la API, conteos reales del dataset, mapa general, escenarios y advertencias |
+| `/puntos-criticos` | Mapa + listado filtrable (ID/sector/FTR, peligro, plausibilidad, documentación), ficha de parada y tabla equivalente |
+| `/escenarios` | Conservador, ampliado y personalizado con validación `POST /scenarios/resolve` |
+| `/planificar?modo=ruta` | Modelo A: vecino, 2-opt, Held–Karp o AG; secuencia, tabla de visitas, cronograma, historial genético y CSV |
+| `/planificar?modo=jornada` | Modelo B: voraz, AG (`feasible_insertion` recomendado, `prefix` disponible) o exacto; uso de jornada, omitidas, objetivo lexicográfico y CSV |
+| `/experimentos` | Protocolo congelado, cuatro semillas, comparación con referencias, convergencia, hashes y resumen estático de la comparación de decodificadores |
+| `/acerca` | Contexto académico, ODS 13 y limitaciones |
+
+### Decisiones de implementación
+
+- **Tipos:** `src/types/api.generated.ts` se generó con `openapi-typescript` desde el OpenAPI real; `src/types/api.ts` define alias y describe solo las claves documentadas de los campos `result: dict` que OpenAPI no tipa.
+- **Estado:** TanStack Query para datos del servidor; las optimizaciones son mutaciones iniciadas solo por botón. Un contexto en memoria (`app/workspace.tsx`) conserva la selección personalizada y el último resultado de cada modelo al cambiar de pestaña o página. Recargar la página los descarta (el backend no persiste ejecuciones).
+- **Ejecuciones largas:** cronómetro visible y botón «Dejar de esperar» (AbortController). La API no cancela el cálculo en el servidor; la interfaz lo indica.
+- **Errores:** `ApiError` distingue red, validación 422 (con campo), dominio (`error_type`, incluida integridad del dataset), cancelación y servidor. Los 422 se asignan al campo del formulario cuando la ruta lo permite.
+- **Decodificador:** el formulario del AG del Modelo B preselecciona `feasible_insertion` y lo envía explícitamente; los métodos voraz y exacto envían `prefix` porque el backend rechaza otra estrategia con ellos. El valor predeterminado del backend no se modifica.
+- **Mapa:** marcadores `divIcon` con simbología distinta para origen, acceso vehicular (numerado en el recorrido), parada omitida y referencia crítica (rombo, unida a su acceso por una guía punteada). La conexión entre paradas es opcional, discontinua y rotulada «esquemática · no es carretera». Sin Internet se muestra un aviso y los marcadores siguen funcionando. El zoom con rueda está desactivado para no secuestrar el desplazamiento de la página.
+- **Gráficos:** un solo eje por gráfico; paleta categórica validada para daltonismo (`#2563EB`, `#0D9488`, `#D97706`, `#7C3AED`). El historial del experimento congelado se grafica en las unidades enteras internas que devuelve la API (no se convierten a km en el navegador).
+- **Identidad visual:** la paleta ODS 13 (verde petróleo `#0F766E` para acciones, azul río `#2563EB` para recorridos) y la fuente Inter (empaquetada localmente con `@fontsource-variable/inter`) reemplazan la paleta y tipografía iniciales de este plan. Tokens en `src/index.css`.
+- **Exportación CSV:** la genera el backend (`/exports/*.csv`) con la misma solicitud y semilla. CORS no expone `Content-Disposition`, por lo que el nombre de archivo usa el mismo valor por defecto que el backend.
+
+### Limitaciones conocidas del frontend
+
+- Las métricas «Tiempo restante» (jornada − tiempo total) y la «brecha por fila» de la tabla de experimentos son diferencias de presentación sobre valores de la API; las estadísticas agregadas provienen íntegras del backend.
+- El cronograma esquemático reparte el tiempo uniforme de inspección declarado en la solicitud; no representa horarios reales.
+- La comparación de decodificadores del Modelo B es contenido estático transcrito de `docs/LIMITED_DAY_DECODER_COMPARISON.md`: no existe endpoint para consultarla.
+- Los textos de limitaciones de `/acerca` resumen `docs/LIMITATIONS.md` y deben actualizarse a mano si el documento cambia.
+
+---
+
+El resto de este documento conserva el plan original de integración que guió la implementación.
 
 No se deben introducir nombres comerciales para el sistema académico.
 
@@ -207,7 +269,7 @@ La documentación contractual completa está en `../docs/API.md` y Swagger en `h
 - Solicitar `include_history: true` solo en la vista académica que grafica la evolución.
 - Mostrar todas las advertencias documentales y operativas relevantes.
 - Conservar el objetivo lexicográfico del Modelo B en el orden recibido.
-- Permitir `decoder_strategy: prefix | feasible_insertion` únicamente para el AG del Modelo B; `prefix` debe aparecer como opción compatible predeterminada y la inserción como experimental.
+- Permitir `decoder_strategy: prefix | feasible_insertion` únicamente para el AG del Modelo B; `prefix` debe aparecer como opción compatible predeterminada y la inserción como experimental. *(Actualizado en la implementación: por requisito del equipo, la interfaz recomienda y preselecciona `feasible_insertion`, siempre enviado de forma explícita; `prefix` sigue disponible y es el predeterminado del backend.)*
 
 ### Errores
 
@@ -422,21 +484,6 @@ No guardar resultados como si fueran persistentes: el backend actual no mantiene
 - La compilación TypeScript y las pruebas terminan sin errores.
 - La aplicación funciona en escritorio y móvil sin perder información esencial.
 
-## Ejecución futura esperada
+## Ejecución
 
-Cuando la aplicación haya sido generada, los comandos deberán quedar equivalentes a:
-
-```powershell
-cd frontend
-npm install
-npm run dev
-```
-
-Backend, desde otra terminal:
-
-```powershell
-cd backend
-python -m app.server
-```
-
-No ejecutar todavía los comandos de Node: actualmente no existe `package.json` ni una implementación frontend.
+Ver la sección «Ejecución» al inicio de este documento.

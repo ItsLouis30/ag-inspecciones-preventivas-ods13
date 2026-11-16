@@ -1,0 +1,118 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "leaflet/dist/leaflet.css";
+
+/*
+ * Identidad visual ODS 13 · tokens centralizados.
+ * Verde petróleo = acciones y navegación · Azul río = recorridos y agua.
+ * Rojo reservado para peligro o errores reales.
+ */
+:root {
+  --primary: #0f766e;
+  --primary-dark: #115e59;
+  --primary-light: #ccfbf1;
+  --river: #2563eb;
+  --river-light: #dbeafe;
+  --climate: #16a34a;
+  --climate-light: #dcfce7;
+  --warning: #d97706;
+  --warning-light: #fef3c7;
+  --critical: #dc2626;
+  --critical-light: #fee2e2;
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --foreground: #0f172a;
+  --muted-foreground: #64748b;
+  --muted: #f1f5f9;
+  --border: #e2e8f0;
+  --ring: #0f766e;
+  --radius: 0.875rem;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
+  --color-river: var(--river);
+  --color-river-light: var(--river-light);
+  --color-climate: var(--climate);
+  --color-climate-light: var(--climate-light);
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-critical: var(--critical);
+  --color-critical-light: var(--critical-light);
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 4px 16px -4px rgb(15 23 42 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.05), 0 12px 32px -8px rgb(15 23 42 / 0.12);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Leaflet: ajustes para integrarse en el sistema visual */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: #eef2f6;
+  border-radius: inherit;
+}
+.leaflet-control-attribution {
+  font-size: 10px;
+  border-top-left-radius: 6px;
+}
+.leaflet-tooltip.map-label {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+  color: var(--foreground);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+}
+.leaflet-tooltip.map-label::before {
+  display: none;
+}
+.stop-icon {
+  background: transparent;
+  border: none;
+}
