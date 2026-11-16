@@ -94,8 +94,8 @@ export const DEFAULT_LIMITED_DAY_VALUES: LimitedDayFormValues = {
   // Valores experimentales documentados en docs/API.md (240 / 15).
   dayLimit: 240,
   serviceTime: 15,
-  // Recomendado visualmente, enviado siempre de forma explícita.
-  decoder: "feasible_insertion",
+  // Estrategia original y predeterminada del contrato del backend.
+  decoder: "prefix",
   includeHistory: true,
   evolution: DEFAULT_EVOLUTION,
   exact: DEFAULT_EXACT,
@@ -162,7 +162,7 @@ export function limitedDayValuesFromRequest(request: LimitedDayOptimizationReque
     method: request.method,
     dayLimit: Number(request.day_limit_min),
     serviceTime: Number(request.service_time_min),
-    decoder: request.method === "limited_day_genetic_algorithm" ? request.decoder_strategy : "feasible_insertion",
+    decoder: request.method === "limited_day_genetic_algorithm" ? request.decoder_strategy : "prefix",
     includeHistory: request.evolution ? request.include_history : DEFAULT_LIMITED_DAY_VALUES.includeHistory,
     evolution: request.evolution ?? DEFAULT_EVOLUTION,
     exact: request.exact_limits ?? DEFAULT_EXACT,

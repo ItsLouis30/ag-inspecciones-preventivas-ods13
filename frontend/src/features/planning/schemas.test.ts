@@ -39,9 +39,9 @@ describe("buildTspRequest", () => {
 });
 
 describe("buildLimitedDayRequest", () => {
-  it("envía explícitamente feasible_insertion como estrategia recomendada del AG", () => {
+  it("conserva prefix como estrategia predeterminada del AG", () => {
     const request = buildLimitedDayRequest(DEFAULT_LIMITED_DAY_VALUES, expanded);
-    expect(request.decoder_strategy).toBe("feasible_insertion");
+    expect(request.decoder_strategy).toBe("prefix");
     expect(request.method).toBe("limited_day_genetic_algorithm");
     expect(request.experimental).toBe(true);
     expect(request.return_to_origin).toBe(true);
@@ -49,9 +49,9 @@ describe("buildLimitedDayRequest", () => {
     expect(request.service_time_min).toBe("15");
   });
 
-  it("permite prefix para comparación", () => {
-    const request = buildLimitedDayRequest({ ...DEFAULT_LIMITED_DAY_VALUES, decoder: "prefix" }, expanded);
-    expect(request.decoder_strategy).toBe("prefix");
+  it("permite seleccionar feasible_insertion como variante experimental", () => {
+    const request = buildLimitedDayRequest({ ...DEFAULT_LIMITED_DAY_VALUES, decoder: "feasible_insertion" }, expanded);
+    expect(request.decoder_strategy).toBe("feasible_insertion");
   });
 
   it("fuerza prefix en métodos voraz y exacto (el backend rechaza otra estrategia)", () => {
@@ -68,7 +68,7 @@ describe("buildLimitedDayRequest", () => {
     const values = limitedDayValuesFromRequest(request);
     expect(values.dayLimit).toBe(180);
     expect(values.serviceTime).toBe(20);
-    expect(values.decoder).toBe("feasible_insertion");
+    expect(values.decoder).toBe("prefix");
   });
 });
 

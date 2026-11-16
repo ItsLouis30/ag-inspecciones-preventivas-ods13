@@ -28,7 +28,7 @@ describe("LimitedDayForm", () => {
     const body = JSON.parse(String(call?.[1]?.body));
     expect(body).toMatchObject({
       method: "limited_day_genetic_algorithm",
-      decoder_strategy: "feasible_insertion",
+      decoder_strategy: "prefix",
       experimental: true,
       return_to_origin: true,
       day_limit_min: "240",
@@ -36,11 +36,11 @@ describe("LimitedDayForm", () => {
     });
   });
 
-  it("muestra la recomendación de inserción factible y mantiene prefix disponible", () => {
+  it("distingue la estrategia predeterminada de la variante experimental", () => {
     vi.stubGlobal("fetch", mockFetch(baseRoutes));
     renderWithProviders(<LimitedDayForm />);
-    expect(screen.getByText("Recomendada")).toBeInTheDocument();
-    expect(screen.getByText("Para comparación")).toBeInTheDocument();
+    expect(screen.getByText("Predeterminada")).toBeInTheDocument();
+    expect(screen.getByText("Variante experimental")).toBeInTheDocument();
   });
 
   it("muestra los errores 422 de FastAPI junto al formulario", async () => {

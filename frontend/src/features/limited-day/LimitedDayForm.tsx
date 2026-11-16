@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarClock, CornerDownLeft, FlaskConical, Sparkles } from "lucide-react";
+import { CalendarClock, CornerDownLeft, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Field } from "@/components/ui/form-controls";
@@ -33,7 +33,7 @@ function DecoderField() {
       render={({ field }) => (
         <fieldset className="flex flex-col gap-2">
           <legend className="mb-2 text-xs font-medium text-muted-foreground">Estrategia de decodificación del AG</legend>
-          {(["feasible_insertion", "prefix"] as DecoderStrategy[]).map((value) => {
+          {(["prefix", "feasible_insertion"] as DecoderStrategy[]).map((value) => {
             const checked = field.value === value;
             return (
               <label
@@ -48,10 +48,10 @@ function DecoderField() {
                   <span className="flex flex-wrap items-center gap-1.5 text-[13px] font-semibold">
                     {DECODER_LABELS[value].label}
                     <code className="rounded bg-muted px-1 text-[10px] font-normal text-muted-foreground">{value}</code>
-                    {value === "feasible_insertion" ? (
-                      <Badge tone="primary"><Sparkles aria-hidden /> Recomendada</Badge>
+                    {value === "prefix" ? (
+                      <Badge tone="primary">Predeterminada</Badge>
                     ) : (
-                      <Badge tone="neutral">Para comparación</Badge>
+                      <Badge tone="warning">Variante experimental</Badge>
                     )}
                   </span>
                   <span className="text-[11px] leading-snug text-muted-foreground">{DECODER_LABELS[value].description}</span>
@@ -60,7 +60,7 @@ function DecoderField() {
             );
           })}
           <p className="text-[11px] leading-snug text-muted-foreground">
-            La estrategia elegida se envía explícitamente; el valor predeterminado del backend (<code>prefix</code>) no se altera.
+            La inserción factible obtuvo mejores resultados en parte del protocolo piloto, pero no probó superioridad universal. La estrategia elegida se envía explícitamente.
           </p>
         </fieldset>
       )}

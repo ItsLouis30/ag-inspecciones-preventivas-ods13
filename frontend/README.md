@@ -4,6 +4,8 @@
 
 Aplicación React + TypeScript + Vite **implementada y conectada** a la API FastAPI. Consume los once endpoints reales; no contiene datos simulados ni lógica matemática del backend.
 
+Requisito local: **Node.js 22.22 o superior**. La versión verificada es Node 22.23.5 con npm 11.7.0.
+
 ### Ejecución
 
 Backend (terminal 1):
@@ -17,10 +19,12 @@ Frontend (terminal 2):
 
 ```powershell
 cd frontend
-npm install
+npm ci
 copy .env.example .env.local   # opcional: ajustar VITE_API_BASE_URL
 npm run dev                     # http://127.0.0.1:5173
 ```
+
+Usar `npm install` únicamente cuando cambien deliberadamente las dependencias; después debe versionarse el `package-lock.json` actualizado y volver a comprobarse `npm ci`.
 
 Si el puerto 8000 está ocupado, levantar la API en otro puerto (`$env:ODS13_API_PORT="8010"`) y fijar `VITE_API_BASE_URL=http://127.0.0.1:8010/api/v1` en `.env.local`. El origen del frontend debe seguir siendo `http://127.0.0.1:5173` o `http://localhost:5173` por CORS.
 
@@ -41,7 +45,7 @@ Si el puerto 8000 está ocupado, levantar la API en otro puerto (`$env:ODS13_API
 | `/puntos-criticos` | Mapa + listado filtrable (ID/sector/FTR, peligro, plausibilidad, documentación), ficha de parada y tabla equivalente |
 | `/escenarios` | Conservador, ampliado y personalizado con validación `POST /scenarios/resolve` |
 | `/planificar?modo=ruta` | Modelo A: vecino, 2-opt, Held–Karp o AG; secuencia, tabla de visitas, cronograma, historial genético y CSV |
-| `/planificar?modo=jornada` | Modelo B: voraz, AG (`feasible_insertion` recomendado, `prefix` disponible) o exacto; uso de jornada, omitidas, objetivo lexicográfico y CSV |
+| `/planificar?modo=jornada` | Modelo B: voraz, AG (`prefix` predeterminado y `feasible_insertion` experimental) o exacto; uso de jornada, omitidas, objetivo lexicográfico y CSV |
 | `/experimentos` | Protocolo congelado, cuatro semillas, comparación con referencias, convergencia, hashes y resumen estático de la comparación de decodificadores |
 | `/acerca` | Contexto académico, ODS 13 y limitaciones |
 
@@ -51,7 +55,7 @@ Si el puerto 8000 está ocupado, levantar la API en otro puerto (`$env:ODS13_API
 - **Estado:** TanStack Query para datos del servidor; las optimizaciones son mutaciones iniciadas solo por botón. Un contexto en memoria (`app/workspace.tsx`) conserva la selección personalizada y el último resultado de cada modelo al cambiar de pestaña o página. Recargar la página los descarta (el backend no persiste ejecuciones).
 - **Ejecuciones largas:** cronómetro visible y botón «Dejar de esperar» (AbortController). La API no cancela el cálculo en el servidor; la interfaz lo indica.
 - **Errores:** `ApiError` distingue red, validación 422 (con campo), dominio (`error_type`, incluida integridad del dataset), cancelación y servidor. Los 422 se asignan al campo del formulario cuando la ruta lo permite.
-- **Decodificador:** el formulario del AG del Modelo B preselecciona `feasible_insertion` y lo envía explícitamente; los métodos voraz y exacto envían `prefix` porque el backend rechaza otra estrategia con ellos. El valor predeterminado del backend no se modifica.
+- **Decodificador:** el formulario del AG del Modelo B preselecciona `prefix`, que conserva el comportamiento original. `feasible_insertion` está disponible como variante experimental y no se presenta como universalmente superior. Los métodos voraz y exacto envían `prefix` porque no utilizan este decodificador.
 - **Mapa:** marcadores `divIcon` con simbología distinta para origen, acceso vehicular (numerado en el recorrido), parada omitida y referencia crítica (rombo, unida a su acceso por una guía punteada). La conexión entre paradas es opcional, discontinua y rotulada «esquemática · no es carretera». Sin Internet se muestra un aviso y los marcadores siguen funcionando. El zoom con rueda está desactivado para no secuestrar el desplazamiento de la página.
 - **Gráficos:** un solo eje por gráfico; paleta categórica validada para daltonismo (`#2563EB`, `#0D9488`, `#D97706`, `#7C3AED`). El historial del experimento congelado se grafica en las unidades enteras internas que devuelve la API (no se convierten a km en el navegador).
 - **Identidad visual:** la paleta ODS 13 (verde petróleo `#0F766E` para acciones, azul río `#2563EB` para recorridos) y la fuente Inter (empaquetada localmente con `@fontsource-variable/inter`) reemplazan la paleta y tipografía iniciales de este plan. Tokens en `src/index.css`.
@@ -66,7 +70,7 @@ Si el puerto 8000 está ocupado, levantar la API en otro puerto (`$env:ODS13_API
 
 ---
 
-El resto de este documento conserva el plan original de integración que guió la implementación.
+El resto de este documento conserva la arquitectura y los criterios que guiaron la implementación.
 
 No se deben introducir nombres comerciales para el sistema académico.
 
@@ -182,32 +186,21 @@ shared components
 - `types/` centraliza contratos compartidos; los tipos exclusivos de una feature deben permanecer dentro de esa feature.
 - `api.generated.ts` debe regenerarse desde OpenAPI cuando cambie el backend y nunca contener lógica de negocio.
 
-## Estructura existente auditada
+## Estructura implementada
 
-Actualmente existen estos placeholders vacíos:
+La aplicación está organizada por responsabilidades y funcionalidades:
 
 ```text
-src/app/App.tsx
-src/app/providers.tsx
-src/app/router.tsx
-src/components/charts/ComparisonChart.tsx
-src/components/charts/ConvergenceChart.tsx
-src/components/common/ErrorState.tsx
-src/components/common/LoadingState.tsx
-src/components/common/MetricCard.tsx
-src/components/layout/AppLayout.tsx
-src/components/layout/Header.tsx
-src/components/layout/Sidebar.tsx
-src/components/maps/MapLegend.tsx
-src/pages/DashboardPage.tsx
-src/services/apiClient.ts
-src/services/experimentsApi.ts
-src/services/exportsApi.ts
-src/services/optimizationApi.ts
-src/services/scenariosApi.ts
+src/app/                 proveedores, router y estado de sesión
+src/components/          UI compartida, mapas, gráficos y layout
+src/features/            escenarios, planificación, resultados y exportaciones
+src/hooks/               consultas reutilizables con TanStack Query
+src/lib/                 formato, etiquetas y utilidades puras
+src/pages/               páginas asociadas a las rutas React
+src/services/            cliente HTTP y módulos de la API
+src/test/                configuración, fixtures y utilidades de pruebas
+src/types/               tipos OpenAPI generados y contratos complementarios
 ```
-
-Las carpetas y archivos adicionales del árbol propuesto deben crearse cuando comience la implementación, no como placeholders vacíos masivos.
 
 ## Módulos y rutas de usuario
 
@@ -215,8 +208,9 @@ Las carpetas y archivos adicionales del árbol propuesto deben crearse cuando co
 |---|---|
 | `/` | Resumen del dataset, escenarios y advertencias principales |
 | `/escenarios` | Consultar, filtrar y validar paradas del escenario |
-| `/modelo-a` | Optimizar un recorrido TSP dirigido obligatorio |
-| `/modelo-b` | Planificar inspecciones dentro de una jornada experimental |
+| `/puntos-criticos` | Explorar mapa, filtros, procedencia y advertencias |
+| `/planificar?modo=ruta` | Optimizar un recorrido TSP dirigido obligatorio |
+| `/planificar?modo=jornada` | Planificar inspecciones dentro de una jornada experimental |
 | `/experimentos` | Comparar métodos, semillas e historial del AG |
 
 El flujo principal debe hablar en términos del problema: zona, paradas, jornada, método y resultado. Población, mutación, cruce, generaciones y semilla deben permanecer en una sección académica avanzada plegable.
@@ -269,7 +263,7 @@ La documentación contractual completa está en `../docs/API.md` y Swagger en `h
 - Solicitar `include_history: true` solo en la vista académica que grafica la evolución.
 - Mostrar todas las advertencias documentales y operativas relevantes.
 - Conservar el objetivo lexicográfico del Modelo B en el orden recibido.
-- Permitir `decoder_strategy: prefix | feasible_insertion` únicamente para el AG del Modelo B; `prefix` debe aparecer como opción compatible predeterminada y la inserción como experimental. *(Actualizado en la implementación: por requisito del equipo, la interfaz recomienda y preselecciona `feasible_insertion`, siempre enviado de forma explícita; `prefix` sigue disponible y es el predeterminado del backend.)*
+- Permitir `decoder_strategy: prefix | feasible_insertion` únicamente para el AG del Modelo B; `prefix` aparece como opción compatible predeterminada y la inserción como variante experimental.
 
 ### Errores
 
