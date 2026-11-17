@@ -1,0 +1,173 @@
+{
+  "validation_date": "2026-11-17",
+  "status": "pass",
+  "ftr_count": 47,
+  "original_documents_recovered": 43,
+  "snapshot_only_records": 4,
+  "candidate_stop_count": 43,
+  "ftr_representation_exactly_once": true,
+  "operationally_validated_stop_count": 0,
+  "matrix_checks": [
+    {
+      "path": "data/processed/expansion/matrices/srq_distance_km.csv",
+      "dimension": 34,
+      "sha256": "7AC9F43DD59AA245CFD696C427FC712BDC3BE8449F28DFC9582DB0D38DE5C8FB",
+      "asymmetric": true
+    },
+    {
+      "path": "data/processed/expansion/matrices/srq_duration_min.csv",
+      "dimension": 34,
+      "sha256": "DD8159A14E9AAF535C62A3AF058A578336CCE1B0727E0375A4E8DB8F10C351A5",
+      "asymmetric": true
+    },
+    {
+      "path": "data/processed/expansion/matrices/media_alta_distance_km.csv",
+      "dimension": 8,
+      "sha256": "4D5C9FFB61C258AABF1E1FA7D13AE46FC8D5CA48BE254CD44D06FBD7C2E0114D",
+      "asymmetric": true
+    },
+    {
+      "path": "data/processed/expansion/matrices/media_alta_duration_min.csv",
+      "dimension": 8,
+      "sha256": "DB3A1694D86E0D18E9FCCDC2062B511022F91AFEEC6D27A033B99335E54AD5C5",
+      "asymmetric": true
+    },
+    {
+      "path": "data/processed/expansion/matrices/baja_distance_km.csv",
+      "dimension": 4,
+      "sha256": "1E362A873D0B6EC2709DC5098F3C436EBA25621EE0005A8FF0FB8CDF5C34CBF0",
+      "asymmetric": true
+    },
+    {
+      "path": "data/processed/expansion/matrices/baja_duration_min.csv",
+      "dimension": 4,
+      "sha256": "724B0EDB396EB8A46AB701D90FADB7D77BB374B2FD38DD52932F877A13FDBADA",
+      "asymmetric": true
+    },
+    {
+      "path": "data/processed/expansion/matrices/union_43_distance_km.csv",
+      "dimension": 44,
+      "sha256": "A63EFC199BE416A89DAE131CB9125077B9F448904EE5FC09804623432C4B2C0D",
+      "asymmetric": true
+    },
+    {
+      "path": "data/processed/expansion/matrices/union_43_duration_min.csv",
+      "dimension": 44,
+      "sha256": "75E6A99ADCCF98F855DBC974C6A8DC5F988EFF42264855A3CED3A60919927D23",
+      "asymmetric": true
+    }
+  ],
+  "computational_runs": 16,
+  "files": [
+    {
+      "path": "data/processed/expansion/candidate_stop_clusters.csv",
+      "sha256": "E6E2262D4576FF066675E2F18058510A6E926348098370D7D85851F95F0AC5EE",
+      "bytes": 2564
+    },
+    {
+      "path": "data/processed/expansion/candidate_stops_43.csv",
+      "sha256": "B1CE2EF3528585216C15C11C4D602250D16174D7F0F51EE3CD66CE25AAA67F63",
+      "bytes": 10955
+    },
+    {
+      "path": "data/processed/expansion/computational_screening.json",
+      "sha256": "A6B2D24EF4CB5B9D904D2413D17C59AEBAE1979BCACA67EC0722A7FA4B1B9C8D",
+      "bytes": 4647
+    },
+    {
+      "path": "data/processed/expansion/consolidated_audit_summary.json",
+      "sha256": "5D0C4F67D75519D5FDF50DE87C59795430293A891C4888912364CF9266BC2FA6",
+      "bytes": 529
+    },
+    {
+      "path": "data/processed/expansion/external_cartographic_screening.csv",
+      "sha256": "C94A6787925CEFD07EB2D6A2043519E030093EB770257BD935C4955A107CED62",
+      "bytes": 4393
+    },
+    {
+      "path": "data/processed/expansion/ftr_47_consolidated.csv",
+      "sha256": "E32616B71D7EC7EA58899E1B08D761005B4C8DD75F2180CF700FA0020B3D4BD4",
+      "bytes": 17201
+    },
+    {
+      "path": "data/processed/expansion/ftr_candidates_official.csv",
+      "sha256": "AA4E19C0B6F92C8679A6A0294562F5312925FA1ADD7EE50CBAE005F2BC303861",
+      "bytes": 10369
+    },
+    {
+      "path": "data/processed/expansion/matrices/baja_distance_km.csv",
+      "sha256": "1E362A873D0B6EC2709DC5098F3C436EBA25621EE0005A8FF0FB8CDF5C34CBF0",
+      "bytes": 189
+    },
+    {
+      "path": "data/processed/expansion/matrices/baja_duration_min.csv",
+      "sha256": "724B0EDB396EB8A46AB701D90FADB7D77BB374B2FD38DD52932F877A13FDBADA",
+      "bytes": 201
+    },
+    {
+      "path": "data/processed/expansion/matrices/media_alta_distance_km.csv",
+      "sha256": "4D5C9FFB61C258AABF1E1FA7D13AE46FC8D5CA48BE254CD44D06FBD7C2E0114D",
+      "bytes": 639
+    },
+    {
+      "path": "data/processed/expansion/matrices/media_alta_duration_min.csv",
+      "sha256": "DB3A1694D86E0D18E9FCCDC2062B511022F91AFEEC6D27A033B99335E54AD5C5",
+      "bytes": 702
+    },
+    {
+      "path": "data/processed/expansion/matrices/routing_metadata.json",
+      "sha256": "9F6B8F77EE9F42AE1971D48B02FB661319B34C65F76A4C58DEA8BA302BA6838B",
+      "bytes": 3466
+    },
+    {
+      "path": "data/processed/expansion/matrices/srq_distance_km.csv",
+      "sha256": "7AC9F43DD59AA245CFD696C427FC712BDC3BE8449F28DFC9582DB0D38DE5C8FB",
+      "bytes": 9234
+    },
+    {
+      "path": "data/processed/expansion/matrices/srq_duration_min.csv",
+      "sha256": "DD8159A14E9AAF535C62A3AF058A578336CCE1B0727E0375A4E8DB8F10C351A5",
+      "bytes": 10368
+    },
+    {
+      "path": "data/processed/expansion/matrices/union_43_distance_km.csv",
+      "sha256": "A63EFC199BE416A89DAE131CB9125077B9F448904EE5FC09804623432C4B2C0D",
+      "bytes": 15473
+    },
+    {
+      "path": "data/processed/expansion/matrices/union_43_duration_min.csv",
+      "sha256": "75E6A99ADCCF98F855DBC974C6A8DC5F988EFF42264855A3CED3A60919927D23",
+      "bytes": 17389
+    },
+    {
+      "path": "data/processed/expansion/new_srq_candidate_stops.csv",
+      "sha256": "32A564D3C684B3985EC1918E311726EF1C0C4AA00BA167235F5702CA8E14E4FD",
+      "bytes": 4495
+    },
+    {
+      "path": "data/processed/expansion/new_srq_cartographic_screening.csv",
+      "sha256": "1FECB91EA396C3C0590D76FF4A0C045E66640AA428673A546B7F9BB58A395E33",
+      "bytes": 5098
+    },
+    {
+      "path": "data/processed/expansion/origin_candidates.csv",
+      "sha256": "86025E1EFD2EF4C36E8AEDABEED2007314802DD254F636B2B445AE2CB86B82B4",
+      "bytes": 1647
+    },
+    {
+      "path": "data/processed/expansion/origin_comparison.json",
+      "sha256": "19E4D6FC69191598781E678634F7C20327143781165399670914EA2C370841DE",
+      "bytes": 1013
+    },
+    {
+      "path": "data/processed/expansion/preliminary_route_screening.json",
+      "sha256": "7F7956BCBB6796EDB736FC258D9FBBE1FFC540812601D0A65F340FF63CB45F85",
+      "bytes": 1562
+    },
+    {
+      "path": "data/processed/expansion/spatial_relationships.csv",
+      "sha256": "5B6E006DE990B1484F314E33D807F2AE0577B9542810F331ECF30B903579004D",
+      "bytes": 2087
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "audit_date": "2026-11-17",
+  "ftr_count": 47,
+  "original_documents_recovered": 43,
+  "audited_snapshots_without_original": 4,
+  "unique_candidate_stops": 43,
+  "stops_by_scope": {
+    "santa_rosa_de_quives": 33,
+    "cuenca_media_alta": 7,
+    "cuenca_baja": 3
+  },
+  "plausibility": {
+    "A": 39,
+    "B": 4,
+    "C": 0
+  },
+  "operationally_validated": 0,
+  "exact_duplicate_segments": 0,
+  "spatial_relationships_reviewed": 15,
+  "universe_52_correspondence": "not_demonstrated_and_not_one_to_one"
+}

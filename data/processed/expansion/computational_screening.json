@@ -1,0 +1,174 @@
+[
+  {
+    "scenario": "baja",
+    "stop_count": 3,
+    "permutation_space": "6",
+    "held_karp_status": "optimal",
+    "held_karp_distance_km": "17.7247",
+    "held_karp_runtime_ms": 0.092,
+    "held_karp_message": "Óptimo ATSP probado mediante Held–Karp sobre 3 paradas.",
+    "ga_runs": [
+      {
+        "seed": 11,
+        "distance_km": "17.7247",
+        "runtime_ms": 12.594,
+        "evaluations": 406,
+        "generations": 100,
+        "stop_reason": "stagnation"
+      },
+      {
+        "seed": 22,
+        "distance_km": "17.7247",
+        "runtime_ms": 11.592,
+        "evaluations": 406,
+        "generations": 100,
+        "stop_reason": "stagnation"
+      },
+      {
+        "seed": 33,
+        "distance_km": "17.7247",
+        "runtime_ms": 11.237,
+        "evaluations": 406,
+        "generations": 100,
+        "stop_reason": "stagnation"
+      },
+      {
+        "seed": 44,
+        "distance_km": "17.7247",
+        "runtime_ms": 11.569,
+        "evaluations": 406,
+        "generations": 100,
+        "stop_reason": "stagnation"
+      }
+    ]
+  },
+  {
+    "scenario": "media_alta",
+    "stop_count": 7,
+    "permutation_space": "5040",
+    "held_karp_status": "optimal",
+    "held_karp_distance_km": "138.1107",
+    "held_karp_runtime_ms": 0.579,
+    "held_karp_message": "Óptimo ATSP probado mediante Held–Karp sobre 7 paradas.",
+    "ga_runs": [
+      {
+        "seed": 11,
+        "distance_km": "138.1107",
+        "runtime_ms": 393.554,
+        "evaluations": 10390,
+        "generations": 105,
+        "stop_reason": "stagnation"
+      },
+      {
+        "seed": 22,
+        "distance_km": "138.1107",
+        "runtime_ms": 385.712,
+        "evaluations": 10390,
+        "generations": 105,
+        "stop_reason": "stagnation"
+      },
+      {
+        "seed": 33,
+        "distance_km": "138.1107",
+        "runtime_ms": 420.666,
+        "evaluations": 11468,
+        "generations": 116,
+        "stop_reason": "stagnation"
+      },
+      {
+        "seed": 44,
+        "distance_km": "138.1107",
+        "runtime_ms": 368.526,
+        "evaluations": 9998,
+        "generations": 101,
+        "stop_reason": "stagnation"
+      }
+    ]
+  },
+  {
+    "scenario": "srq",
+    "stop_count": 33,
+    "permutation_space": "8683317618811886495518194401280000000",
+    "held_karp_status": "not_run",
+    "held_karp_distance_km": "208.7992",
+    "held_karp_runtime_ms": 0.64,
+    "held_karp_message": "No ejecutado: 33 paradas exceden el límite configurado de 18.",
+    "ga_runs": [
+      {
+        "seed": 11,
+        "distance_km": "178.3573",
+        "runtime_ms": 4610.834,
+        "evaluations": 35282,
+        "generations": 359,
+        "stop_reason": "stagnation"
+      },
+      {
+        "seed": 22,
+        "distance_km": "179.6976",
+        "runtime_ms": 3410.856,
+        "evaluations": 25972,
+        "generations": 264,
+        "stop_reason": "stagnation"
+      },
+      {
+        "seed": 33,
+        "distance_km": "179.6976",
+        "runtime_ms": 4210.646,
+        "evaluations": 32244,
+        "generations": 328,
+        "stop_reason": "stagnation"
+      },
+      {
+        "seed": 44,
+        "distance_km": "178.3574",
+        "runtime_ms": 3845.825,
+        "evaluations": 27834,
+        "generations": 283,
+        "stop_reason": "stagnation"
+      }
+    ]
+  },
+  {
+    "scenario": "union_43",
+    "stop_count": 43,
+    "permutation_space": "60415263063373835637355132068513997507264512000000000",
+    "held_karp_status": "not_run",
+    "held_karp_distance_km": "319.9040",
+    "held_karp_runtime_ms": 1.146,
+    "held_karp_message": "No ejecutado: 43 paradas exceden el límite configurado de 18.",
+    "ga_runs": [
+      {
+        "seed": 11,
+        "distance_km": "309.0380",
+        "runtime_ms": 6827.019,
+        "evaluations": 35086,
+        "generations": 357,
+        "stop_reason": "stagnation"
+      },
+      {
+        "seed": 22,
+        "distance_km": "297.1352",
+        "runtime_ms": 5433.899,
+        "evaluations": 32146,
+        "generations": 327,
+        "stop_reason": "stagnation"
+      },
+      {
+        "seed": 33,
+        "distance_km": "307.8767",
+        "runtime_ms": 8521.122,
+        "evaluations": 49100,
+        "generations": 500,
+        "stop_reason": "max_generations"
+      },
+      {
+        "seed": 44,
+        "distance_km": "297.6458",
+        "runtime_ms": 6983.131,
+        "evaluations": 37046,
+        "generations": 377,
+        "stop_reason": "stagnation"
+      }
+    ]
+  }
+]

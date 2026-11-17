@@ -1,0 +1,35 @@
+{
+  "screening_date": "2026-11-17",
+  "routing_engine": "OSRM public demonstration server",
+  "routing_profile": "driving",
+  "origin": "Origen experimental vigente en Yangas",
+  "method": "Vecino más cercano seguido de 2-opt dirigido, únicamente para dimensionar el alcance",
+  "warning": "Resultados heurísticos y cartográficos. No son rutas óptimas, polilíneas viales ni planes operativos; los tiempos no incorporan inspección, tráfico, lluvia, cierres ni caminatas.",
+  "results": {
+    "upper_middle_external": {
+      "stop_count": 7,
+      "order": ["ORIGEN", "E09", "E08", "E10", "E02", "E04", "E01", "E03", "ORIGEN"],
+      "distance_km": 153.852,
+      "driving_duration_min": 231.20
+    },
+    "lower_external_from_yangas_only_for_scale": {
+      "stop_count": 3,
+      "order": ["ORIGEN", "E07", "E06", "E05", "ORIGEN"],
+      "distance_km": 94.523,
+      "driving_duration_min": 104.94,
+      "note": "Yangas no se recomienda como origen para un futuro escenario de cuenca baja."
+    },
+    "all_external_from_yangas": {
+      "stop_count": 10,
+      "order": ["ORIGEN", "E07", "E06", "E05", "E09", "E08", "E10", "E02", "E04", "E01", "E03", "ORIGEN"],
+      "distance_km": 248.375,
+      "driving_duration_min": 336.13
+    },
+    "existing_plus_external_from_yangas": {
+      "stop_count": 28,
+      "distance_km": 272.170,
+      "driving_duration_min": 391.80,
+      "note": "Incluye las 18 paradas vigentes y los 10 clústeres externos; el orden completo se omite porque este escenario no se recomienda como una sola jornada."
+    }
+  }
+}

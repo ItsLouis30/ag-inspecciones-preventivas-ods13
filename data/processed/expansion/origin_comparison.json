@@ -1,0 +1,39 @@
+{
+  "audit_date": "2026-11-17",
+  "method": "OSRM driving; vecino más cercano seguido de 2-opt dirigido para comparar escala",
+  "warning": "Las sedes son orígenes experimentales. No existe evidencia de que ANA las use como base de brigada.",
+  "comparisons": [
+    {
+      "scope": "cuenca_media_alta",
+      "origin_id": "YANGAS",
+      "stop_count": 7,
+      "distance_km": 153.852,
+      "duration_min": 231.20,
+      "recommended": false
+    },
+    {
+      "scope": "cuenca_media_alta",
+      "origin_id": "CANTA",
+      "stop_count": 7,
+      "distance_km": 138.111,
+      "duration_min": 217.49,
+      "recommended": true
+    },
+    {
+      "scope": "cuenca_baja",
+      "origin_id": "CARABAYLLO",
+      "stop_count": 3,
+      "distance_km": 22.819,
+      "duration_min": 33.51,
+      "recommended": false
+    },
+    {
+      "scope": "cuenca_baja",
+      "origin_id": "PUENTE_PIEDRA",
+      "stop_count": 3,
+      "distance_km": 17.725,
+      "duration_min": 26.45,
+      "recommended": true
+    }
+  ]
+}

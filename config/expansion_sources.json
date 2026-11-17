@@ -1,0 +1,76 @@
+{
+  "research_date": "2026-11-17",
+  "institution": "Autoridad Nacional del Agua (ANA)",
+  "repository": "SIGRID - CENEPRED",
+  "basin_filter": "CUENCA CHILLÓN",
+  "note": "Los lotes originales son pesados y permanecen fuera de Git. Esta configuración enumera únicamente las FTR adicionales verificadas en los anexos oficiales.",
+  "sources": [
+    {
+      "source_id": "SIGRID-22463",
+      "document_id": 22463,
+      "title": "Fichas técnicas referenciales de puntos críticos 2026 de los departamentos de La Libertad y Lima",
+      "year": 2026,
+      "page_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22463",
+      "download_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22463/descargar",
+      "archive_sha256": "CB9B16421FB4C09C5A83C69A0CBCCC11D2DC95B011F656E1980DF1693BED75F1",
+      "lot_ftr_count": 12,
+      "additional_chillon_ftr_numbers": ["0491", "0492", "0493", "0494", "0495", "0496"]
+    },
+    {
+      "source_id": "SIGRID-22599",
+      "document_id": 22599,
+      "title": "Fichas técnicas referenciales de puntos críticos 2026 de los departamentos de Tumbes, Piura, Áncash y Arequipa",
+      "year": 2026,
+      "page_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22599",
+      "download_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22599/descargar",
+      "archive_sha256": "6B98E9A4DD509536ACFD186D3E79E1F5C297760414836A9D3D3BCDED0EF32D3F",
+      "lot_ftr_count": 20,
+      "additional_chillon_ftr_numbers": ["0421", "0422", "0423", "0428", "0553", "0554", "0555", "0556"],
+      "note": "El título visible omite Lima, pero la descripción del propio registro y el anexo sí la incluyen."
+    },
+    {
+      "source_id": "SIGRID-22710",
+      "document_id": 22710,
+      "title": "Fichas técnicas referenciales de puntos críticos 2026 de los departamentos de Loreto y Lima",
+      "year": 2026,
+      "page_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22710",
+      "download_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22710/descargar",
+      "archive_sha256": "A81E1B75EB703E6C2687DA569373BF9AEB93551B5D88C01EF70BE8CA3CD749A5",
+      "lot_ftr_count": 9,
+      "additional_chillon_ftr_numbers": ["0565", "0566", "0567", "0573", "0574", "0575", "0576", "0577"]
+    },
+    {
+      "source_id": "SIGRID-22711",
+      "document_id": 22711,
+      "title": "Fichas técnicas referenciales de puntos críticos 2026 de los departamentos de Lima, San Martín, Ica, Arequipa, Áncash y Tumbes",
+      "year": 2026,
+      "page_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22711",
+      "download_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22711/descargar",
+      "archive_sha256": "BE820E06896296063EEC01C2B4C8170A8BE98491859542CF14EA07A8D57A05D0",
+      "lot_ftr_count": 11,
+      "additional_chillon_ftr_numbers": ["0442", "0443", "0444"]
+    },
+    {
+      "source_id": "SIGRID-22810",
+      "document_id": 22810,
+      "title": "Fichas técnicas referenciales de puntos críticos 2026 consolidadas de los departamentos de Lima, Áncash, Cajamarca, Cusco y La Libertad",
+      "year": 2026,
+      "page_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22810",
+      "download_url": "https://sigrid.cenepred.gob.pe/sigridv3/documento/22810/descargar",
+      "archive_sha256": "D4300B905929B7AA8DFBE6113BB478F3BD1F032C25B18D66E69E4C02092728A0",
+      "lot_ftr_count": 44,
+      "additional_chillon_ftr_numbers": ["0622", "0623", "0625"]
+    }
+  ],
+  "audited_without_new_chillon_rows": [23031, 23073],
+  "inaccessible_or_mismatched_records": [
+    {
+      "document_id": 22913,
+      "finding": "La descarga devolvió un archivo ajeno al registro esperado durante la auditoría."
+    },
+    {
+      "document_id": 22914,
+      "finding": "La descarga devolvió el mismo archivo ajeno observado para 22913 durante la auditoría."
+    }
+  ]
+}
