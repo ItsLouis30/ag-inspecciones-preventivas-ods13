@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import json
 import math
 from pathlib import Path
@@ -13,6 +12,7 @@ from app.domain.models import Origin, Plausibility, ReferenceDataset, Stop
 from app.domain.provenance import DatasetManifest, FileIntegrity, FTRReference, RecordStatus
 
 from .matrix_loader import load_matrix_csv
+from .hashing import canonical_sha256_file
 
 
 DEFAULT_MANIFEST_PATH = Path(__file__).resolve().parents[1] / "core" / "reference_dataset_manifest.json"
@@ -34,14 +34,6 @@ ORIGIN_COLUMNS = {
     "node_id", "name", "source_url", "latitude", "longitude", "audited_road_latitude",
     "audited_road_longitude", "audited_snap_distance_m", "status", "warning",
 }
-
-
-def _sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as source:
-        for chunk in iter(lambda: source.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest().upper()
 
 
 def _read_csv(path: Path, required_columns: set[str], logical_name: str) -> list[dict[str, str]]:
@@ -107,7 +99,7 @@ def _verify_file(project_root: Path, file: FileIntegrity) -> Path:
     path = project_root / file.relative_path
     if not path.is_file():
         raise IntegrityError(f"Falta el archivo canónico {file.key}: {path}.")
-    actual_hash = _sha256_file(path)
+    actual_hash = canonical_sha256_file(path)
     if actual_hash != file.sha256:
         raise IntegrityError(
             f"Hash inválido para {file.key}: esperado {file.sha256}, obtenido {actual_hash}."

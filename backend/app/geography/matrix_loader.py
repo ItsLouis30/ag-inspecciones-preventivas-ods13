@@ -3,20 +3,16 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 from app.domain.errors import IntegrityError, MatrixValidationError, SchemaValidationError
 from app.domain.matrix import DirectedMatrix
+from .hashing import canonical_sha256_file
 
 
 def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as source:
-        for chunk in iter(lambda: source.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest().upper()
+    return canonical_sha256_file(path)
 
 
 def load_matrix_csv(

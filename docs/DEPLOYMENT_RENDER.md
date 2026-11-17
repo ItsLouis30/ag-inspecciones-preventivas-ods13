@@ -13,6 +13,12 @@ Esta disposición evita depender de URLs cruzadas entre servicios. En producció
 el navegador solicita `/api/v1` al mismo origen; CORS conserva únicamente los
 orígenes locales para el desarrollo con Vite.
 
+Los CSV versionados pueden quedar con CRLF en Windows y LF en Linux. La
+verificación de integridad normaliza exclusivamente esos finales de línea a la
+representación CRLF usada durante la auditoría original antes de calcular SHA-256.
+Los valores y columnas no se transforman, y cualquier cambio de contenido sigue
+provocando un error de integridad.
+
 ## Crear el servicio
 
 1. Subir los cambios a la rama que se desplegará.

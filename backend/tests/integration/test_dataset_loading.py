@@ -36,6 +36,24 @@ def test_hash_tampering_is_detected(copied_project: Path) -> None:
         load_reference_dataset(copied_project)
 
 
+def test_hashes_are_stable_with_linux_line_endings(copied_project: Path) -> None:
+    canonical_files = (
+        "ftr_pilot.csv",
+        "stops.csv",
+        "origin.csv",
+        "matrices/distance_km.csv",
+        "matrices/duration_min.csv",
+    )
+    processed = copied_project / "data" / "processed"
+    for relative_path in canonical_files:
+        path = processed / relative_path
+        path.write_bytes(path.read_bytes().replace(b"\r\n", b"\n"))
+
+    dataset = load_reference_dataset(copied_project)
+    assert len(dataset.ftr_references) == 19
+    assert len(dataset.stops) == 18
+
+
 def test_missing_required_column_is_detected_without_hash_check(copied_project: Path) -> None:
     stops = copied_project / "data" / "processed" / "stops.csv"
     content = stops.read_text(encoding="utf-8-sig").replace("stop_id", "wrong_stop_id", 1)
