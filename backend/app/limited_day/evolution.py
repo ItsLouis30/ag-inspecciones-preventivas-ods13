@@ -35,6 +35,7 @@ class LimitedGenerationStats:
 @dataclass(frozen=True, slots=True)
 class LimitedGeneticResult:
     evaluation: LimitedRouteEvaluation
+    best_chromosome: tuple[str, ...]
     policy: LimitedDayPolicy
     config: EvolutionConfig
     history: tuple[LimitedGenerationStats, ...]
@@ -48,6 +49,7 @@ class LimitedGeneticResult:
         return {
             "method": "limited_day_genetic_algorithm",
             "decoder_strategy": self.decoder_strategy.value,
+            "best_chromosome": self.best_chromosome,
             **self.evaluation.as_dict(),
             "runtime_ms": round(self.runtime_ms, 3),
             "evaluated_candidates": self.evaluated_candidates,
@@ -147,6 +149,7 @@ def run_limited_genetic_algorithm(
     if len(scenario.stop_ids) < 2:
         return LimitedGeneticResult(
             evaluation=best.evaluation,
+            best_chromosome=best.chromosome.genes,
             policy=policy,
             config=config,
             history=tuple(history),
@@ -207,6 +210,7 @@ def run_limited_genetic_algorithm(
 
     return LimitedGeneticResult(
         evaluation=best.evaluation,
+        best_chromosome=best.chromosome.genes,
         policy=policy,
         config=config,
         history=tuple(history),

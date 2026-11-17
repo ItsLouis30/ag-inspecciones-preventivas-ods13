@@ -47,7 +47,6 @@ function DecoderField() {
                 <span className="flex flex-col gap-1">
                   <span className="flex flex-wrap items-center gap-1.5 text-[13px] font-semibold">
                     {DECODER_LABELS[value].label}
-                    <code className="rounded bg-muted px-1 text-[10px] font-normal text-muted-foreground">{value}</code>
                     {value === "prefix" ? (
                       <Badge tone="primary">Predeterminada</Badge>
                     ) : (
@@ -60,7 +59,7 @@ function DecoderField() {
             );
           })}
           <p className="text-[11px] leading-snug text-muted-foreground">
-            La inserción factible obtuvo mejores resultados en parte del protocolo piloto, pero no probó superioridad universal. La estrategia elegida se envía explícitamente.
+            La inserción factible mejoró algunas corridas del piloto, pero no se ha demostrado que sea siempre mejor.
           </p>
         </fieldset>
       )}

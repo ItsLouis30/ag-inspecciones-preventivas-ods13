@@ -1,7 +1,6 @@
 import { Clock3, MapPin, Route, ShieldCheck } from "lucide-react";
 import { useWorkspace } from "@/app/workspace";
 import { MetricCard, MetricStrip } from "@/components/common/MetricCard";
-import { OptimalityBadge } from "@/components/common/badges";
 import { formatDuration, formatNumber, toNumber } from "@/lib/format";
 import type { ScenarioMode } from "@/types/api";
 import { PlanningWorkspace } from "@/features/planning/PlanningWorkspace";
@@ -10,6 +9,7 @@ import { GeneticHistoryPanel } from "@/features/planning/GeneticHistoryPanel";
 import { JourneyTimeline } from "@/features/planning/JourneyTimeline";
 import { ExportCsvButton } from "@/features/exports/ExportCsvButton";
 import { Card } from "@/components/ui/card";
+import { Tooltip } from "@/components/ui/misc";
 import { TspForm } from "./TspForm";
 
 /** Modelo A · ruta completa. */
@@ -25,9 +25,9 @@ export function TspPanel({ initialScenario }: { initialScenario?: ScenarioMode }
       <MetricCard icon={<MapPin />} label="Paradas visitadas" value={plan ? plan.selected_stop_ids.length : "—"} hint={response ? `de ${response.scenario.stop_count} del escenario` : "Todas las del escenario"} />
       <MetricCard
         icon={<ShieldCheck />}
-        label="Optimalidad"
-        value={plan ? (plan.proven_optimal ? "Probada" : "Sin prueba") : "—"}
-        hint={plan ? <OptimalityBadge status={plan.optimality_status} proven={plan.proven_optimal} /> : "Solo Held–Karp puede probarla"}
+        label="Estado de la solución"
+        value={plan ? (plan.proven_optimal ? "Óptimo probado" : plan.feasible ? "Factible" : "No factible") : "—"}
+        hint={<Tooltip content="Una solución factible cumple las restricciones. El algoritmo genético busca calidad, pero no garantiza el óptimo global. Un método exacto puede probarlo."><button type="button" className="cursor-help underline decoration-dotted underline-offset-2">¿Qué significa este estado?</button></Tooltip>}
       />
     </MetricStrip>
   );

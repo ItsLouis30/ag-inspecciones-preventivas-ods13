@@ -160,6 +160,11 @@ def test_limited_ga_is_reproducible_for_each_decoder(reference_dataset, strategy
     assert first.evaluation == second.evaluation
     assert first.history == second.history
     assert first.decoder_strategy is strategy
+    assert set(first.best_chromosome) == set(scenario.stop_ids)
+    assert len(first.best_chromosome) == len(scenario.stop_ids)
+    assert set(first.evaluation.selected_order).isdisjoint(first.evaluation.excluded_stop_ids)
+    assert set(first.evaluation.selected_order) | set(first.evaluation.excluded_stop_ids) == set(first.best_chromosome)
+    assert first.as_dict()["best_chromosome"] == first.best_chromosome
     assert first.evaluation.total_duration_min <= policy.day_limit_min
 
 

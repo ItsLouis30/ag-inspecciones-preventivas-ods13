@@ -48,6 +48,8 @@ def test_ga_is_feasible_and_never_beats_known_optimum_artificially(
         small_config(crossover_operator=crossover, mutation_operator=mutation),
     )
     assert result.evaluation.feasible
+    assert result.best_chromosome == result.evaluation.visit_order
+    assert result.as_dict()["best_chromosome"] == result.best_chromosome
     assert set(result.evaluation.visit_order) == set(scenario.stop_ids)
     assert result.evaluation.total_distance_km >= exact.evaluation.total_distance_km
     assert not result.proven_optimal

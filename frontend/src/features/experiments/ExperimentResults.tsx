@@ -10,6 +10,8 @@ import { MetricCard, MetricStrip } from "@/components/common/MetricCard";
 import { OptimalityBadge } from "@/components/common/badges";
 import { formatInteger, formatKm, formatMinutes, formatMs, formatNumber, toNumber } from "@/lib/format";
 import { methodLabel, stopReasonLabel } from "@/lib/labels";
+import { ChromosomeViewer } from "@/features/planning/ChromosomeViewer";
+import { useStops } from "@/hooks/queries";
 
 function HashRow({ label, value }: { label: string; value: string }) {
   return (
@@ -21,9 +23,12 @@ function HashRow({ label, value }: { label: string; value: string }) {
 }
 
 export function ExperimentResults({ result }: { result: ExperimentResultView }) {
+  const stops = useStops();
   const stats = result.statistics;
   const refs = result.references;
-  const [zoomed, setZoomed] = useState<"zoom" | "full">("zoom");
+  const [zoomed, setZoomed] = useState<"zoom" | "full">("full");
+  const [selectedSeed, setSelectedSeed] = useState(result.genetic_runs[0]?.seed ?? 11);
+  const selectedRun = result.genetic_runs.find((run) => run.seed === selectedSeed) ?? result.genetic_runs[0];
 
   const comparison = [
     { label: "Vecino más cercano", value: toNumber(refs.nearest_neighbor.distance_km) ?? 0 },
@@ -32,18 +37,17 @@ export function ExperimentResults({ result }: { result: ExperimentResultView }) 
     { label: "Held–Karp exacto", value: toNumber(refs.exact.distance_km) ?? 0, highlight: refs.exact.proven_optimal },
   ];
 
-  const hasHistory = result.genetic_runs.some((run) => run.history && run.history.length > 0);
-  const maxGen = Math.max(0, ...result.genetic_runs.map((run) => run.history?.length ?? 0));
-  const convergence = Array.from({ length: maxGen }, (_, generation) => {
-    const row: Record<string, number | null> = { generation };
-    result.genetic_runs.forEach((run) => {
-      row[`seed${run.seed}`] = run.history?.[generation]?.best_cost_units ?? null;
-    });
-    return row;
-  });
+  const hasHistory = !!selectedRun?.history?.length;
+  const convergence = selectedRun?.history?.map((point) => ({ generation: point.generation, best: point.best_cost_units / 1_000_000 })) ?? [];
+  const diversity = selectedRun?.history?.map((point) => ({ generation: point.generation, diversity: point.diversity_ratio })) ?? [];
 
   return (
     <div className="flex flex-col gap-6">
+      <section aria-label="Cuatro corridas del algoritmo genético" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {result.genetic_runs.map((run, index) => <button key={run.seed} type="button" aria-pressed={selectedRun?.seed === run.seed} onClick={() => setSelectedSeed(run.seed)} className={`rounded-xl border p-4 text-left transition-colors ${selectedRun?.seed === run.seed ? "border-primary bg-primary-light/40" : "border-border bg-surface hover:border-primary/50"}`}><span className="block text-xs text-muted-foreground">Corrida {index + 1} · Semilla {run.seed}</span><strong className="mt-2 block text-xl tabular">{formatKm(run.distance_km, 4)}</strong><span className="mt-1 block text-xs text-muted-foreground">{formatInteger(run.generations_completed)} generaciones · {stopReasonLabel(run.stop_reason)}</span></button>)}
+      </section>
+      {selectedRun ? <Card className="p-5"><h2 className="text-base font-semibold">Detalle de la corrida · semilla {selectedRun.seed}</h2><dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4"><div><dt className="text-muted-foreground">Distancia</dt><dd className="font-semibold">{formatKm(selectedRun.distance_km, 4)}</dd></div><div><dt className="text-muted-foreground">Evaluaciones</dt><dd>{formatInteger(selectedRun.evaluated_candidates)}</dd></div><div><dt className="text-muted-foreground">Tiempo de cómputo</dt><dd>{formatMs(selectedRun.runtime_ms)}</dd></div><div><dt className="text-muted-foreground">Estado</dt><dd>{selectedRun.feasible ? "Solución factible" : "No factible"}</dd></div></dl><p className="mt-3 text-xs text-muted-foreground">Ruta: {selectedRun.route.join(" → ")}</p><details className="mt-3 text-xs"><summary className="cursor-pointer font-medium">Configuración utilizada y parada</summary><pre className="mt-2 overflow-auto rounded-lg bg-muted p-3">{JSON.stringify({ ...selectedRun.config, stop_reason: selectedRun.stop_reason }, null, 2)}</pre></details></Card> : null}
+      {selectedRun?.best_chromosome ? <ChromosomeViewer genes={selectedRun.best_chromosome} route={selectedRun.route} stops={stops.data?.stops} seed={selectedRun.seed} distanceKm={selectedRun.distance_km} /> : null}
       <Card className="p-5">
         <MetricStrip>
           <MetricCard icon={<Sigma />} label="Mejor distancia AG" value={formatNumber(stats.best_distance_km, 4)} unit="km" title={stats.best_distance_km} />
@@ -86,24 +90,20 @@ export function ExperimentResults({ result }: { result: ExperimentResultView }) 
 
         <Card>
           <CardHeader>
-            <CardTitle>Convergencia de las cuatro semillas</CardTitle>
+            <CardTitle>Convergencia de la corrida seleccionada</CardTitle>
             <p className="text-sm text-muted-foreground">
-              Mejor costo por generación en unidades enteras internas del backend (proporcionales a la distancia).
+              Mejor distancia por generación, en kilómetros.
             </p>
           </CardHeader>
           <CardContent>
             {hasHistory ? (
               <ConvergenceChart
                 data={convergence}
-                yLabel="Mejor costo (unidades internas del backend)"
-                digits={0}
+                yLabel="Distancia (km)"
+                digits={4}
                 height={280}
-                series={result.genetic_runs.map((run, index) => ({
-                  key: `seed${run.seed}`,
-                  label: `Semilla ${run.seed}`,
-                  color: SERIES_COLORS[index % SERIES_COLORS.length],
-                  dashed: index % 2 === 1,
-                }))}
+                yDomain={[0, "auto"]}
+                series={[{ key: "best", label: `Semilla ${selectedRun.seed}`, color: SERIES_COLORS[0] }]}
               />
             ) : (
               <p className="py-10 text-center text-sm text-muted-foreground">
@@ -113,8 +113,10 @@ export function ExperimentResults({ result }: { result: ExperimentResultView }) 
           </CardContent>
         </Card>
       </div>
+      {hasHistory ? <Card className="p-5"><h2 className="mb-3 text-base font-semibold">Diversidad de la población · semilla {selectedRun.seed}</h2><ConvergenceChart data={diversity} yLabel="Proporción de recorridos distintos" digits={2} height={220} yDomain={[0, 1]} series={[{ key: "diversity", label: "Diversidad", color: SERIES_COLORS[1] }]} /></Card> : null}
 
-      <Card>
+      <details className="rounded-xl border border-border bg-surface p-5"><summary className="cursor-pointer text-base font-semibold">Comparación técnica: vecino más cercano, 2-opt y óptimo exacto</summary>
+      <Card className="mt-4">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Table2 className="size-4 text-primary" aria-hidden /> Tabla comparativa
@@ -170,7 +172,9 @@ export function ExperimentResults({ result }: { result: ExperimentResultView }) 
         </CardContent>
       </Card>
 
-      <Card>
+      </details>
+      <details className="rounded-xl border border-border bg-surface p-5"><summary className="cursor-pointer text-base font-semibold">Información técnica del experimento</summary>
+      <Card className="mt-4">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Fingerprint className="size-4 text-primary" aria-hidden /> Reproducibilidad
@@ -188,7 +192,7 @@ export function ExperimentResults({ result }: { result: ExperimentResultView }) 
             <HashRow label="Orden de nodos" value={result.node_order.join(" · ")} />
           </dl>
         </CardContent>
-      </Card>
+      </Card></details>
     </div>
   );
 }

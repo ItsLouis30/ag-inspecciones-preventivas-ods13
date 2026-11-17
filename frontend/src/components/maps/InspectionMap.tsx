@@ -162,6 +162,13 @@ export function InspectionMap({
   );
 
   const schematic = route?.schematicPoints.map(toLatLng) ?? [];
+  const nearby = selectedId ? stops.filter((stop) => {
+    const selected = stops.find((item) => item.stop_id === selectedId);
+    if (!selected) return false;
+    const a = stop.vehicle_access.coordinates;
+    const b = selected.vehicle_access.coordinates;
+    return Math.abs(a.latitude - b.latitude) < 0.00012 && Math.abs(a.longitude - b.longitude) < 0.00012;
+  }) : [];
 
   return (
     <div className="flex flex-col gap-3">
@@ -277,6 +284,7 @@ export function InspectionMap({
           Mapa base no disponible (sin conexión a OpenStreetMap). Los marcadores siguen siendo válidos.
         </div>
       ) : null}
+      {nearby.length > 1 ? <div className="absolute bottom-3 left-3 z-[450] max-w-[min(18rem,70%)] rounded-lg border border-border bg-surface p-3 shadow-soft"><p className="text-xs font-semibold">Paradas próximas · elige una</p><div className="mt-2 flex flex-wrap gap-1">{nearby.map((stop) => <button key={stop.stop_id} type="button" onClick={() => onSelect?.(stop.stop_id)} className={cn("rounded-md px-2 py-1 text-xs focus-visible:outline-2 focus-visible:outline-primary", selectedId === stop.stop_id ? "bg-primary text-white" : "bg-muted text-foreground")}>{stop.stop_id}</button>)}</div></div> : null}
 
       {legend ? (
         <MapLegend

@@ -54,8 +54,9 @@ export function CriticalPointsPage() {
           </span>
         }
         title="Puntos críticos"
-        description="Paradas de inspección derivadas de fichas técnicas de riesgo (FTR) en Santa Rosa de Quives. Cada punto distingue la referencia crítica oficial del acceso vehicular usado para planificar."
+        description="Paradas de inspección derivadas de Fichas Técnicas Referenciales (FTR) en Santa Rosa de Quives. Cada punto distingue la referencia crítica oficial del acceso vehicular usado para planificar."
       />
+      <p className="rounded-lg bg-muted/60 px-4 py-2 text-xs text-muted-foreground"><strong>Acceso A:</strong> ubicación cartográficamente plausible. <strong>Acceso B:</strong> ubicación dudosa que requiere revisión. Ninguna categoría acredita una visita de campo.</p>
 
       {stopsQuery.isError ? (
         <ErrorState error={stopsQuery.error} onRetry={() => stopsQuery.refetch()} />

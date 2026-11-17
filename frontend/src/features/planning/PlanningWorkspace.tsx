@@ -15,6 +15,7 @@ import { buildScenarioSpec } from "@/features/scenarios/useScenarioSpec";
 import { useRouteOverlay } from "./ResultParts";
 import { VisitsTable } from "./VisitsTable";
 import { SequenceStrip } from "./SequenceStrip";
+import { ChromosomeViewer } from "./ChromosomeViewer";
 
 function sameSpec(a: ScenarioSpec, b: ScenarioSpec) {
   return a.mode === b.mode && [...a.stop_ids].sort().join() === [...b.stop_ids].sort().join();
@@ -102,6 +103,7 @@ export function PlanningWorkspace({
               Cambiaste el escenario del formulario. El mapa conserva el último resultado hasta que vuelvas a optimizar.
             </p>
           ) : null}
+          {response?.model === "limited_inspection_day" ? <Card className="grid gap-2 p-4 text-sm sm:grid-cols-3"><div><p className="text-xs text-muted-foreground">Jornada disponible</p><p className="font-semibold tabular">{response.route_plan.day_limit_min} min</p></div><div><p className="text-xs text-muted-foreground">Tiempo planificado</p><p className="font-semibold tabular">{response.route_plan.total_duration_min} min</p></div><div><p className="text-xs text-muted-foreground">Inspecciones programadas</p><p className="font-semibold tabular">{response.route_plan.selected_stop_ids.length} de {mapQuery.data?.stops.length ?? "—"}</p></div></Card> : null}
         </div>
 
         <Card className="p-5">{renderForm(onScenarioChange)}</Card>
@@ -110,6 +112,7 @@ export function PlanningWorkspace({
       {response ? (
         <div className="flex flex-col gap-6">
           {resultHeader}
+          {Array.isArray(response.result.best_chromosome) ? <ChromosomeViewer genes={response.result.best_chromosome as string[]} route={response.route_plan.ordered_node_ids} stops={mapQuery.data?.stops} omitted={response.route_plan.omitted_stop_ids} seed={response.result.seed as number | undefined} distanceKm={response.route_plan.total_distance_km} veryHigh={response.model === "limited_inspection_day" ? response.result.very_high_count as number : undefined} totalSelected={response.route_plan.selected_stop_ids.length} totalTimeMin={response.route_plan.total_duration_min} decoder={response.result.decoder_strategy as "prefix" | "feasible_insertion" | undefined} /> : null}
           <section className="flex flex-col gap-3">
             <SectionTitle icon={<Route />} title="Secuencia de visitas" description="Orden entregado por la API. Selecciona una tarjeta para ver la ficha de la parada." />
             <SequenceStrip visits={response.route_plan.visits} selectedId={selectedId} onSelect={select} />

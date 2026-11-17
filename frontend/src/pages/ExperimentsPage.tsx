@@ -14,6 +14,8 @@ import { OBJECTIVE_LABELS } from "@/lib/labels";
 import { formatInteger, formatNumber } from "@/lib/format";
 import { ExperimentResults } from "@/features/experiments/ExperimentResults";
 import { DecoderComparisonNote } from "@/features/experiments/DecoderComparisonNote";
+import { StudyCases } from "@/features/experiments/StudyCases";
+import { MainRuns } from "@/features/experiments/MainRuns";
 
 export function ExperimentsPage() {
   const protocol = useExperimentProtocol();
@@ -39,8 +41,13 @@ export function ExperimentsPage() {
           </span>
         }
         title="Experimentos"
-        description="Protocolo congelado: cuatro corridas del algoritmo genético con semillas fijas, comparadas con vecino más cercano, 2-opt dirigido y Held–Karp exacto."
+        description="Explora cuatro condiciones de planificación con algoritmo genético. Cada corrida se ejecuta cuando la solicitas."
       />
+
+      <MainRuns />
+      <details className="rounded-xl border border-border bg-surface p-5">
+        <summary className="cursor-pointer text-base font-semibold">Evaluación técnica y reproducibilidad</summary>
+        <div className="mt-5 flex flex-col gap-8">
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
         <Card>
@@ -118,6 +125,9 @@ export function ExperimentsPage() {
       )}
 
       <DecoderComparisonNote />
+      <StudyCases protocol={p} />
+        </div>
+      </details>
     </div>
   );
 }

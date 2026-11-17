@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { OdsBadge } from "@/components/common/badges";
 import { PageHeader } from "@/components/common/PageHeader";
 import { useHealth } from "@/hooks/queries";
+import { GeneticLearning } from "@/features/planning/GeneticLearning";
 
 const LIMITATIONS = [
   {
@@ -76,12 +77,27 @@ export function AboutPage() {
           </h2>
           <dl className="flex flex-col gap-2 text-sm">
             <div><dt className="text-[11px] text-muted-foreground">Universidad</dt><dd className="font-medium">Universidad Nacional Mayor de San Marcos</dd></div>
+            <div><dt className="text-[11px] text-muted-foreground">Facultad</dt><dd className="font-medium">Ingeniería de Sistemas e Informática</dd></div>
             <div><dt className="text-[11px] text-muted-foreground">Curso</dt><dd className="font-medium">Sistemas Inteligentes</dd></div>
             <div><dt className="text-[11px] text-muted-foreground">Naturaleza</dt><dd className="font-medium">Prototipo de planificación y simulación</dd></div>
             <div><dt className="text-[11px] text-muted-foreground">Dataset</dt><dd className="break-all font-mono text-xs">{health.data?.dataset_id ?? "—"}</dd></div>
           </dl>
         </Card>
       </div>
+
+      <section className="grid gap-5 lg:grid-cols-2">
+        <Card className="p-6"><h2 className="text-lg font-semibold">Problema y objetivo</h2><p className="mt-3 text-sm leading-relaxed text-foreground/80">Las fichas de la Autoridad Nacional del Agua identifican tramos expuestos a inundaciones y erosión fluvial. Para estudiar una campaña preventiva, este sistema propone en qué orden visitar los accesos derivados o cuáles priorizar cuando el tiempo disponible es limitado. Reducir distancia recorrida ayuda a organizar la visita, pero no equivale a prevenir una inundación.</p></Card>
+        <Card className="p-6"><h2 className="text-lg font-semibold">Arquitectura de la aplicación</h2><ol className="mt-4 flex flex-wrap items-center gap-2 text-sm"><li className="rounded-lg bg-primary-light px-3 py-2">React + TypeScript</li><li aria-hidden>→</li><li className="rounded-lg bg-river-light px-3 py-2">API REST</li><li aria-hidden>→</li><li className="rounded-lg bg-primary-light px-3 py-2">Python + FastAPI</li><li aria-hidden>→</li><li className="rounded-lg bg-river-light px-3 py-2">Optimización y matrices locales</li></ol><p className="mt-4 text-xs text-muted-foreground">El navegador presenta los resultados; los cálculos y la validación de datos se realizan en el backend.</p></Card>
+      </section>
+
+      <GeneticLearning />
+
+      <section className="space-y-3"><h2 className="text-lg font-semibold">Fuentes y herramientas cartográficas</h2><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[
+        ["ANA", "Fichas técnicas de tramos críticos en la cuenca.", "https://www.gob.pe/ana"],
+        ["CENEPRED · SIGRID", "Consulta y recuperación documental de fichas.", "https://sigrid.cenepred.gob.pe/"],
+        ["OpenStreetMap", "Referencia cartográfica de caminos y mapa base.", "https://www.openstreetmap.org/copyright"],
+        ["OSRM", "Estimaciones viales usadas en las matrices auditadas.", "https://project-osrm.org/"],
+      ].map(([name, text, url]) => <article key={name} className="rounded-xl border border-border bg-surface p-4"><h3 className="text-sm font-semibold">{name}</h3><p className="mt-1 text-xs text-muted-foreground">{text}</p><a className="mt-3 inline-block text-xs font-medium text-primary underline" href={url} target="_blank" rel="noreferrer">Visitar sitio oficial</a></article>)}</div><p className="text-xs text-muted-foreground">La mención de estas entidades no implica patrocinio ni certificación del proyecto.</p></section>
 
       <section className="grid gap-4 md:grid-cols-3">
         {METHODS.map((m) => (

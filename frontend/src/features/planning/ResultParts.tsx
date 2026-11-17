@@ -44,7 +44,7 @@ export function ResultHeader({
         <div className="flex flex-wrap items-center gap-2">
           <h2 className="text-lg font-semibold tracking-tight">{methodLabel(response.method)}</h2>
           <FeasibleBadge feasible={plan.feasible} />
-          <OptimalityBadge status={plan.optimality_status} proven={plan.proven_optimal} />
+          {plan.proven_optimal ? <OptimalityBadge status={plan.optimality_status} proven /> : null}
           {result.decoder_strategy ? (
             <Badge tone="river" title={DECODER_LABELS[result.decoder_strategy]?.description}>
               Decodificador: {DECODER_LABELS[result.decoder_strategy]?.label ?? result.decoder_strategy}
@@ -60,13 +60,10 @@ export function ResultHeader({
           {result.evaluated_candidates !== undefined ? <span>{formatInteger(result.evaluated_candidates)} candidatos evaluados</span> : null}
           <span>Recibido {receivedAt.toLocaleTimeString("es-PE")}</span>
         </p>
+        <details className="text-xs text-muted-foreground"><summary className="cursor-pointer">Detalles técnicos de la solución</summary><p className="mt-1">Estado de optimalidad: {plan.optimality_status}. {plan.proven_optimal ? "Óptimo global probado." : "No se ha demostrado que sea el óptimo global."}</p></details>
         {result.message ? (
           <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
             <Info className="mt-0.5 size-3 shrink-0" aria-hidden /> {result.message}
-          </p>
-        ) : !plan.proven_optimal ? (
-          <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
-            <Info className="mt-0.5 size-3 shrink-0" aria-hidden /> Resultado heurístico: no existe prueba de que sea el óptimo.
           </p>
         ) : null}
       </div>

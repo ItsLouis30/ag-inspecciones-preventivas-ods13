@@ -71,12 +71,12 @@ export const DECODER_LABELS: Record<DecoderStrategy, { label: string; descriptio
   feasible_insertion: {
     label: "Inserción factible",
     description:
-      "Interpreta los genes como orden de consideración e inserta cada parada en la posición factible de menor incremento de tiempo.",
+      "Considera todas las paradas y coloca cada una donde menos tiempo adicional requiera, si cabe en la jornada.",
   },
   prefix: {
     label: "Prefijo factible",
     description:
-      "Interpretación original: los genes son prioridad y orden a la vez; se acepta el prefijo factible más largo.",
+      "Sigue el orden propuesto hasta que la siguiente parada ya no cabe en la jornada.",
   },
 };
 

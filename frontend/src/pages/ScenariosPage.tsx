@@ -105,7 +105,7 @@ export function ScenariosPage() {
           </span>
         }
         title="Escenarios"
-        description="Un escenario define qué paradas entran en la optimización. La API construye las matrices de distancias y tiempos; el navegador no las reconstruye."
+        description="Elige las paradas que podrán formar parte de tu planificación. Puedes usar un conjunto preparado o crear uno propio."
         actions={
           <Button asChild disabled={emptyCustom}>
             <Link to={`/planificar?escenario=${mode}`} aria-disabled={emptyCustom} onClick={(e) => emptyCustom && e.preventDefault()}>
@@ -189,18 +189,10 @@ export function ScenariosPage() {
                 onClick={() => resolve.mutate()}
                 disabled={emptyCustom || resolve.isPending}
               >
-                <CircleCheck /> Validar selección con la API
+                <CircleCheck /> Validar selección
               </Button>
               {resolve.isPending ? <LoadingState label="Validando escenario…" className="py-1" /> : null}
               {resolve.isError ? <ErrorState error={resolve.error} compact /> : null}
-              {resolve.data && resolvedMatchesSelection ? (
-                <div className="flex flex-col gap-3 border-t border-border pt-4">
-                  <p className="flex items-center gap-1.5 text-sm font-medium text-green-800">
-                    <CircleCheck className="size-4 text-climate" aria-hidden /> Escenario válido · {resolve.data.stop_count} paradas
-                  </p>
-                  <ScenarioSummaryPanel summary={resolve.data} />
-                </div>
-              ) : null}
             </>
           ) : presetSummary ? (
             <ScenarioSummaryPanel summary={presetSummary} />
@@ -209,6 +201,14 @@ export function ScenariosPage() {
           ) : null}
         </Card>
       </div>
+      {mode === "custom" && resolve.data && resolvedMatchesSelection ? (
+        <Card className="p-5" aria-live="polite">
+          <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-green-800">
+            <CircleCheck className="size-4 text-climate" aria-hidden /> Selección válida · {resolve.data.stop_count} paradas
+          </h2>
+          <ScenarioSummaryPanel summary={resolve.data} />
+        </Card>
+      ) : null}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { Controller, useFormContext, useWatch, type FieldErrors } from "react-hook-form";
 import { ChevronDown, Dna, Layers, ListChecks, Timer, TriangleAlert } from "lucide-react";
 import { Field, Input, NativeSelect, Switch } from "@/components/ui/form-controls";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger, Segmented } from "@/components/ui/misc";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger, Segmented, Tooltip } from "@/components/ui/misc";
 import { useWorkspace } from "@/app/workspace";
 import { useScenarios, useStops } from "@/hooks/queries";
 import { SCENARIO_LABELS } from "@/lib/labels";
@@ -109,15 +109,25 @@ export function MethodField({
   options: { value: string; label: string; short: string; description: string }[];
 }) {
   const { control } = useFormContext<SharedValues>();
+  const genetic = options.find((option) => option.value.includes("genetic"));
+  const comparisons = options.filter((option) => option !== genetic);
   return (
     <Controller
       control={control}
       name="method"
       render={({ field }) => (
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-2 text-xs font-medium text-muted-foreground">Método de optimización</legend>
-          <div className="grid grid-cols-2 gap-2">
-            {options.map((option) => {
+          <legend className="mb-2 text-xs font-medium text-muted-foreground">Método de planificación</legend>
+          <div className="grid gap-2">
+            {genetic ? [genetic].map((option) => {
+              const checked = field.value === option.value;
+              return <label key={option.value} className={cn("flex cursor-pointer flex-col gap-1 rounded-xl border p-3 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring", checked ? "border-primary bg-primary-light/30" : "border-border")}><input type="radio" name={field.name} value={option.value} checked={checked} onChange={() => field.onChange(option.value)} className="sr-only" /><span className="flex items-center gap-2 text-sm font-semibold"><Dna className="size-4 text-primary" aria-hidden />{option.label}</span><span className="text-xs text-muted-foreground">{option.description}</span></label>;
+            }) : null}
+          </div>
+          <details className="mt-2 rounded-xl border border-border p-3" open={!field.value.includes("genetic") || undefined}>
+            <summary className="cursor-pointer text-xs font-medium">Métodos de comparación</summary>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {comparisons.map((option) => {
               const checked = field.value === option.value;
               return (
                 <label
@@ -145,9 +155,7 @@ export function MethodField({
               );
             })}
           </div>
-          <p className="text-[11px] leading-snug text-muted-foreground">
-            {options.find((o) => o.value === field.value)?.description}
-          </p>
+          </details>
         </fieldset>
       )}
     />
@@ -171,13 +179,31 @@ function NumberInput({ name, step = 1, ...rest }: { name: string; step?: number 
 }
 
 /** Parámetros evolutivos admitidos por la API, en una sección académica plegable. */
+const PARAMETER_HELP: Record<string, string> = {
+  population_size: "Cantidad de recorridos candidatos en cada generación.",
+  tournament_size: "Cantidad de candidatos que compiten para ser padres.",
+  elite_count: "Mejores recorridos conservados sin cambios en la siguiente generación.",
+  max_generations: "Número máximo de ciclos de evolución.",
+  max_evaluations: "Límite de recorridos evaluados durante la búsqueda.",
+  stagnation_generations: "La búsqueda se detiene tras este número de generaciones sin mejora.",
+  crossover_probability: "Probabilidad de combinar dos recorridos candidatos; entre 0 y 1.",
+  mutation_probability: "Probabilidad de modificar un recorrido candidato; entre 0 y 1.",
+  crossover_operator: "OX conserva el orden relativo; PMX intercambia segmentos y corrige correspondencias.",
+  mutation_operator: "Inversión invierte un tramo; intercambio cambia de lugar dos paradas.",
+  seed: "Valor que permite repetir los mismos resultados con la misma configuración.",
+};
+
+function ParameterHelp({ name }: { name: string }) {
+  return <Tooltip content={PARAMETER_HELP[name]}><button type="button" className="ml-1 inline-flex size-5 items-center justify-center rounded-full border border-border text-[11px] text-primary focus-visible:outline-2 focus-visible:outline-primary" aria-label={`Ayuda: ${name}`}>?</button></Tooltip>;
+}
+
 export function EvolutionFields() {
   const { register, control, formState } = useFormContext<SharedValues>();
   const errors = formState.errors as FieldErrors;
   const hasErrors = !!errors.evolution;
   const [open, setOpen] = useState(hasErrors);
   const field = (name: keyof EvolutionParameters, label: string, hint?: string, step: number | "any" = 1) => (
-    <Field label={label} htmlFor={`evolution.${name}`} hint={hint} error={errorAt(errors, `evolution.${name}`)}>
+    <Field label={<>{label}<ParameterHelp name={name} /></>} htmlFor={`evolution.${name}`} hint={hint} error={errorAt(errors, `evolution.${name}`)}>
       <NumberInput name={`evolution.${name}`} step={step} />
     </Field>
   );
@@ -186,7 +212,7 @@ export function EvolutionFields() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3 rounded-xl border border-border px-3 py-2.5">
         <div className="flex flex-col">
-          <span className="text-xs font-medium">Semilla aleatoria</span>
+          <span className="text-xs font-medium">Semilla aleatoria <ParameterHelp name="seed" /></span>
           <span className="text-[11px] text-muted-foreground">Misma semilla → mismo resultado</span>
         </div>
         <Input
@@ -229,13 +255,13 @@ export function EvolutionFields() {
           {field("stagnation_generations", "Estancamiento", "Generaciones sin mejora")}
           {field("crossover_probability", "Prob. de cruce", "0 – 1", "any")}
           {field("mutation_probability", "Prob. de mutación", "0 – 1", "any")}
-          <Field label="Operador de cruce" htmlFor="evolution.crossover_operator">
+          <Field label={<>Operador de cruce<ParameterHelp name="crossover_operator" /></>} htmlFor="evolution.crossover_operator">
             <NativeSelect id="evolution.crossover_operator" {...register("evolution.crossover_operator")}>
               <option value="ox">OX · orden</option>
               <option value="pmx">PMX · parcialmente mapeado</option>
             </NativeSelect>
           </Field>
-          <Field label="Operador de mutación" htmlFor="evolution.mutation_operator">
+          <Field label={<>Operador de mutación<ParameterHelp name="mutation_operator" /></>} htmlFor="evolution.mutation_operator">
             <NativeSelect id="evolution.mutation_operator" {...register("evolution.mutation_operator")}>
               <option value="inversion">Inversión</option>
               <option value="swap">Intercambio</option>

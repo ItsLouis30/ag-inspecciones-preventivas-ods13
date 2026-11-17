@@ -61,7 +61,7 @@ export function DocumentBadge({ available }: { available: boolean }) {
   ) : (
     <Badge tone="warning" title="Al menos un PDF original no es recuperable actualmente">
       <FileWarning aria-hidden />
-      Sin original
+      Documentación parcial
     </Badge>
   );
 }
@@ -70,7 +70,7 @@ export function FeasibleBadge({ feasible }: { feasible: boolean }) {
   return feasible ? (
     <Badge tone="success">
       <CircleCheck aria-hidden />
-      Factible
+      Solución factible
     </Badge>
   ) : (
     <Badge tone="critical">
@@ -87,7 +87,7 @@ export function OptimalityBadge({ status, proven }: { status: string; proven: bo
       {optimalityLabel(status, proven)}
     </Badge>
   ) : (
-    <Badge tone="neutral" title="Resultado sin prueba matemática de optimalidad">
+    <Badge tone="neutral" title="Solución factible sin garantía de óptimo global">
       <ShieldQuestion aria-hidden />
       {optimalityLabel(status, proven)}
     </Badge>

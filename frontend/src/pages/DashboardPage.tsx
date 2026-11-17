@@ -22,7 +22,6 @@ import { Skeleton } from "@/components/ui/misc";
 import { OdsBadge } from "@/components/common/badges";
 import { MetricCard, MetricStrip } from "@/components/common/MetricCard";
 import { ErrorState } from "@/components/common/ErrorState";
-import { WarningList } from "@/components/common/WarningList";
 import { InspectionMap } from "@/components/maps/InspectionMap";
 import { useHealth, useScenarioMap, useScenarios, useStops } from "@/hooks/queries";
 import { useWorkspace } from "@/app/workspace";
@@ -124,31 +123,25 @@ export function DashboardPage() {
             </div>
           </div>
         </section>
-        <div className="flex flex-col gap-5">
-          <ApiCard />
-          <Card className="flex flex-col gap-2 p-5">
-            <h2 className="flex items-center gap-2 text-sm font-semibold">
-              <ShieldAlert className="size-4 text-warning" aria-hidden /> Alcance
-            </h2>
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              Prototipo de planificación y simulación. No es un sistema oficial de respuesta a emergencias ni demuestra reducción
-              cuantificada del riesgo.
-            </p>
-            <Link to="/acerca" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
-              Limitaciones del proyecto <ChevronRight className="size-3" aria-hidden />
-            </Link>
-          </Card>
-        </div>
+        <Card className="flex flex-col gap-3 p-5">
+          <h2 className="flex items-center gap-2 text-base font-semibold"><ShieldAlert className="size-4 text-warning" aria-hidden /> Consideraciones de planificación</h2>
+          <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-foreground/80">
+            <li>Las ubicaciones provienen de fichas oficiales y análisis cartográfico; los accesos derivados no se han verificado en campo.</li>
+            <li>Los tiempos de recorrido son estimaciones y pueden variar con el tránsito y las condiciones de las vías.</li>
+            <li>Este sistema es un prototipo académico de planificación preventiva.</li>
+          </ol>
+          <Link to="/acerca" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">Ver limitaciones completas <ChevronRight className="size-3" aria-hidden /></Link>
+        </Card>
       </div>
 
       {stops.isError ? (
         <ErrorState error={stops.error} onRetry={() => stops.refetch()} />
       ) : (
         <MetricStrip>
-          <MetricCard icon={<MapPin />} label="Puntos críticos auditados" value={stops.isPending ? "—" : list.length} hint="Santa Rosa de Quives, Canta" />
-          <MetricCard icon={<Flame />} label="Peligro Muy Alto" value={stops.isPending ? "—" : list.filter((s) => s.priority === "very_high").length} hint="Prioridad del Modelo B" />
-          <MetricCard icon={<Gauge />} label="Accesibilidad cartográfica A" value={stops.isPending ? "—" : list.filter((s) => s.plausibility === "A").length} hint="No certifica acceso físico" />
-          <MetricCard icon={<FileCheck2 />} label="Con documento original" value={stops.isPending ? "—" : list.filter((s) => s.original_documents_available).length} hint="PDF recuperado de SIGRID" />
+          <MetricCard icon={<MapPin />} label="Paradas de inspección" value={stops.isPending ? "—" : list.length} hint="Accesos derivados" />
+          <MetricCard icon={<Flame />} label="Paradas de peligro Muy Alto" value={stops.isPending ? "—" : list.filter((s) => s.priority === "very_high").length} hint="Prioridad del Modelo B" />
+          <MetricCard icon={<FileCheck2 />} label="FTR identificadas" value={stops.isPending ? "—" : new Set(list.flatMap((s) => s.ftr_codes)).size} hint="Fichas Técnicas Referenciales" />
+          <MetricCard icon={<Gauge />} label="Escenario conservador" value={scenarios.data?.find((s) => s.mode === "conservative")?.stop_count ?? "—"} hint="Paradas con respaldo original" />
         </MetricStrip>
       )}
 
@@ -234,23 +227,10 @@ export function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        {expanded ? (
-          <WarningList warnings={expanded.warnings} title="Advertencias del conjunto de paradas (API)" initiallyVisible={4} />
-        ) : null}
-        <Card className="p-5">
-          <h2 className="flex items-center gap-2 text-sm font-semibold">
-            <Info className="size-4 text-primary" aria-hidden /> Antes de interpretar resultados
-          </h2>
-          <ul className="mt-3 space-y-2 text-[13px] leading-snug text-foreground/80">
-            <li>• Las paradas son accesos cartográficamente plausibles, no validados en campo.</li>
-            <li>• La API no tiene trazados viales: el mapa solo muestra el orden de visita de forma esquemática.</li>
-            <li>• Los tiempos no consideran tráfico, lluvia, inundación, derrumbes ni cierres.</li>
-            <li>• Yangas es un origen experimental, no una base oficial de brigada.</li>
-            <li>• La jornada y el tiempo de inspección del Modelo B son parámetros experimentales.</li>
-          </ul>
-        </Card>
-      </div>
+      <details className="rounded-xl border border-border bg-surface p-5 text-sm">
+        <summary className="flex cursor-pointer items-center gap-2 font-medium"><Info className="size-4 text-primary" aria-hidden /> Información técnica</summary>
+        <div className="mt-4 grid gap-4 md:grid-cols-2"><ApiCard /><div className="text-xs text-muted-foreground"><p>Fichas Técnicas Referenciales (FTR) y paradas derivadas son unidades distintas.</p>{expanded ? <p className="mt-2">{expanded.warnings.length} advertencias documentadas. Consulta los detalles de cada escenario y las limitaciones completas.</p> : null}</div></div>
+      </details>
     </div>
   );
 }

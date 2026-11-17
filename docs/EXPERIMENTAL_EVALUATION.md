@@ -1,5 +1,15 @@
 # Evaluación experimental del algoritmo genético
 
+## Casos adicionales en la interfaz
+
+La presentación principal muestra cuatro **corridas demostrativas con condiciones distintas**: (1) TSP ampliado, 18 paradas, semilla 11; (2) TSP personalizado P01–P08, 8 paradas, semilla 22; (3) jornada ampliada 240/15 minutos, semilla 33; (4) jornada conservadora 180/20 minutos, semilla 44. Las cuatro emplean población 100, torneo 3, élites 2, OX 0.90, inversión 0.20, máximo 500 generaciones, 50 000 evaluaciones y estancamiento 100. La jornada emplea `prefix`. Son demostraciones de condiciones diferentes: **no** forman un experimento que aísle el efecto de la semilla y sus distancias no deben agregarse como si correspondieran a un único problema.
+
+El protocolo congelado y los cinco casos adicionales descritos a continuación permanecen disponibles en el apartado «Evaluación técnica y reproducibilidad» de la interfaz. No se modifican sus entradas ni sus resultados históricos.
+
+La pantalla Experimentos conserva este protocolo congelado y ofrece cinco ensayos adicionales, ejecutados solo a petición del usuario: ruta completa ampliada (18), conservadora (13) y personalizada (8), y jornada limitada ampliada con políticas experimentales 240/15 y 180/20 minutos. Cada caso usa semillas 11, 22, 33 y 44; solo varía la semilla entre sus cuatro corridas. El caso personalizado fija **P01–P08 por orden ascendente del identificador antes de ejecutar**. Es una regla determinista, no una selección por desempeño. Los casos utilizan los endpoints de optimización existentes; no sustituyen el informe congelado ni se deben comparar distancias entre conjuntos distintos como si fueran el mismo problema.
+
+La jornada limitada usa `prefix` inicialmente. `feasible_insertion` permanece como variante experimental seleccionable por separado. Sus resultados se agrupan por caso y estrategia, y el criterio de comparación del Modelo B sigue siendo lexicográfico: Muy Alto, total de inspecciones, tiempo y distancia.
+
 ## Protocolo
 
 La evaluación usa el escenario ampliado de 18 paradas, el origen experimental en Yangas y la misma matriz dirigida para todos los métodos. El objetivo único es minimizar distancia vial estimada; la duración se registra como métrica secundaria.

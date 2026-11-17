@@ -213,7 +213,10 @@ async def test_api_selects_decoder_strategy_without_changing_default(project_roo
     assert default_result["route"] == prefix_result["route"]
     assert default_result["total_duration_min"] == prefix_result["total_duration_min"]
     assert default_result["decoder_strategy"] == "prefix"
+    assert set(default_result["best_chromosome"]) == set(default.json()["scenario"]["stop_ids"])
+    assert len(default_result["best_chromosome"]) == len(set(default_result["best_chromosome"]))
     assert insertion.json()["result"]["decoder_strategy"] == "feasible_insertion"
+    assert set(insertion.json()["result"]["best_chromosome"]) == set(insertion.json()["scenario"]["stop_ids"])
     assert invalid.status_code == 422
 
 

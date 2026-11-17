@@ -1,4 +1,4 @@
-import { Ban, Fingerprint } from "lucide-react";
+import { Fingerprint } from "lucide-react";
 import type { ScenarioSummary } from "@/types/api";
 import { WarningList } from "@/components/common/WarningList";
 import { shortHash } from "@/lib/format";
@@ -7,8 +7,8 @@ import { shortHash } from "@/lib/format";
 export function ScenarioSummaryPanel({ summary }: { summary: ScenarioSummary }) {
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <p className="text-xs font-medium text-muted-foreground">Paradas incluidas ({summary.stop_count})</p>
+      <details>
+        <summary className="cursor-pointer text-xs font-medium text-muted-foreground">Paradas incluidas ({summary.stop_count})</summary>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {summary.stop_ids.map((id) => (
             <span key={id} className="rounded-md bg-river-light px-2 py-0.5 text-xs font-semibold text-river tabular">
@@ -16,12 +16,10 @@ export function ScenarioSummaryPanel({ summary }: { summary: ScenarioSummary }) 
             </span>
           ))}
         </div>
-      </div>
+      </details>
       {summary.excluded.length > 0 ? (
-        <div>
-          <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <Ban className="size-3.5" aria-hidden /> Excluidas de este escenario ({summary.excluded.length})
-          </p>
+        <details>
+          <summary className="cursor-pointer text-xs font-medium text-muted-foreground">Excluidas de este escenario ({summary.excluded.length})</summary>
           <ul className="mt-2 flex flex-col gap-1">
             {summary.excluded.map((item) => (
               <li key={item.stop_id} className="flex gap-2 text-xs">
@@ -30,17 +28,17 @@ export function ScenarioSummaryPanel({ summary }: { summary: ScenarioSummary }) 
               </li>
             ))}
           </ul>
-        </div>
+        </details>
       ) : null}
       <WarningList warnings={summary.warnings} title="Advertencias del escenario" />
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
+      <details className="text-[11px] text-muted-foreground"><summary className="cursor-pointer">Información técnica del escenario</summary><div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
         <span className="inline-flex items-center gap-1" title={summary.matrix_hashes.distance}>
           <Fingerprint className="size-3" aria-hidden /> Matriz de distancias {shortHash(summary.matrix_hashes.distance)}
         </span>
         <span className="inline-flex items-center gap-1" title={summary.matrix_hashes.duration}>
           <Fingerprint className="size-3" aria-hidden /> Matriz de tiempos {shortHash(summary.matrix_hashes.duration)}
         </span>
-      </div>
+      </div></details>
     </div>
   );
 }

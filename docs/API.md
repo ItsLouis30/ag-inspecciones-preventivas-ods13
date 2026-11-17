@@ -75,6 +75,8 @@ La API exige que la jornada y el tiempo de servicio permanezcan marcados como ex
 
 ## Contrato geográfico
 
+Los resultados del algoritmo genético incluyen `result.best_chromosome`: la permutación completa del mejor individuo. En el Modelo A, al añadir el origen fijo a ambos extremos se obtiene la ruta. En el Modelo B, la estrategia de decodificación puede seleccionar solo una parte y cambiar el orden de visita; `route_plan` sigue siendo la fuente del fenotipo. El campo se añade sin cambiar los resultados anteriores ni los contratos de métodos no genéticos.
+
 Cada parada distingue:
 
 - `critical_reference`: referencia geográfica convertida desde las coordenadas UTM oficiales de la FTR.

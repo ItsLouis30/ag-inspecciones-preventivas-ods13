@@ -81,6 +81,7 @@ class GenerationStats:
 @dataclass(frozen=True, slots=True)
 class GeneticAlgorithmResult:
     evaluation: RouteEvaluation
+    best_chromosome: tuple[str, ...]
     config: EvolutionConfig
     history: tuple[GenerationStats, ...]
     stop_reason: StopReason
@@ -106,6 +107,7 @@ class GeneticAlgorithmResult:
             "optimality_status": self.optimality_status.value,
             "proven_optimal": False,
             "route": self.evaluation.route,
+            "best_chromosome": self.best_chromosome,
             "distance_km": str(self.evaluation.total_distance_km),
             "duration_min": str(self.evaluation.total_duration_min),
             "feasible": self.evaluation.feasible,
@@ -177,6 +179,7 @@ def run_genetic_algorithm(
     if len(scenario.stop_ids) < 2:
         return GeneticAlgorithmResult(
             evaluation=best.evaluation,
+            best_chromosome=best.chromosome.genes,
             config=config,
             history=tuple(history),
             stop_reason=StopReason.TRIVIAL_SPACE,
@@ -232,6 +235,7 @@ def run_genetic_algorithm(
 
     return GeneticAlgorithmResult(
         evaluation=best.evaluation,
+        best_chromosome=best.chromosome.genes,
         config=config,
         history=tuple(history),
         stop_reason=stop_reason,

@@ -61,6 +61,7 @@ export interface ExperimentProtocol {
 
 /** Claves conocidas de `OptimizationResponse.result`. */
 export interface OptimizationResultView {
+  best_chromosome?: string[];
   method?: string;
   optimality_status?: string;
   proven_optimal?: boolean;
@@ -107,6 +108,7 @@ export interface RawGenerationStats {
 }
 
 export interface GeneticRunResult extends ReferenceMethodResult {
+  best_chromosome?: string[];
   generations_completed: number;
   stop_reason: string;
   seed: number;

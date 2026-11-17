@@ -25,8 +25,7 @@ export function StopsTable({
           <TableHead>Peligro</TableHead>
           <TableHead>Accesibilidad</TableHead>
           <TableHead>FTR asociada</TableHead>
-          <TableHead>Documento original</TableHead>
-          <TableHead>Validación de campo</TableHead>
+          <TableHead>Documentación</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -55,8 +54,8 @@ export function StopsTable({
             </TableCell>
             <TableCell>
               <span className="font-medium">{stop.display_name}</span>
-              {stop.sectors.length > 1 ? (
-                <span className="block text-[11px] text-muted-foreground">{stop.sectors.join(" · ")}</span>
+              {stop.sectors.filter((sector) => sector !== stop.display_name).length > 0 ? (
+                <span className="block text-[11px] text-muted-foreground">{[...new Set(stop.sectors.filter((sector) => sector !== stop.display_name))].join(" · ")}</span>
               ) : null}
             </TableCell>
             <TableCell>
@@ -75,7 +74,6 @@ export function StopsTable({
             <TableCell>
               <DocumentBadge available={stop.original_documents_available} />
             </TableCell>
-            <TableCell className="text-xs text-muted-foreground">No validada</TableCell>
           </TableRow>
         ))}
       </TableBody>
