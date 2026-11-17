@@ -78,7 +78,7 @@ export function ExperimentResults({ result }: { result: ExperimentResultView }) 
               value={zoomed}
               onValueChange={setZoomed}
               options={[
-                { value: "zoom", label: "Ampliado" },
+                { value: "zoom", label: "Acercado" },
                 { value: "full", label: "Desde cero" },
               ]}
             />

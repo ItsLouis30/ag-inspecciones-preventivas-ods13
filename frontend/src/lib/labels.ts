@@ -2,16 +2,17 @@ import type { DecoderStrategy, LimitedDayMethod, ScenarioMode, TspMethod } from 
 
 export const SCENARIO_LABELS: Record<ScenarioMode, string> = {
   conservative: "Conservador",
-  expanded: "Ampliado",
+  expanded: "Completo",
   custom: "Personalizado",
 };
+
+export const COMPLETE_DOCUMENT_WARNING = "Incluye cuatro registros de auditoría cuya documentación original no pudo verificarse";
 
 export const SCENARIO_DESCRIPTIONS: Record<ScenarioMode, string> = {
   conservative:
     "Solo paradas de plausibilidad cartográfica A con todos los documentos originales recuperados.",
-  expanded:
-    "Todas las paradas auditadas, incluidas aquellas con limitaciones de acceso o de documentación.",
-  custom: "Selección manual de paradas. El orden de selección no se interpreta como recorrido.",
+  expanded: "Todos los 18 puntos considerados en el estudio.",
+  custom: "Selecciona entre 1 y 18 paradas para incluirlas en la planificación.",
 };
 
 export const TSP_METHODS: { value: TspMethod; label: string; short: string; description: string }[] = [

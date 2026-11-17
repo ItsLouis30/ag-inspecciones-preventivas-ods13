@@ -11,13 +11,14 @@ import { optimizationApi } from "@/services/optimizationApi";
 import type { EvolutionParameters, OptimizationResponse, ScenarioSpec } from "@/types/api";
 
 export const MAIN_RUNS = [
-  { id: "01", title: "Ruta completa · ampliado", model: "tsp", scenario: "expanded", count: 18, seed: 11 },
+  { id: "01", title: "Ruta completa · completo", model: "tsp", scenario: "expanded", count: 18, seed: 11 },
   { id: "02", title: "Ruta completa · personalizado", model: "tsp", scenario: "custom", count: 8, seed: 22 },
-  { id: "03", title: "Jornada limitada · ampliado", model: "day", scenario: "expanded", count: 18, seed: 33, day: 240, service: 15 },
-  { id: "04", title: "Jornada limitada · conservador", model: "day", scenario: "conservative", count: 13, seed: 44, day: 180, service: 20 },
+  { id: "03", title: "Jornada limitada · completo", model: "day", scenario: "expanded", count: 18, seed: 33, day: 240, service: 15 },
+  { id: "04", title: "Jornada limitada · personalizado", model: "day", scenario: "custom", count: 13, seed: 44, day: 180, service: 20 },
 ] as const;
 
 export const CUSTOM_STOPS = ["P01", "P02", "P03", "P04", "P05", "P06", "P07", "P08"];
+export const HISTORICAL_13_STOPS = ["P02", "P03", "P04", "P05", "P10", "P11", "P12", "P13", "P14", "P15", "P16", "P17", "P18"];
 
 const COMMON_CONFIG: Omit<EvolutionParameters, "seed"> = {
   population_size: 100, tournament_size: 3, elite_count: 2,
@@ -30,7 +31,7 @@ type Case = (typeof MAIN_RUNS)[number];
 type RunState = { status: "running" | "complete" | "error"; response?: OptimizationResponse; message?: string };
 
 export function mainRequest(item: Case) {
-  const scenario: ScenarioSpec = { mode: item.scenario, stop_ids: item.scenario === "custom" ? CUSTOM_STOPS : [] };
+  const scenario: ScenarioSpec = { mode: item.scenario, stop_ids: item.id === "04" ? HISTORICAL_13_STOPS : item.scenario === "custom" ? CUSTOM_STOPS : [] };
   const evolution: EvolutionParameters = { ...COMMON_CONFIG, seed: item.seed };
   return item.model === "tsp"
     ? { model: "tsp" as const, body: { scenario, method: "genetic_algorithm" as const, evolution, include_history: true } }
@@ -90,7 +91,7 @@ export function MainRuns() {
 
   return <section className="space-y-5" aria-labelledby="main-runs-title"><div><h2 id="main-runs-title" className="text-lg font-semibold">Cuatro condiciones de planificación</h2><p className="text-sm text-muted-foreground">Cada corrida usa datos de entrada distintos. Sirven para demostrar el sistema; no aíslan el efecto de la semilla ni se comparan como un mismo problema.</p></div>
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{MAIN_RUNS.map((item) => { const run = runs[item.id]; return <Card key={item.id} className={`p-4 ${selectedId === item.id ? "border-primary bg-primary-light/20" : ""}`}><button type="button" className="w-full text-left" aria-pressed={selectedId === item.id} onClick={() => setSelectedId(item.id)}><span className="text-xs text-muted-foreground">Corrida {item.id} · semilla {item.seed}</span><strong className="mt-1 block text-sm">{item.title}</strong><span className="mt-1 block text-xs text-muted-foreground">{item.count} paradas{item.model === "day" ? ` · ${item.day}/${item.service} min` : ""}</span><span className="mt-2 block text-xs font-medium">{run?.status === "complete" ? "Completada" : run?.status === "running" ? "Ejecutando…" : run?.status === "error" ? "Error" : "Pendiente"}</span></button><Button size="sm" className="mt-3 w-full" disabled={run?.status === "running"} onClick={() => { setSelectedId(item.id); void execute(item); }}>{run?.status === "complete" ? "Repetir corrida" : "Ejecutar corrida"}</Button>{run?.message ? <p role="alert" className="mt-2 text-xs text-critical">{run.message}</p> : null}</Card>; })}</div>
-    <Card className="p-4 text-xs text-muted-foreground"><p>Configuración común: población 100, torneo 3, elitismo 2, OX 0,90, inversión 0,20, máximo 500 generaciones, 50 000 evaluaciones y estancamiento de 100. Jornada limitada usa el decodificador original <code>prefix</code>.</p><p className="mt-1">P01–P08 se fijaron por orden ascendente de ID antes de observar resultados.</p></Card>
+    <Card className="p-4 text-xs text-muted-foreground"><p>Configuración común: población 100, torneo 3, elitismo 2, OX 0,90, inversión 0,20, máximo 500 generaciones, 50 000 evaluaciones y estancamiento de 100. Jornada limitada usa el decodificador original <code>prefix</code>.</p><p className="mt-1">P01–P08 y el conjunto histórico de 13 paradas se fijaron antes de observar resultados. La corrida 04 conserva los mismos 13 IDs de la evaluación conservadora original mediante una selección personalizada.</p></Card>
     {active?.response ? <RunDetail response={active.response} item={selected} /> : <p className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">Selecciona y ejecuta una corrida para ver su cromosoma, ruta y evolución.</p>}
   </section>;
 }

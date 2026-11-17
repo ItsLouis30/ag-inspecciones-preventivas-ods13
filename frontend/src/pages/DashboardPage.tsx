@@ -6,7 +6,6 @@ import {
   Database,
   FileCheck2,
   Flame,
-  Gauge,
   Info,
   Layers,
   MapPin,
@@ -26,7 +25,7 @@ import { InspectionMap } from "@/components/maps/InspectionMap";
 import { useHealth, useScenarioMap, useScenarios, useStops } from "@/hooks/queries";
 import { useWorkspace } from "@/app/workspace";
 import { API_BASE_URL } from "@/services/apiClient";
-import { SCENARIO_DESCRIPTIONS, SCENARIO_LABELS } from "@/lib/labels";
+import { COMPLETE_DOCUMENT_WARNING, SCENARIO_DESCRIPTIONS, SCENARIO_LABELS } from "@/lib/labels";
 import { shortHash } from "@/lib/format";
 
 const EXPANDED = { mode: "expanded" as const, stop_ids: [] };
@@ -126,7 +125,7 @@ export function DashboardPage() {
         <Card className="flex flex-col gap-3 p-5">
           <h2 className="flex items-center gap-2 text-base font-semibold"><ShieldAlert className="size-4 text-warning" aria-hidden /> Consideraciones de planificación</h2>
           <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-foreground/80">
-            <li>Las ubicaciones provienen de fichas oficiales y análisis cartográfico; los accesos derivados no se han verificado en campo.</li>
+            <li>Las ubicaciones se basan en fichas técnicas, registros de auditoría y análisis cartográfico; los accesos derivados no se han verificado en campo.</li>
             <li>Los tiempos de recorrido son estimaciones y pueden variar con el tránsito y las condiciones de las vías.</li>
             <li>Este sistema es un prototipo académico de planificación preventiva.</li>
           </ol>
@@ -141,7 +140,7 @@ export function DashboardPage() {
           <MetricCard icon={<MapPin />} label="Paradas de inspección" value={stops.isPending ? "—" : list.length} hint="Accesos derivados" />
           <MetricCard icon={<Flame />} label="Paradas de peligro Muy Alto" value={stops.isPending ? "—" : list.filter((s) => s.priority === "very_high").length} hint="Prioridad del Modelo B" />
           <MetricCard icon={<FileCheck2 />} label="FTR identificadas" value={stops.isPending ? "—" : new Set(list.flatMap((s) => s.ftr_codes)).size} hint="Fichas Técnicas Referenciales" />
-          <MetricCard icon={<Gauge />} label="Escenario conservador" value={scenarios.data?.find((s) => s.mode === "conservative")?.stop_count ?? "—"} hint="Paradas con respaldo original" />
+          <MetricCard icon={<ShieldCheck />} label="Documentos originales recuperados" value={stops.isPending ? "—" : new Set(list.flatMap((stop) => stop.provenance.filter((reference) => reference.original_document_available).map((reference) => reference.full_code))).size} hint="FTR con original disponible" />
         </MetricStrip>
       )}
 
@@ -167,9 +166,9 @@ export function DashboardPage() {
           {scenarios.isPending ? <Skeleton className="h-40" /> : null}
           {scenarios.isError ? <ErrorState error={scenarios.error} compact /> : null}
           <ul className="flex flex-col gap-2">
-            {scenarios.data?.map((scenario) => {
-              const mode = scenario.mode as "conservative" | "expanded";
-              const Icon = mode === "conservative" ? ShieldCheck : Layers;
+            {scenarios.data?.filter((scenario) => scenario.mode === "expanded").map((scenario) => {
+              const mode = "expanded";
+              const Icon = Layers;
               return (
                 <li key={scenario.scenario_id}>
                   <Link
@@ -201,12 +200,13 @@ export function DashboardPage() {
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="text-sm font-semibold">Personalizado</span>
-                  <span className="block text-xs text-muted-foreground">Elige tus propias paradas</span>
+                  <span className="block text-xs text-muted-foreground">Elige entre 1 y 18 paradas</span>
                 </span>
                 <ArrowRight className="size-4 text-muted-foreground" aria-hidden />
               </Link>
             </li>
           </ul>
+          <p className="text-xs text-muted-foreground">{COMPLETE_DOCUMENT_WARNING}.</p>
           {tspRun || limitedDayRun ? (
             <div className="rounded-xl bg-muted/60 p-3 text-xs">
               <p className="font-medium">Resultados de esta sesión</p>

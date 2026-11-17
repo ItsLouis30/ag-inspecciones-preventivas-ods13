@@ -81,7 +81,7 @@ export const limitedDayFormSchema = z.object({
 export type LimitedDayFormValues = z.infer<typeof limitedDayFormSchema>;
 
 export const DEFAULT_TSP_VALUES: TspFormValues = {
-  scenarioMode: "conservative",
+  scenarioMode: "expanded",
   method: "genetic_algorithm",
   includeHistory: true,
   evolution: DEFAULT_EVOLUTION,

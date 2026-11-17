@@ -6,7 +6,7 @@ import { Field, Input, NativeSelect, Switch } from "@/components/ui/form-control
 import { Collapsible, CollapsibleContent, CollapsibleTrigger, Segmented, Tooltip } from "@/components/ui/misc";
 import { useWorkspace } from "@/app/workspace";
 import { useScenarios, useStops } from "@/hooks/queries";
-import { SCENARIO_LABELS } from "@/lib/labels";
+import { COMPLETE_DOCUMENT_WARNING, SCENARIO_LABELS } from "@/lib/labels";
 import { cn } from "@/lib/utils";
 import type { EvolutionParameters, ScenarioMode } from "@/types/api";
 import { StopPicker } from "@/features/scenarios/StopPicker";
@@ -54,7 +54,7 @@ export function ScenarioField() {
             }}
             className="w-full [&>*]:flex-1 [&>*]:justify-center"
             size="sm"
-            options={(["conservative", "expanded", "custom"] as ScenarioMode[]).map((item) => ({
+            options={(["expanded", "custom"] as ScenarioMode[]).map((item) => ({
               value: item,
               label: (
                 <>
@@ -66,6 +66,7 @@ export function ScenarioField() {
           />
         )}
       />
+      {mode === "expanded" ? <p className="text-xs text-muted-foreground">{COMPLETE_DOCUMENT_WARNING}.</p> : null}
       {mode === "custom" ? (
         <Collapsible open={open} onOpenChange={setOpen} className="rounded-xl border border-border bg-muted/40">
           <CollapsibleTrigger className="flex w-full cursor-pointer items-center justify-between px-3 py-2 text-xs font-medium">
@@ -80,7 +81,7 @@ export function ScenarioField() {
               stops={stops.data?.stops ?? []}
               selectedIds={customStopIds}
               onChange={setCustomStopIds}
-              presets={scenarios.data}
+              presets={scenarios.data?.filter((scenario) => scenario.mode === "expanded")}
               isLoading={stops.isPending}
               maxHeightClass="max-h-[260px]"
             />

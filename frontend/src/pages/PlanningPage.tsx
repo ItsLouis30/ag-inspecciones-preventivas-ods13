@@ -13,7 +13,7 @@ export function PlanningPage() {
   const [params, setParams] = useSearchParams();
   const mode: PlanningMode = params.get("modo") === "jornada" ? "jornada" : "ruta";
   const scenarioParam = params.get("escenario");
-  const initialScenario = (["conservative", "expanded", "custom"] as const).includes(scenarioParam as ScenarioMode)
+  const initialScenario = (["expanded", "custom"] as ScenarioMode[]).includes(scenarioParam as ScenarioMode)
     ? (scenarioParam as ScenarioMode)
     : undefined;
 

@@ -52,7 +52,7 @@ export function StopPicker({
               size="sm"
               onClick={() => onChange([...preset.stop_ids])}
             >
-              Base {preset.mode === "conservative" ? "conservadora" : "ampliada"}
+              Seleccionar todas
             </Button>
           ))}
           <Button type="button" variant="ghost" size="sm" onClick={() => onChange([])} disabled={selectedIds.length === 0}>

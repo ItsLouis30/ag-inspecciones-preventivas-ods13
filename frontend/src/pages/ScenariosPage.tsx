@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowRight, CircleCheck, Layers, ListChecks, ShieldCheck, SlidersHorizontal, TriangleAlert } from "lucide-react";
+import { ArrowRight, CircleCheck, Layers, ListChecks, SlidersHorizontal, TriangleAlert } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/misc";
@@ -12,15 +12,15 @@ import { InspectionMap } from "@/components/maps/InspectionMap";
 import { useScenarioMap, useScenarios, useStops } from "@/hooks/queries";
 import { useWorkspace } from "@/app/workspace";
 import { scenariosApi } from "@/services/scenariosApi";
-import { SCENARIO_DESCRIPTIONS, SCENARIO_LABELS } from "@/lib/labels";
+import { COMPLETE_DOCUMENT_WARNING, SCENARIO_DESCRIPTIONS, SCENARIO_LABELS } from "@/lib/labels";
 import { cn } from "@/lib/utils";
 import type { ScenarioMode, ScenarioSummary } from "@/types/api";
 import { StopPicker } from "@/features/scenarios/StopPicker";
 import { ScenarioSummaryPanel } from "@/features/scenarios/ScenarioSummaryPanel";
 import { useScenarioSpec } from "@/features/scenarios/useScenarioSpec";
 
-const MODES: ScenarioMode[] = ["conservative", "expanded", "custom"];
-const MODE_ICONS = { conservative: ShieldCheck, expanded: Layers, custom: SlidersHorizontal };
+const MODES: ScenarioMode[] = ["expanded", "custom"];
+const MODE_ICONS = { conservative: Layers, expanded: Layers, custom: SlidersHorizontal };
 
 function ScenarioCard({
   mode,
@@ -73,8 +73,8 @@ function ScenarioCard({
 
 export function ScenariosPage() {
   const [params, setParams] = useSearchParams();
-  const initial = (params.get("modo") as ScenarioMode) ?? "conservative";
-  const [mode, setModeState] = useState<ScenarioMode>(MODES.includes(initial) ? initial : "conservative");
+  const initial = (params.get("modo") as ScenarioMode) ?? "expanded";
+  const [mode, setModeState] = useState<ScenarioMode>(MODES.includes(initial) ? initial : "expanded");
   const setMode = (next: ScenarioMode) => {
     setModeState(next);
     setParams({ modo: next }, { replace: true });
@@ -117,7 +117,7 @@ export function ScenariosPage() {
 
       {scenarios.isError ? <ErrorState error={scenarios.error} onRetry={() => scenarios.refetch()} /> : null}
 
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-3 md:grid-cols-2">
         {MODES.map((item) => {
           const summary = scenarios.data?.find((s) => s.mode === item);
           const count = item === "custom" ? customStopIds.length : summary?.stop_count ?? null;
@@ -133,6 +133,8 @@ export function ScenariosPage() {
           );
         })}
       </div>
+
+      {mode === "expanded" ? <p className="text-xs text-muted-foreground">{COMPLETE_DOCUMENT_WARNING}.</p> : null}
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_420px]">
         <div className="min-w-0">
@@ -175,7 +177,7 @@ export function ScenariosPage() {
                   setCustomStopIds(ids);
                   resolve.reset();
                 }}
-                presets={scenarios.data}
+                presets={scenarios.data?.filter((scenario) => scenario.mode === "expanded")}
                 isLoading={stops.isPending}
                 maxHeightClass="max-h-[340px]"
               />

@@ -92,7 +92,7 @@ export function ExperimentsPage() {
               <Dna className="size-4 text-primary" aria-hidden /> Reproducir evaluación
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Ejecuta las cuatro semillas y los métodos de referencia en FastAPI. Incluye Held–Karp sobre el escenario ampliado;
+              Ejecuta las cuatro semillas y los métodos de referencia en FastAPI. Incluye Held–Karp sobre el escenario completo;
               puede tardar varios segundos.
             </p>
           </div>

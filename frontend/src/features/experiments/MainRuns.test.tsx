@@ -11,7 +11,7 @@ describe("cuatro corridas demostrativas", () => {
     expect(requests[0].body.scenario.mode).toBe("expanded");
     expect(requests[1].body.scenario.stop_ids).toEqual(["P01", "P02", "P03", "P04", "P05", "P06", "P07", "P08"]);
     expect(requests[2].model).toBe("day");
-    expect(requests[3].body.scenario.mode).toBe("conservative");
+    expect(requests[3].body.scenario).toEqual({ mode: "custom", stop_ids: ["P02", "P03", "P04", "P05", "P10", "P11", "P12", "P13", "P14", "P15", "P16", "P17", "P18"] });
     for (const request of requests) {
       const { seed, ...common } = request.body.evolution;
       expect(seed).toBeGreaterThan(0);
