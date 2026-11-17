@@ -8,8 +8,9 @@ El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planifi
 
 - Los datos geográficos y documentales del piloto están organizados.
 - Las Fases 1 a 7 del backend están implementadas: dominio, optimización, evaluación, API REST y contratos preparados para frontend.
-- El frontend continúa vacío.
-- No existe aún frontend ni persistencia.
+- El frontend React está implementado e integrado con ambos modelos de optimización.
+- El proyecto está preparado para desplegarse en Render como un único servicio Docker.
+- No existe persistencia: los resultados se calculan bajo demanda.
 - La implementación seguirá el [plan técnico del backend](docs/IMPLEMENTATION_PLAN.md).
 - El backend funciona completamente offline y dispone de 103 pruebas automatizadas.
 
@@ -115,6 +116,17 @@ python -m app.server
 ```
 
 La especificación OpenAPI queda disponible en `http://127.0.0.1:8000/docs`.
+
+## Despliegue en Render
+
+El repositorio incluye `render.yaml`, un `Dockerfile` multietapa y reglas de
+exclusión para evitar copiar fuentes documentales pesadas. El contenedor compila
+el frontend y lo sirve desde FastAPI junto con `/api/v1`, por lo que producción
+no depende de configurar manualmente dos dominios ni de CORS entre servicios.
+
+En Render, crear un **Blueprint** desde este repositorio. El servicio verificará
+su estado mediante `/api/v1/health`. Las instrucciones y comprobaciones posteriores
+están en [Despliegue en Render](docs/DEPLOYMENT_RENDER.md).
 
 ## Modelos previstos
 

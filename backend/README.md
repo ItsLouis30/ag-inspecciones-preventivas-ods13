@@ -151,6 +151,11 @@ La API carga el dataset auditado al iniciar y funciona sin Internet. Expone esce
 
 El servidor se liga a `127.0.0.1` y permite por defecto únicamente los orígenes de desarrollo `localhost:5173` y `127.0.0.1:5173`. No se utiliza CORS con comodín.
 
+En el despliegue Docker de Render, Uvicorn escucha en `0.0.0.0:$PORT` y FastAPI
+sirve además el build de Vite desde `frontend/dist`. La API mantiene el prefijo
+`/api/v1`; el desarrollo local continúa usando procesos separados. Consultar
+[la guía de despliegue](../docs/DEPLOYMENT_RENDER.md).
+
 ## Entradas canónicas versionables
 
 Estos archivos son pequeños y suficientes para ejecutar la demostración sin Internet:

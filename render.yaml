@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ag-inspecciones-preventivas-ods13
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: ODS13_CORS_ORIGINS
+        value: http://localhost:5173,http://127.0.0.1:5173

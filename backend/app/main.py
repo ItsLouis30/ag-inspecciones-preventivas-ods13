@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
 import subprocess
 
 from fastapi import FastAPI, Request
@@ -14,6 +15,7 @@ from app.api.router import api_router
 from app.domain.errors import DataValidationError
 from app.core.settings import load_api_settings
 from app.experiments import load_experiment_protocol
+from app.frontend import mount_compiled_frontend
 from app.geography import load_reference_dataset
 
 
@@ -21,6 +23,9 @@ DEFAULT_PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _code_revision(project_root: Path) -> str:
+    render_revision = os.getenv("RENDER_GIT_COMMIT", "").strip()
+    if render_revision:
+        return render_revision
     try:
         revision = subprocess.run(
             ["git", "rev-parse", "HEAD"],
@@ -83,6 +88,8 @@ def create_app(project_root: Path | None = None) -> FastAPI:
             content={"detail": str(exc), "error_type": type(exc).__name__},
         )
 
+    # Debe montarse al final para no interceptar /api, /docs ni /openapi.json.
+    mount_compiled_frontend(application, root)
     return application
 
 
