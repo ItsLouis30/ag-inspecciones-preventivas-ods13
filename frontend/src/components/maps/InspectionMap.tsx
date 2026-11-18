@@ -24,6 +24,8 @@ export interface InspectionMapProps {
   stops: StopResponse[];
   route?: RouteOverlay | null;
   selectedId?: string | null;
+  /** Coordenada de la visita activa en la reproducción esquemática. */
+  focusCoordinate?: Coordinate | null;
   onSelect?: (stopId: string | null) => void;
   /** IDs atenuados por filtros visuales (no alteran escenarios). */
   dimmedIds?: Set<string>;
@@ -54,6 +56,19 @@ function FitBounds({ points, signature }: { points: [number, number][]; signatur
     // Solo reencuadrar cuando cambia el conjunto de puntos.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signature, map]);
+  return null;
+}
+
+function FocusVisit({ coordinate }: { coordinate?: Coordinate | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!coordinate) return;
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    map.flyTo(toLatLng(coordinate), Math.max(map.getZoom(), 12), {
+      animate: !reducedMotion,
+      duration: 0.45,
+    });
+  }, [coordinate, map]);
   return null;
 }
 
@@ -133,6 +148,7 @@ export function InspectionMap({
   stops,
   route,
   selectedId,
+  focusCoordinate,
   onSelect,
   dimmedIds,
   className,
@@ -190,6 +206,7 @@ export function InspectionMap({
           }}
         />
         <FitBounds points={points} signature={signature} />
+        <FocusVisit coordinate={focusCoordinate} />
         <MapControls
           points={points}
           showCritical={showCritical}

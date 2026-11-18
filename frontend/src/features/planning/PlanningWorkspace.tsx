@@ -1,9 +1,9 @@
 import { useCallback, useState, type ReactNode } from "react";
 import { Info, ListOrdered, Map as MapIcon, Route } from "lucide-react";
-import type { OptimizationResponse, ScenarioMode, ScenarioSpec, StopResponse } from "@/types/api";
+import type { Coordinate, OptimizationResponse, RouteVisit, ScenarioMode, ScenarioSpec, StopResponse } from "@/types/api";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/misc";
-import { EmptyState, SectionTitle } from "@/components/common/PageHeader";
+import { EmptyState } from "@/components/common/PageHeader";
 import { ErrorState } from "@/components/common/ErrorState";
 import { WarningList } from "@/components/common/WarningList";
 import { InspectionMap } from "@/components/maps/InspectionMap";
@@ -15,6 +15,7 @@ import { buildScenarioSpec } from "@/features/scenarios/useScenarioSpec";
 import { useRouteOverlay } from "./ResultParts";
 import { VisitsTable } from "./VisitsTable";
 import { SequenceStrip } from "./SequenceStrip";
+import { RoutePlayback } from "./RoutePlayback";
 import { ChromosomeViewer } from "./ChromosomeViewer";
 
 function sameSpec(a: ScenarioSpec, b: ScenarioSpec) {
@@ -54,11 +55,16 @@ export function PlanningWorkspace({
   const mapQuery = useScenarioMap(mapSpec);
   const overlay = useRouteOverlay(response);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [focusCoordinate, setFocusCoordinate] = useState<Coordinate | null>(null);
 
   const stopsById = new Map<string, StopResponse>((mapQuery.data?.stops ?? []).map((s) => [s.stop_id, s]));
   const selected = selectedId ? stopsById.get(selectedId) : undefined;
   const scenarioChanged = runScenario && !sameSpec(runScenario, previewSpec);
   const select = (id: string) => setSelectedId(id);
+  const handlePlaybackStep = useCallback((visit: RouteVisit) => {
+    setSelectedId(visit.role === "inspection" ? visit.node_id : null);
+    setFocusCoordinate(visit.coordinates);
+  }, []);
 
   return (
     <div className="flex flex-col gap-8">
@@ -85,6 +91,7 @@ export function PlanningWorkspace({
               stops={mapQuery.data.stops}
               route={overlay}
               selectedId={selectedId}
+              focusCoordinate={focusCoordinate}
               onSelect={setSelectedId}
               className="h-[420px] lg:h-[600px]"
               initialShowCritical={false}
@@ -98,6 +105,11 @@ export function PlanningWorkspace({
               ? `Mostrando el resultado del escenario ${SCENARIO_LABELS[mapSpec.mode].toLowerCase()}. La línea discontinua es solo el orden de visita: la API no dispone de trazados viales.`
               : `Vista previa del escenario ${SCENARIO_LABELS[mapSpec.mode].toLowerCase()}. Configura y ejecuta la optimización para ver el recorrido.`}
           </p>
+          {response ? <section className="space-y-2">
+            <h3 className="text-sm font-semibold">Secuencia de visitas</h3>
+            <p className="text-xs text-muted-foreground">Orden entregado por la API. Selecciona una parada o reproduce los pasos para ubicarla en el mapa.</p>
+            <RoutePlayback key={response.route_plan.ordered_node_ids.join("|")} visits={response.route_plan.visits} onStep={handlePlaybackStep} />
+          </section> : null}
           {scenarioChanged ? (
             <p role="status" className="rounded-lg border border-river/20 bg-river-light/50 px-3 py-2 text-xs text-river">
               Cambiaste el escenario del formulario. El mapa conserva el último resultado hasta que vuelvas a optimizar.
@@ -113,10 +125,10 @@ export function PlanningWorkspace({
         <div className="flex flex-col gap-6">
           {resultHeader}
           {Array.isArray(response.result.best_chromosome) ? <ChromosomeViewer genes={response.result.best_chromosome as string[]} route={response.route_plan.ordered_node_ids} stops={mapQuery.data?.stops} omitted={response.route_plan.omitted_stop_ids} seed={response.result.seed as number | undefined} distanceKm={response.route_plan.total_distance_km} veryHigh={response.model === "limited_inspection_day" ? response.result.very_high_count as number : undefined} totalSelected={response.route_plan.selected_stop_ids.length} totalTimeMin={response.route_plan.total_duration_min} decoder={response.result.decoder_strategy as "prefix" | "feasible_insertion" | undefined} /> : null}
-          <section className="flex flex-col gap-3">
-            <SectionTitle icon={<Route />} title="Secuencia de visitas" description="Orden entregado por la API. Selecciona una tarjeta para ver la ficha de la parada." />
-            <SequenceStrip visits={response.route_plan.visits} selectedId={selectedId} onSelect={select} />
-          </section>
+          <details className="rounded-xl border border-border bg-surface p-3">
+            <summary className="cursor-pointer text-xs font-medium text-primary">Ver tarjetas con distancias y tiempos por tramo</summary>
+            <div className="mt-3"><SequenceStrip visits={response.route_plan.visits} selectedId={selectedId} onSelect={select} /></div>
+          </details>
           {beforeTable?.(select)}
           <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
             <Card className="min-w-0 p-2">

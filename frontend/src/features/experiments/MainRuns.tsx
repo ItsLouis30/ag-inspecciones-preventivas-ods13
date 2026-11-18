@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { InspectionMap } from "@/components/maps/InspectionMap";
+import { StopDetailPanel } from "@/components/maps/StopDetailPanel";
 import { ConvergenceChart, SERIES_COLORS } from "@/components/charts/ConvergenceChart";
 import { ChromosomeViewer } from "@/features/planning/ChromosomeViewer";
+import { RoutePlayback } from "@/features/planning/RoutePlayback";
 import { useScenarioMap } from "@/hooks/queries";
 import { formatKm, formatMs, toNumber } from "@/lib/format";
 import { stopReasonLabel } from "@/lib/labels";
 import { optimizationApi } from "@/services/optimizationApi";
-import type { EvolutionParameters, OptimizationResponse, ScenarioSpec } from "@/types/api";
+import type { Coordinate, EvolutionParameters, OptimizationResponse, RouteVisit, ScenarioSpec } from "@/types/api";
 
 export const MAIN_RUNS = [
   { id: "01", title: "Ruta completa · Santa Rosa ampliada", model: "tsp", scenario: "expanded", territory: "srq_extended", count: 33, seed: 11 },
@@ -42,9 +44,16 @@ export function mainRequest(item: Case) {
 }
 
 function RunDetail({ response, item }: { response: OptimizationResponse; item: Case }) {
+  const [selectedStopId, setSelectedStopId] = useState<string | null>(null);
+  const [focusCoordinate, setFocusCoordinate] = useState<Coordinate | null>(null);
+  const handlePlaybackStep = useCallback((visit: RouteVisit) => {
+    setSelectedStopId(visit.role === "inspection" ? visit.node_id : null);
+    setFocusCoordinate(visit.coordinates);
+  }, []);
   const spec = mainRequest(item).body.scenario;
   const map = useScenarioMap(spec);
   const plan = response.route_plan;
+  const selectedStop = map.data?.stops.find((stop) => stop.stop_id === selectedStopId);
   const history = response.genetic_history;
   const chart = history?.points.map((point) => ({
     generation: point.generation,
@@ -68,7 +77,14 @@ function RunDetail({ response, item }: { response: OptimizationResponse; item: C
       <details className="mt-3 text-xs"><summary className="cursor-pointer font-medium">Configuración y optimalidad</summary><p className="mt-1">Solución heurística: no se ha probado el óptimo global.</p><pre className="mt-2 overflow-auto rounded-lg bg-muted p-3">{JSON.stringify({ ...COMMON_CONFIG, seed: item.seed }, null, 2)}</pre></details>
     </Card>
     {Array.isArray(result.best_chromosome) ? <ChromosomeViewer genes={result.best_chromosome as string[]} route={plan.ordered_node_ids} stops={map.data?.stops} omitted={plan.omitted_stop_ids} seed={item.seed} distanceKm={plan.total_distance_km} veryHigh={item.model === "day" ? Number(result.very_high_count) : undefined} totalSelected={plan.selected_stop_ids.length} totalTimeMin={plan.total_duration_min} decoder={item.model === "day" ? "prefix" : undefined} /> : null}
-    <Card className="p-5"><h3 className="mb-3 text-sm font-semibold">Recorrido en el mapa</h3>{map.data ? <InspectionMap origin={map.data.origin} stops={map.data.stops} className="h-[380px] md:h-[460px]" initialShowCritical={false} initialShowSchematic route={{ orderedStopIds: plan.visits.filter((visit) => visit.role === "inspection").map((visit) => visit.node_id), omittedStopIds: plan.omitted_stop_ids, schematicPoints: plan.route_geometry.ordered_access_points }} /> : <p className="text-sm text-muted-foreground">Cargando puntos del escenario…</p>}<p className="mt-2 text-xs text-muted-foreground">La línea discontinua representa el orden de visitas, no una carretera real.</p></Card>
+    <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
+      <Card className="min-w-0 p-5"><h3 className="mb-3 text-sm font-semibold">Recorrido en el mapa</h3>{map.data ? <InspectionMap origin={map.data.origin} stops={map.data.stops} selectedId={selectedStopId} onSelect={setSelectedStopId} focusCoordinate={focusCoordinate} className="h-[380px] md:h-[460px]" initialShowCritical={false} initialShowSchematic route={{ orderedStopIds: plan.visits.filter((visit) => visit.role === "inspection").map((visit) => visit.node_id), omittedStopIds: plan.omitted_stop_ids, schematicPoints: plan.route_geometry.ordered_access_points }} /> : <p className="text-sm text-muted-foreground">Cargando puntos del escenario…</p>}<p className="mt-2 text-xs text-muted-foreground">La línea discontinua representa el orden de visitas, no una carretera real.</p></Card>
+      <section className="min-w-0 space-y-3" aria-label="Secuencia de visitas">
+        <div><h3 className="text-base font-semibold">Secuencia de visitas</h3><p className="text-sm text-muted-foreground">Orden entregado por la API. Selecciona un punto para ver su ficha o reproduce la secuencia en el mapa.</p></div>
+        <RoutePlayback visits={plan.visits} onStep={handlePlaybackStep} />
+        {selectedStop ? <Card className="p-5"><StopDetailPanel stop={selectedStop} onClose={() => setSelectedStopId(null)} /></Card> : null}
+      </section>
+    </div>
     {history ? <div className="grid gap-4 lg:grid-cols-2"><Card className="p-5"><h3 className="mb-2 text-sm font-semibold">Convergencia</h3><ConvergenceChart data={chart} yLabel={item.model === "tsp" ? "Mejor distancia (km)" : "Inspecciones Muy Alto"} digits={item.model === "tsp" ? 4 : 0} yDomain={[0, "auto"]} series={[{ key: "best", label: "Mejor", color: SERIES_COLORS[0] }]} /></Card><Card className="p-5"><h3 className="mb-2 text-sm font-semibold">Diversidad</h3><ConvergenceChart data={chart} yLabel={item.model === "tsp" ? "Proporción de individuos únicos" : "Genotipos únicos"} digits={2} yDomain={item.model === "tsp" ? [0, 1] : [0, "auto"]} series={[{ key: "diversity", label: "Diversidad", color: SERIES_COLORS[1] }]} /></Card></div> : null}
   </div>;
 }
@@ -95,6 +111,6 @@ export function MainRuns() {
   return <section className="space-y-5" aria-labelledby="main-runs-title"><div><h2 id="main-runs-title" className="text-lg font-semibold">Cuatro condiciones de planificación</h2><p className="text-sm text-muted-foreground">Cada corrida usa datos de entrada distintos. Sirven para demostrar el sistema; no aíslan el efecto de la semilla ni se comparan como un mismo problema.</p></div>
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{MAIN_RUNS.map((item) => { const run = runs[item.id]; return <Card key={item.id} className={`p-4 ${selectedId === item.id ? "border-primary bg-primary-light/20" : ""}`}><button type="button" className="w-full text-left" aria-pressed={selectedId === item.id} onClick={() => setSelectedId(item.id)}><span className="text-xs text-muted-foreground">Corrida {item.id} · semilla {item.seed}</span><strong className="mt-1 block text-sm">{item.title}</strong><span className="mt-1 block text-xs text-muted-foreground">{item.count} paradas{item.model === "day" ? ` · ${item.day}/${item.service} min` : ""}</span><span className="mt-2 block text-xs font-medium">{run?.status === "complete" ? "Completada" : run?.status === "running" ? "Ejecutando…" : run?.status === "error" ? "Error" : "Pendiente"}</span></button><Button size="sm" className="mt-3 w-full" disabled={run?.status === "running"} onClick={() => { setSelectedId(item.id); void execute(item); }}>{run?.status === "complete" ? "Repetir corrida" : "Ejecutar corrida"}</Button>{run?.message ? <p role="alert" className="mt-2 text-xs text-critical">{run.message}</p> : null}</Card>; })}</div>
     <Card className="p-4 text-xs text-muted-foreground"><p>Configuración común: población 100, torneo 3, elitismo 2, OX 0,90, inversión 0,20, máximo 500 generaciones, 50 000 evaluaciones y estancamiento de 100. Jornada limitada usa el decodificador original <code>prefix</code>.</p><p className="mt-1">Las selecciones están fijadas antes de ejecutar: SRQ-P01–SRQ-P08, SRQ-P01–SRQ-P18 y los seis accesos cartográficamente plausibles de cuenca media y alta (MED-01, 02, 03, 05, 06 y 07). MED-04 queda fuera por accesibilidad dudosa. Estas corridas muestran condiciones diferentes; no aíslan el efecto de la semilla ni permiten comparar distancias como si fueran la misma instancia.</p></Card>
-    {active?.response ? <RunDetail response={active.response} item={selected} /> : <p className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">Selecciona y ejecuta una corrida para ver su cromosoma, ruta y evolución.</p>}
+    {active?.response ? <RunDetail key={selected.id} response={active.response} item={selected} /> : <p className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">Selecciona y ejecuta una corrida para ver su cromosoma, ruta y evolución.</p>}
   </section>;
 }
