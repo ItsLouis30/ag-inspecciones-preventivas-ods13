@@ -16,7 +16,7 @@ El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planifi
 - El proyecto está preparado para desplegarse en Render como un único servicio Docker.
 - No existe persistencia: los resultados se calculan bajo demanda.
 - La implementación seguirá el [plan técnico del backend](docs/IMPLEMENTATION_PLAN.md).
-- El backend funciona completamente offline; en la revisión final aprobaron 104 pruebas síncronas. Las pruebas ASGI quedaron pendientes en el entorno administrado de Windows y funcionaron en la verificación manual local.
+- El backend funciona completamente offline; en la revisión final aprobaron 105 pruebas síncronas. Las pruebas ASGI quedaron pendientes en el entorno administrado de Windows y funcionaron en la verificación manual local.
 
 ## Contenido verificado
 

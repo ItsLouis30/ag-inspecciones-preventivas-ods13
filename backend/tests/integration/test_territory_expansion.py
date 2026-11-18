@@ -60,6 +60,16 @@ def test_expansion_provenance_counts_and_directed_matrices(
         assert dataset.distance_matrix.node_ids[0] == dataset.origin.node_id
 
 
+def test_middle_upper_six_stops_are_all_cartographically_plausible(
+    project_root, reference_dataset
+) -> None:
+    catalog = load_territory_catalog(project_root, reference_dataset)
+    stops = catalog.get("middle_upper").dataset.stop_by_id
+    selected = ("MED-01", "MED-02", "MED-03", "MED-05", "MED-06", "MED-07")
+    assert set(selected) == {stop_id for stop_id, stop in stops.items() if stop.plausibility.value == "A"}
+    assert stops["MED-04"].plausibility.value == "B"
+
+
 def test_default_and_custom_territorial_scenarios(project_root, reference_dataset) -> None:
     catalog = load_territory_catalog(project_root, reference_dataset)
     complete, territory = build_catalog_scenario(

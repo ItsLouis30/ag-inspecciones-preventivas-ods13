@@ -14,7 +14,14 @@ python -m app.expansion_benchmark_cli --project-root ..
 Held–Karp y el exacto de jornada no se ejecutan sobre más de 18 paradas. Este límite evita reservas exponenciales incompatibles con Render Free.
 
 El repositorio incluye un Blueprint en `render.yaml` y una imagen multietapa en
-`Dockerfile`. El despliegue utiliza un único Web Service:
+`Dockerfile`. El despliegue utiliza un único Web Service. El Blueprint fija
+`autoDeployTrigger: commit`: cuando la rama vinculada a Render reciba el merge,
+Render deberá reconstruir el servicio. En un servicio existente también se debe
+comprobar que el Blueprint tenga Auto Sync activo y que la rama vinculada sea
+`main` ([referencia de Blueprints](https://render.com/docs/blueprint-spec),
+[despliegues automáticos](https://render.com/docs/deploys)).
+
+El proceso es:
 
 1. Node 22.22 compila el frontend Vite con `VITE_API_BASE_URL=/api/v1`.
 2. Python 3.12 instala las dependencias de producción de `backend/requirements-prod.txt`
@@ -91,21 +98,26 @@ documental del dataset local. El despliegue no los presenta como PDF recuperados
 ## Verificación final local (17 de noviembre de 2026)
 
 - Typecheck, lint, 43 pruebas frontend y build completados.
-- 104 pruebas backend síncronas y de integración de datos completadas. Las pruebas
+- 105 pruebas backend síncronas y de integración de datos completadas. Las pruebas
   ASGI del entorno Windows administrado siguen bloqueadas por el bucle de eventos;
   la ejecución local integrada del usuario sí funciona. No se alteró el servidor
   para acomodar ese entorno.
-- Las cuatro corridas principales se ejecutaron con las semillas y parámetros
-  fijados. Resultaron factibles: 33 paradas, 178.3573 km; selección de ocho,
-  67.0135 km; cuenca media y alta, cinco visitas y 222.478333 min dentro de
-  240 min; cuenca baja, tres visitas y 86.445000 min dentro de 180 min.
+- Las cuatro corridas principales definitivas se ejecutaron con las semillas y
+  parámetros fijados: 33 paradas de Santa Rosa, 178.3573 km; selección de ocho,
+  67.0135 km; jornada de 18 candidatas de Santa Rosa, 11 visitas y
+  223.068333 min dentro de 240 min; jornada de seis candidatas de cuenca media
+  y alta, dos visitas y 148.408333 min dentro de 180 min. El detalle reproducible
+  está en `docs/EXPERIMENTAL_EVALUATION.md`.
 - El protocolo original de 18 paradas conservó el mismo hash de entrada y las
   cuatro distancias históricas al repetirse fuera de ASGI.
 - El método exacto de ambos modelos devuelve `not_run` cuando se solicitan más
   de 18 paradas. El frontend deshabilita esa selección con el mismo umbral.
-- La imagen Docker no se pudo construir en este equipo porque Docker Desktop no
-  tenía activo el motor Linux. La lista de archivos de `Dockerfile` se comprobó
-  contra los manifiestos; el despliegue en Render continúa pendiente.
+- El Blueprint y la imagen multietapa son el mecanismo ya usado por `main` en
+  Render. En este equipo no se ejecutó una construcción local de la imagen porque
+  el motor Linux de Docker Desktop no estaba activo; no es requisito para el
+  despliegue mediante Blueprint. Se comprobó que las fuentes de `COPY` existen
+  y que los 19 hashes de ambos manifiestos son iguales con finales de línea
+  CRLF y LF. La ampliación permanece en su rama hasta la autorización de merge.
 
 ## Reproducción local del contenedor
 

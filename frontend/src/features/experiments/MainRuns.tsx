@@ -13,11 +13,14 @@ import type { EvolutionParameters, OptimizationResponse, ScenarioSpec } from "@/
 export const MAIN_RUNS = [
   { id: "01", title: "Ruta completa · Santa Rosa ampliada", model: "tsp", scenario: "expanded", territory: "srq_extended", count: 33, seed: 11 },
   { id: "02", title: "Ruta completa · selección de 8", model: "tsp", scenario: "custom", territory: "srq_extended", count: 8, seed: 22 },
-  { id: "03", title: "Jornada · cuenca media y alta", model: "day", scenario: "expanded", territory: "middle_upper", count: 7, seed: 33, day: 240, service: 15 },
-  { id: "04", title: "Jornada · cuenca baja", model: "day", scenario: "expanded", territory: "lower_basin", count: 3, seed: 44, day: 180, service: 20 },
+  { id: "03", title: "Jornada · 18 paradas originales", model: "day", scenario: "custom", territory: "srq_extended", count: 18, seed: 33, day: 240, service: 15 },
+  { id: "04", title: "Jornada · cuenca media y alta", model: "day", scenario: "custom", territory: "middle_upper", count: 6, seed: 44, day: 180, service: 20 },
 ] as const;
 
-export const CUSTOM_STOPS = ["SRQ-P01", "SRQ-P02", "SRQ-P03", "SRQ-P04", "SRQ-P05", "SRQ-P06", "SRQ-P07", "SRQ-P08"];
+export const SRQ_EIGHT = Array.from({ length: 8 }, (_, index) => `SRQ-P${String(index + 1).padStart(2, "0")}`);
+export const SRQ_ORIGINAL = Array.from({ length: 18 }, (_, index) => `SRQ-P${String(index + 1).padStart(2, "0")}`);
+/** Seis accesos A de cuenca media y alta; MED-04 es el único acceso B. */
+export const MIDDLE_PLAUSIBLE = ["MED-01", "MED-02", "MED-03", "MED-05", "MED-06", "MED-07"];
 
 const COMMON_CONFIG: Omit<EvolutionParameters, "seed"> = {
   population_size: 100, tournament_size: 3, elite_count: 2,
@@ -30,7 +33,8 @@ type Case = (typeof MAIN_RUNS)[number];
 type RunState = { status: "running" | "complete" | "error"; response?: OptimizationResponse; message?: string };
 
 export function mainRequest(item: Case) {
-  const scenario: ScenarioSpec = { mode: item.scenario, stop_ids: item.scenario === "custom" ? CUSTOM_STOPS : [], territory_id: item.territory };
+  const stop_ids = item.id === "02" ? SRQ_EIGHT : item.id === "03" ? SRQ_ORIGINAL : item.id === "04" ? MIDDLE_PLAUSIBLE : [];
+  const scenario: ScenarioSpec = { mode: item.scenario, stop_ids, territory_id: item.territory };
   const evolution: EvolutionParameters = { ...COMMON_CONFIG, seed: item.seed };
   return item.model === "tsp"
     ? { model: "tsp" as const, body: { scenario, method: "genetic_algorithm" as const, evolution, include_history: true } }
@@ -90,7 +94,7 @@ export function MainRuns() {
 
   return <section className="space-y-5" aria-labelledby="main-runs-title"><div><h2 id="main-runs-title" className="text-lg font-semibold">Cuatro condiciones de planificación</h2><p className="text-sm text-muted-foreground">Cada corrida usa datos de entrada distintos. Sirven para demostrar el sistema; no aíslan el efecto de la semilla ni se comparan como un mismo problema.</p></div>
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{MAIN_RUNS.map((item) => { const run = runs[item.id]; return <Card key={item.id} className={`p-4 ${selectedId === item.id ? "border-primary bg-primary-light/20" : ""}`}><button type="button" className="w-full text-left" aria-pressed={selectedId === item.id} onClick={() => setSelectedId(item.id)}><span className="text-xs text-muted-foreground">Corrida {item.id} · semilla {item.seed}</span><strong className="mt-1 block text-sm">{item.title}</strong><span className="mt-1 block text-xs text-muted-foreground">{item.count} paradas{item.model === "day" ? ` · ${item.day}/${item.service} min` : ""}</span><span className="mt-2 block text-xs font-medium">{run?.status === "complete" ? "Completada" : run?.status === "running" ? "Ejecutando…" : run?.status === "error" ? "Error" : "Pendiente"}</span></button><Button size="sm" className="mt-3 w-full" disabled={run?.status === "running"} onClick={() => { setSelectedId(item.id); void execute(item); }}>{run?.status === "complete" ? "Repetir corrida" : "Ejecutar corrida"}</Button>{run?.message ? <p role="alert" className="mt-2 text-xs text-critical">{run.message}</p> : null}</Card>; })}</div>
-    <Card className="p-4 text-xs text-muted-foreground"><p>Configuración común: población 100, torneo 3, elitismo 2, OX 0,90, inversión 0,20, máximo 500 generaciones, 50 000 evaluaciones y estancamiento de 100. Jornada limitada usa el decodificador original <code>prefix</code>.</p><p className="mt-1">La selección SRQ-P01–SRQ-P08 se fijó por orden canónico antes de ejecutar. Las cuatro corridas demuestran condiciones territoriales distintas y no deben compararse como si resolvieran la misma instancia.</p></Card>
+    <Card className="p-4 text-xs text-muted-foreground"><p>Configuración común: población 100, torneo 3, elitismo 2, OX 0,90, inversión 0,20, máximo 500 generaciones, 50 000 evaluaciones y estancamiento de 100. Jornada limitada usa el decodificador original <code>prefix</code>.</p><p className="mt-1">Las selecciones están fijadas antes de ejecutar: SRQ-P01–SRQ-P08, SRQ-P01–SRQ-P18 y los seis accesos cartográficamente plausibles de cuenca media y alta (MED-01, 02, 03, 05, 06 y 07). MED-04 queda fuera por accesibilidad dudosa. Estas corridas muestran condiciones diferentes; no aíslan el efecto de la semilla ni permiten comparar distancias como si fueran la misma instancia.</p></Card>
     {active?.response ? <RunDetail response={active.response} item={selected} /> : <p className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">Selecciona y ejecuta una corrida para ver su cromosoma, ruta y evolución.</p>}
   </section>;
 }

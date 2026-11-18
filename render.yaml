@@ -3,6 +3,7 @@ services:
     name: ag-inspecciones-preventivas-ods13
     runtime: docker
     plan: free
+    autoDeployTrigger: commit
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /api/v1/health

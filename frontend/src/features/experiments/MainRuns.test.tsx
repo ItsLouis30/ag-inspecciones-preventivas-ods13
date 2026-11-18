@@ -10,11 +10,12 @@ describe("cuatro corridas demostrativas", () => {
     const requests = MAIN_RUNS.map(mainRequest);
     expect(requests[0].body.scenario.mode).toBe("expanded");
     expect(requests.map((request) => request.body.scenario.territory_id)).toEqual([
-      "srq_extended", "srq_extended", "middle_upper", "lower_basin",
+      "srq_extended", "srq_extended", "srq_extended", "middle_upper",
     ]);
     expect(requests[1].body.scenario.stop_ids).toEqual(["SRQ-P01", "SRQ-P02", "SRQ-P03", "SRQ-P04", "SRQ-P05", "SRQ-P06", "SRQ-P07", "SRQ-P08"]);
     expect(requests[2].model).toBe("day");
-    expect(requests[3].body.scenario).toEqual({ mode: "expanded", stop_ids: [], territory_id: "lower_basin" });
+    expect(requests[2].body.scenario.stop_ids).toEqual(Array.from({ length: 18 }, (_, index) => `SRQ-P${String(index + 1).padStart(2, "0")}`));
+    expect(requests[3].body.scenario).toEqual({ mode: "custom", stop_ids: ["MED-01", "MED-02", "MED-03", "MED-05", "MED-06", "MED-07"], territory_id: "middle_upper" });
     for (const request of requests) {
       const { seed, ...common } = request.body.evolution;
       expect(seed).toBeGreaterThan(0);

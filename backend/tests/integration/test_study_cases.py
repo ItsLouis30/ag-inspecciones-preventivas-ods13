@@ -68,8 +68,8 @@ async def test_four_main_demonstration_runs(project_root) -> None:
     cases = (
         ("01", "expanded", "srq_extended", 33, None, None, 11),
         ("02", "custom", "srq_extended", 8, None, None, 22),
-        ("03", "expanded", "middle_upper", 7, 240, 15, 33),
-        ("04", "expanded", "lower_basin", 3, 180, 20, 44),
+        ("03", "custom", "srq_extended", 18, 240, 15, 33),
+        ("04", "custom", "middle_upper", 6, 180, 20, 44),
     )
     common = {
         "population_size": 100, "tournament_size": 3, "elite_count": 2,
@@ -85,7 +85,11 @@ async def test_four_main_demonstration_runs(project_root) -> None:
             scenario = {
                 "mode": mode,
                 "territory_id": territory,
-                "stop_ids": [f"SRQ-P{i:02d}" for i in range(1, 9)] if mode == "custom" else [],
+                "stop_ids": (
+                    [f"SRQ-P{i:02d}" for i in range(1, 9)] if case_id == "02" else
+                    [f"SRQ-P{i:02d}" for i in range(1, 19)] if case_id == "03" else
+                    ["MED-01", "MED-02", "MED-03", "MED-05", "MED-06", "MED-07"] if case_id == "04" else []
+                ),
             }
             body = {
                 "scenario": scenario,
