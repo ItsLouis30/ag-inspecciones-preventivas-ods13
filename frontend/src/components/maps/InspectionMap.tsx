@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { MapContainer, Marker, Polyline, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { MapContainer, Marker, Polyline, Popup, TileLayer, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import { Crosshair, Diamond, Spline, WifiOff, Minus, Plus } from "lucide-react";
 import type { Coordinate, OriginResponse, StopResponse } from "@/types/api";
@@ -267,10 +267,18 @@ export function InspectionMap({
         })}
 
         {origin ? (
-          <Marker position={toLatLng(origin.routing_location.coordinates)} icon={originIcon()} zIndexOffset={1000}>
-            <Tooltip direction="top" offset={[0, -10]} className="map-label" permanent>
-              Origen · {origin.display_name}
+          <Marker
+            position={toLatLng(origin.routing_location.coordinates)}
+            icon={originIcon()}
+            zIndexOffset={1000}
+            eventHandlers={{ click: (event) => (event.target as L.Marker).closeTooltip() }}
+          >
+            <Tooltip direction="top" offset={[0, -10]} className="map-label">
+              Origen
             </Tooltip>
+            <Popup closeOnClick autoClose>
+              <span className="font-medium">Origen · {origin.display_name}</span>
+            </Popup>
           </Marker>
         ) : null}
       </MapContainer>
