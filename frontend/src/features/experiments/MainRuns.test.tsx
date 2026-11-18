@@ -9,9 +9,12 @@ describe("cuatro corridas demostrativas", () => {
     expect(MAIN_RUNS.map((item) => item.seed)).toEqual([11, 22, 33, 44]);
     const requests = MAIN_RUNS.map(mainRequest);
     expect(requests[0].body.scenario.mode).toBe("expanded");
-    expect(requests[1].body.scenario.stop_ids).toEqual(["P01", "P02", "P03", "P04", "P05", "P06", "P07", "P08"]);
+    expect(requests.map((request) => request.body.scenario.territory_id)).toEqual([
+      "srq_extended", "srq_extended", "middle_upper", "lower_basin",
+    ]);
+    expect(requests[1].body.scenario.stop_ids).toEqual(["SRQ-P01", "SRQ-P02", "SRQ-P03", "SRQ-P04", "SRQ-P05", "SRQ-P06", "SRQ-P07", "SRQ-P08"]);
     expect(requests[2].model).toBe("day");
-    expect(requests[3].body.scenario).toEqual({ mode: "custom", stop_ids: ["P02", "P03", "P04", "P05", "P10", "P11", "P12", "P13", "P14", "P15", "P16", "P17", "P18"] });
+    expect(requests[3].body.scenario).toEqual({ mode: "expanded", stop_ids: [], territory_id: "lower_basin" });
     for (const request of requests) {
       const { seed, ...common } = request.body.evolution;
       expect(seed).toBeGreaterThan(0);

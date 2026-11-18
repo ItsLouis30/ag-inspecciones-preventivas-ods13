@@ -11,8 +11,8 @@ export const COMPLETE_DOCUMENT_WARNING = "Incluye cuatro registros de auditoría
 export const SCENARIO_DESCRIPTIONS: Record<ScenarioMode, string> = {
   conservative:
     "Solo paradas de plausibilidad cartográfica A con todos los documentos originales recuperados.",
-  expanded: "Todos los 18 puntos considerados en el estudio.",
-  custom: "Selecciona entre 1 y 18 paradas para incluirlas en la planificación.",
+  expanded: "Todas las paradas del ámbito territorial seleccionado.",
+  custom: "Selecciona las paradas que deseas incluir en la planificación.",
 };
 
 export const TSP_METHODS: { value: TspMethod; label: string; short: string; description: string }[] = [

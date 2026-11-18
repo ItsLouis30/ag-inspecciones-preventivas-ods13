@@ -8,7 +8,7 @@ from app.api.schemas.optimization import (
     OptimizationResponse,
     TspOptimizationRequest,
 )
-from app.api.services import build_scenario, evolution_config, without_history
+from app.api.services import build_catalog_scenario, evolution_config, without_history
 from app.api.services import summarize_scenario
 from app.api.visualization import build_genetic_history, build_route_plan
 from app.genetic_algorithm import run_genetic_algorithm
@@ -49,7 +49,9 @@ def _optimize_tsp_sync(
     request: TspOptimizationRequest,
     context: ApiContext,
 ) -> OptimizationResponse:
-    scenario = build_scenario(context.dataset, request.scenario)
+    scenario, _ = build_catalog_scenario(
+        context.territories, context.pilot_dataset, request.scenario
+    )
     if request.method == "nearest_neighbor":
         result = solve_nearest_neighbor(scenario).as_dict()
     elif request.method == "directed_two_opt":
@@ -99,7 +101,9 @@ def _optimize_limited_day_sync(
     request: LimitedDayOptimizationRequest,
     context: ApiContext,
 ) -> OptimizationResponse:
-    scenario = build_scenario(context.dataset, request.scenario)
+    scenario, _ = build_catalog_scenario(
+        context.territories, context.pilot_dataset, request.scenario
+    )
     policy = LimitedDayPolicy(
         day_limit_min=request.day_limit_min,
         service_time_min=request.service_time_min,

@@ -21,6 +21,7 @@ def load_matrix_csv(
     name: str,
     unit: str,
     expected_sha256: str | None = None,
+    id_column_names: tuple[str, ...] = ("origin_destination",),
 ) -> DirectedMatrix:
     if not path.is_file():
         raise SchemaValidationError(f"No existe la matriz requerida: {path}.")
@@ -36,9 +37,10 @@ def load_matrix_csv(
     if len(rows) < 2:
         raise SchemaValidationError(f"{path} no contiene encabezado y filas de datos.")
     header = rows[0]
-    if not header or header[0] != "origin_destination":
+    if not header or header[0] not in id_column_names:
         raise SchemaValidationError(
-            f"La primera columna de {path} debe llamarse 'origin_destination'."
+            f"La primera columna de {path} debe ser una de {id_column_names}; "
+            f"se recibió {header[0] if header else None!r}."
         )
     column_ids = tuple(header[1:])
     if not column_ids or any(not node_id for node_id in column_ids):

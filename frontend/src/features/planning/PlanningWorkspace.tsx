@@ -18,7 +18,7 @@ import { SequenceStrip } from "./SequenceStrip";
 import { ChromosomeViewer } from "./ChromosomeViewer";
 
 function sameSpec(a: ScenarioSpec, b: ScenarioSpec) {
-  return a.mode === b.mode && [...a.stop_ids].sort().join() === [...b.stop_ids].sort().join();
+  return a.mode === b.mode && a.territory_id === b.territory_id && [...a.stop_ids].sort().join() === [...b.stop_ids].sort().join();
 }
 
 /**
@@ -46,10 +46,10 @@ export function PlanningWorkspace({
   emptyTitle: string;
   emptyDescription: string;
 }) {
-  const { customStopIds } = useWorkspace();
+  const { customStopIds, territoryId } = useWorkspace();
   const [previewMode, setPreviewMode] = useState<ScenarioMode>("expanded");
   const onScenarioChange = useCallback((mode: ScenarioMode) => setPreviewMode(mode), []);
-  const previewSpec = buildScenarioSpec(previewMode, customStopIds);
+  const previewSpec = buildScenarioSpec(previewMode, customStopIds, territoryId);
   const mapSpec = runScenario ?? previewSpec;
   const mapQuery = useScenarioMap(mapSpec);
   const overlay = useRouteOverlay(response);

@@ -5,7 +5,7 @@ import { ChevronDown, Dna, Layers, ListChecks, Timer, TriangleAlert } from "luci
 import { Field, Input, NativeSelect, Switch } from "@/components/ui/form-controls";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger, Segmented, Tooltip } from "@/components/ui/misc";
 import { useWorkspace } from "@/app/workspace";
-import { useScenarios, useStops } from "@/hooks/queries";
+import { useScenarios, useStops, useTerritories } from "@/hooks/queries";
 import { COMPLETE_DOCUMENT_WARNING, SCENARIO_LABELS } from "@/lib/labels";
 import { cn } from "@/lib/utils";
 import type { EvolutionParameters, ScenarioMode } from "@/types/api";
@@ -28,9 +28,10 @@ function errorAt(errors: FieldErrors, path: string): string | undefined {
 export function ScenarioField() {
   const { control } = useFormContext<SharedValues>();
   const mode = useWatch({ control, name: "scenarioMode" });
-  const scenarios = useScenarios();
-  const stops = useStops();
-  const { customStopIds, setCustomStopIds } = useWorkspace();
+  const { territoryId, setTerritoryId, customStopIds, setCustomStopIds } = useWorkspace();
+  const territories = useTerritories();
+  const scenarios = useScenarios(territoryId);
+  const stops = useStops(territoryId);
   const [open, setOpen] = useState(false);
 
   const countFor = (item: ScenarioMode) =>
@@ -38,6 +39,22 @@ export function ScenarioField() {
 
   return (
     <div className="flex flex-col gap-2">
+      <Field label="Ámbito territorial" htmlFor="territory">
+        <NativeSelect
+          id="territory"
+          value={territoryId}
+          onChange={(event) => {
+            setTerritoryId(event.target.value);
+            setCustomStopIds([]);
+          }}
+        >
+          {(territories.data ?? []).filter((item) => item.planning_enabled).map((item) => (
+            <option key={item.territory_id} value={item.territory_id}>
+              {item.name} · {item.stop_count} paradas
+            </option>
+          ))}
+        </NativeSelect>
+      </Field>
       <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
         <Layers className="size-3.5" aria-hidden /> Escenario
       </span>
@@ -66,7 +83,7 @@ export function ScenarioField() {
           />
         )}
       />
-      {mode === "expanded" ? <p className="text-xs text-muted-foreground">{COMPLETE_DOCUMENT_WARNING}.</p> : null}
+      {mode === "expanded" && territoryId === "srq_extended" ? <p className="text-xs text-muted-foreground">{COMPLETE_DOCUMENT_WARNING}.</p> : null}
       {mode === "custom" ? (
         <Collapsible open={open} onOpenChange={setOpen} className="rounded-xl border border-border bg-muted/40">
           <CollapsibleTrigger className="flex w-full cursor-pointer items-center justify-between px-3 py-2 text-xs font-medium">
@@ -110,6 +127,12 @@ export function MethodField({
   options: { value: string; label: string; short: string; description: string }[];
 }) {
   const { control } = useFormContext<SharedValues>();
+  const mode = useWatch({ control, name: "scenarioMode" });
+  const { territoryId, customStopIds } = useWorkspace();
+  const scenarios = useScenarios(territoryId);
+  const stopCount = mode === "custom"
+    ? customStopIds.length
+    : scenarios.data?.find((scenario) => scenario.mode === "expanded")?.stop_count ?? 0;
   const genetic = options.find((option) => option.value.includes("genetic"));
   const comparisons = options.filter((option) => option !== genetic);
   return (
@@ -130,12 +153,14 @@ export function MethodField({
           <div className="mt-3 grid grid-cols-2 gap-2">
             {comparisons.map((option) => {
               const checked = field.value === option.value;
+              const exact = option.value === "held_karp" || option.value === "limited_day_exact";
+              const disabled = exact && stopCount > 18;
               return (
                 <label
                   key={option.value}
                   className={cn(
                     "relative flex cursor-pointer flex-col gap-0.5 rounded-xl border p-3 transition-all has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring",
-                    checked ? "border-primary bg-primary-light/30 ring-1 ring-primary/20" : "border-border hover:border-slate-300",
+                    disabled ? "cursor-not-allowed border-border bg-muted opacity-60" : checked ? "border-primary bg-primary-light/30 ring-1 ring-primary/20" : "border-border hover:border-slate-300",
                   )}
                   title={option.description}
                 >
@@ -144,6 +169,7 @@ export function MethodField({
                     name={field.name}
                     value={option.value}
                     checked={checked}
+                    disabled={disabled}
                     onChange={() => field.onChange(option.value)}
                     className="sr-only"
                   />
@@ -151,7 +177,7 @@ export function MethodField({
                     {option.value.includes("genetic") ? <Dna className="size-3.5 text-primary" aria-hidden /> : null}
                     {option.label}
                   </span>
-                  <span className="text-[11px] text-muted-foreground">{option.short}</span>
+                  <span className="text-[11px] text-muted-foreground">{disabled ? "Disponible hasta 18 paradas por seguridad" : option.short}</span>
                 </label>
               );
             })}
@@ -287,7 +313,7 @@ export function ExactLimitsFields() {
         <Field label="Tiempo máximo (s)" htmlFor="exact.time_limit_s" hint="≤ 120 s" error={errorAt(errors, "exact.time_limit_s")}>
           <NumberInput name="exact.time_limit_s" step="any" />
         </Field>
-        <Field label="Memoria máxima (MB)" htmlFor="exact.memory_limit_mb" hint="≤ 512 MB" error={errorAt(errors, "exact.memory_limit_mb")}>
+        <Field label="Memoria máxima (MB)" htmlFor="exact.memory_limit_mb" hint="≤ 256 MB" error={errorAt(errors, "exact.memory_limit_mb")}>
           <NumberInput name="exact.memory_limit_mb" step="any" />
         </Field>
       </div>

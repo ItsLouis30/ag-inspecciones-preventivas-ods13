@@ -5,10 +5,10 @@ import { Crosshair, Diamond, Spline, WifiOff, Minus, Plus } from "lucide-react";
 import type { Coordinate, OriginResponse, StopResponse } from "@/types/api";
 import { cn } from "@/lib/utils";
 import { Tooltip as UiTooltip } from "@/components/ui/misc";
-import { accessIcon, criticalIcon, originIcon, MAP_COLORS, type AccessMarkerState } from "./markers";
+import { accessIcon, criticalIcon, originIcon, MAP_COLORS, shortMarkerId, type AccessMarkerState } from "./markers";
 import { MapLegend } from "./MapLegend";
 
-/** Centro aproximado del distrito de Santa Rosa de Quives (solo vista inicial). */
+/** Centro aproximado de la cuenca del Chillón; FitBounds encuadra cada ámbito. */
 const DEFAULT_CENTER: [number, number] = [-11.69, -76.85];
 
 export interface RouteOverlay {
@@ -245,7 +245,7 @@ export function InspectionMap({
           let state: AccessMarkerState = "default";
           if (route) state = number ? "visit" : omitted.has(stop.stop_id) ? "omitted" : "dimmed";
           if (dimmedIds?.has(stop.stop_id)) state = "dimmed";
-          const label = number ? String(number) : stop.stop_id.replace(/^P0?/, "");
+          const label = number ? String(number) : shortMarkerId(stop.stop_id);
           const selected = selectedId === stop.stop_id;
           return (
             <Marker
@@ -269,7 +269,7 @@ export function InspectionMap({
         {origin ? (
           <Marker position={toLatLng(origin.routing_location.coordinates)} icon={originIcon()} zIndexOffset={1000}>
             <Tooltip direction="top" offset={[0, -10]} className="map-label" permanent>
-              Origen · Yangas
+              Origen · {origin.display_name}
             </Tooltip>
           </Marker>
         ) : null}

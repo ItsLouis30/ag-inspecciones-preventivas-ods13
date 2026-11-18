@@ -5,6 +5,7 @@ import type {
   ScenarioSpec,
   ScenarioSummary,
   StopListResponse,
+  TerritoryResponse,
 } from "@/types/api";
 
 export const systemApi = {
@@ -12,8 +13,9 @@ export const systemApi = {
 };
 
 export const scenariosApi = {
-  list: (signal?: AbortSignal) => apiRequest<ScenarioSummary[]>("/scenarios", { signal }),
-  stops: (signal?: AbortSignal) => apiRequest<StopListResponse>("/scenarios/stops", { signal }),
+  territories: (signal?: AbortSignal) => apiRequest<TerritoryResponse[]>("/scenarios/territories", { signal }),
+  list: (territoryId: string, signal?: AbortSignal) => apiRequest<ScenarioSummary[]>(`/scenarios?territory_id=${encodeURIComponent(territoryId)}`, { signal }),
+  stops: (territoryId: string, signal?: AbortSignal) => apiRequest<StopListResponse>(`/scenarios/stops?territory_id=${encodeURIComponent(territoryId)}`, { signal }),
   resolve: (spec: ScenarioSpec, signal?: AbortSignal) =>
     apiRequest<ScenarioSummary>("/scenarios/resolve", { method: "POST", body: spec, signal }),
   map: (spec: ScenarioSpec, signal?: AbortSignal) =>

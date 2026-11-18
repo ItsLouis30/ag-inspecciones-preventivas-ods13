@@ -6,15 +6,29 @@ El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planifi
 
 ## Estado de implementación
 
+- La ampliación territorial está implementada en `feature/expansion-cuenca-chillon`: 47 FTR, 43 paradas candidatas y tres ámbitos públicos con matrices dirigidas propias.
+- Santa Rosa de Quives ampliada —33 paradas, origen Yangas— es el ámbito predeterminado.
+- Cuenca media/alta —7 paradas, origen Canta— y cuenca baja —3 paradas, origen Puente Piedra— están disponibles para planificación.
+- La unión de 43 paradas se conserva solo para pruebas experimentales de escalabilidad.
 - Los datos geográficos y documentales del piloto están organizados.
 - Las Fases 1 a 7 del backend están implementadas: dominio, optimización, evaluación, API REST y contratos preparados para frontend.
 - El frontend React está implementado e integrado con ambos modelos de optimización.
 - El proyecto está preparado para desplegarse en Render como un único servicio Docker.
 - No existe persistencia: los resultados se calculan bajo demanda.
 - La implementación seguirá el [plan técnico del backend](docs/IMPLEMENTATION_PLAN.md).
-- El backend funciona completamente offline y dispone de 103 pruebas automatizadas.
+- El backend funciona completamente offline; en la revisión final aprobaron 104 pruebas síncronas. Las pruebas ASGI quedaron pendientes en el entorno administrado de Windows y funcionaron en la verificación manual local.
 
 ## Contenido verificado
+
+### Catálogo territorial ampliado
+
+- 47 FTR únicas: 43 con documento original recuperado y cuatro snapshots auditados —0407 a 0410—.
+- 43 paradas candidatas únicas: 33 en Santa Rosa de Quives, 7 en cuenca media/alta y 3 en cuenca baja.
+- 39 accesos de plausibilidad cartográfica A y cuatro B; ninguno está validado operativamente en campo.
+- Matrices OSRM dirigidas de 34×34, 8×8 y 4×4, sin pares desconectados en la auditoría.
+- Matriz 44×44 de la unión, reservada para escalabilidad y no presentada como una campaña única.
+
+### Piloto histórico preservado
 
 - 19 registros FTR del piloto en Santa Rosa de Quives.
 - 15 PDF oficiales recuperados desde ANA/SIGRID.
@@ -27,6 +41,7 @@ El sistema está vinculado al ODS 13.1 y se concibe como un prototipo de planifi
 - Recorridos de referencia por vecino más cercano y 2-opt dirigido.
 - Manifiestos SHA-256 y 46 comprobaciones automáticas de integridad.
 
+Los archivos, matrices y experimentos del piloto permanecen intactos para reproducibilidad.
 Ninguna parada está declarada como acceso operativamente validado.
 
 ## Organización

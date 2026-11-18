@@ -36,15 +36,20 @@ async def test_scenario_and_stop_contracts_preserve_traceability(project_root) -
     async with client(project_root) as api:
         scenarios = await api.get("/api/v1/scenarios")
         assert scenarios.status_code == 200
-        assert [item["stop_count"] for item in scenarios.json()] == [13, 18]
+        assert [item["stop_count"] for item in scenarios.json()] == [33]
+        territories = await api.get("/api/v1/scenarios/territories")
+        assert territories.status_code == 200
+        assert [(item["territory_id"], item["stop_count"]) for item in territories.json()] == [
+            ("srq_extended", 33), ("middle_upper", 7), ("lower_basin", 3), ("union_43", 43)
+        ]
         stops = await api.get("/api/v1/scenarios/stops")
         assert stops.status_code == 200
         payload = stops.json()
-        assert payload["count"] == 18
-        p11 = next(stop for stop in payload["stops"] if stop["stop_id"] == "P11")
+        assert payload["count"] == 33
+        p11 = next(stop for stop in payload["stops"] if stop["stop_id"] == "SRQ-P11")
         assert p11["priority"] == "other"
         assert p11["operationally_validated"] is False
-        p06 = next(stop for stop in payload["stops"] if stop["stop_id"] == "P06")
+        p06 = next(stop for stop in payload["stops"] if stop["stop_id"] == "SRQ-P06")
         assert p06["original_documents_available"] is False
 
 
@@ -72,7 +77,7 @@ async def test_tsp_reference_and_genetic_endpoints(project_root) -> None:
     async with client(project_root) as api:
         nearest = await api.post(
             "/api/v1/optimize/tsp",
-            json={"scenario": {"mode": "expanded"}, "method": "nearest_neighbor"},
+            json={"scenario": {"mode": "expanded", "territory_id": "pilot_original"}, "method": "nearest_neighbor"},
         )
         assert nearest.status_code == 200
         assert nearest.json()["result"]["distance_km"] == "91.5095"
@@ -119,7 +124,7 @@ async def test_limited_day_endpoints_and_experimental_guards(project_root) -> No
         greedy = await api.post(
             "/api/v1/optimize/limited-day",
             json={
-                "scenario": {"mode": "expanded"},
+                "scenario": {"mode": "expanded", "territory_id": "pilot_original"},
                 "method": "priority_nearest_greedy",
                 "day_limit_min": "240",
                 "service_time_min": "15",

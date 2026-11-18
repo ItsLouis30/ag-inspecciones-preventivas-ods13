@@ -22,6 +22,8 @@ export type Coordinate = Schemas["CoordinateResponse"];
 export type LocationPoint = Schemas["LocationPointResponse"];
 export type DocumentReference = Schemas["DocumentReferenceResponse"];
 
+export type TerritoryResponse = Schemas["TerritoryResponse"];
+
 export type EvolutionParameters = Schemas["EvolutionParameters"];
 export type ExactLimits = Schemas["ExactLimits"];
 export type TspOptimizationRequest = Schemas["TspOptimizationRequest"];
@@ -42,6 +44,8 @@ export type ExperimentRunRequest = Schemas["ExperimentRunRequest"];
 export interface HealthResponse {
   status: string;
   dataset_id: string;
+  pilot_dataset_id: string;
+  default_territory_id: string;
   offline_ready: boolean;
   code_revision: string;
   cors_origins: string[];

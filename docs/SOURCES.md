@@ -1,6 +1,8 @@
 # Fuentes y estado de recuperación
 
-Fecha de auditoría y recuperación: 14 de noviembre de 2026.
+Fecha de auditoría del piloto: 14 de noviembre de 2026. Consolidación territorial: 17 de noviembre de 2026.
+
+La ampliación reúne 47 FTR: 43 con documento original recuperado y las cuatro fichas 0407–0410 conservadas como snapshots auditados. Los lotes, fichas y estado de recuperación se detallan en `config/expansion_sources.json` y `docs/CHILLON_EXPANSION_CONSOLIDATED_AUDIT.md`. No se demostró que este corpus sea una correspondencia uno a uno con los 52 puntos del comunicado de ANA.
 
 ## ANA y SIGRID
 

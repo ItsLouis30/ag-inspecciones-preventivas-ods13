@@ -12,6 +12,7 @@ class ScenarioSpec(BaseModel):
 
     mode: Literal["conservative", "expanded", "custom"] = "expanded"
     stop_ids: tuple[str, ...] = ()
+    territory_id: str | None = None
 
     @model_validator(mode="after")
     def validate_selection(self) -> "ScenarioSpec":
@@ -26,6 +27,7 @@ class ScenarioSpec(BaseModel):
 
 class ScenarioSummary(BaseModel):
     scenario_id: str
+    territory_id: str
     mode: str
     stop_count: int
     origin_id: str
@@ -33,6 +35,18 @@ class ScenarioSummary(BaseModel):
     excluded: tuple[dict[str, str], ...]
     matrix_hashes: dict[str, str]
     warnings: tuple[str, ...]
+
+
+class TerritoryResponse(BaseModel):
+    territory_id: str
+    name: str
+    description: str
+    stop_count: int = Field(ge=0)
+    origin_id: str
+    planning_enabled: bool
+    scalability_only: bool
+    exact_tsp_max_stops: int = 18
+    exact_limited_day_max_stops: int = 18
 
 
 class CoordinateResponse(BaseModel):

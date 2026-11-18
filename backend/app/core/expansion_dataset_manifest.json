@@ -1,0 +1,67 @@
+{
+  "catalog_id": "chillon-expansion-2026-v1",
+  "schema_version": 1,
+  "default_territory_id": "srq_extended",
+  "files": {
+    "ftr": {"path": "data/processed/expansion/ftr_47_consolidated.csv", "sha256": "E32616B71D7EC7EA58899E1B08D761005B4C8DD75F2180CF700FA0020B3D4BD4"},
+    "stops": {"path": "data/processed/expansion/candidate_stops_43.csv", "sha256": "B1CE2EF3528585216C15C11C4D602250D16174D7F0F51EE3CD66CE25AAA67F63"},
+    "new_srq_screening": {"path": "data/processed/expansion/new_srq_cartographic_screening.csv", "sha256": "1FECB91EA396C3C0590D76FF4A0C045E66640AA428673A546B7F9BB58A395E33"},
+    "external_screening": {"path": "data/processed/expansion/external_cartographic_screening.csv", "sha256": "C94A6787925CEFD07EB2D6A2043519E030093EB770257BD935C4955A107CED62"},
+    "external_clusters": {"path": "data/processed/expansion/candidate_stop_clusters.csv", "sha256": "EF0EF08729E7478C36D2CCC8B83D999B561A40E62808444E0B8561EA5E544A4B"},
+    "origins": {"path": "data/processed/expansion/origin_candidates.csv", "sha256": "367A13C21AD241CC2F859AF43E692CAB40FEFAF53F44215BB9FFCFF812D27834"}
+  },
+  "territories": [
+    {
+      "territory_id": "srq_extended",
+      "scope": "santa_rosa_de_quives",
+      "name": "Santa Rosa de Quives ampliada",
+      "description": "33 paradas candidatas con origen experimental en Yangas.",
+      "origin_row_id": "YANGAS",
+      "origin_node_id": "ORIGIN-santa_rosa_de_quives",
+      "expected_stops": 33,
+      "planning_enabled": true,
+      "scalability_only": false,
+      "distance": {"path": "data/processed/expansion/matrices/srq_distance_km.csv", "sha256": "7AC9F43DD59AA245CFD696C427FC712BDC3BE8449F28DFC9582DB0D38DE5C8FB"},
+      "duration": {"path": "data/processed/expansion/matrices/srq_duration_min.csv", "sha256": "DD8159A14E9AAF535C62A3AF058A578336CCE1B0727E0375A4E8DB8F10C351A5"}
+    },
+    {
+      "territory_id": "middle_upper",
+      "scope": "cuenca_media_alta",
+      "name": "Cuenca media y alta",
+      "description": "7 paradas candidatas con origen experimental en Canta.",
+      "origin_row_id": "CANTA",
+      "origin_node_id": "ORIGIN-cuenca_media_alta",
+      "expected_stops": 7,
+      "planning_enabled": true,
+      "scalability_only": false,
+      "distance": {"path": "data/processed/expansion/matrices/media_alta_distance_km.csv", "sha256": "4D5C9FFB61C258AABF1E1FA7D13AE46FC8D5CA48BE254CD44D06FBD7C2E0114D"},
+      "duration": {"path": "data/processed/expansion/matrices/media_alta_duration_min.csv", "sha256": "DB3A1694D86E0D18E9FCCDC2062B511022F91AFEEC6D27A033B99335E54AD5C5"}
+    },
+    {
+      "territory_id": "lower_basin",
+      "scope": "cuenca_baja",
+      "name": "Cuenca baja",
+      "description": "3 paradas candidatas con origen experimental en Puente Piedra.",
+      "origin_row_id": "PUENTE_PIEDRA",
+      "origin_node_id": "ORIGIN-cuenca_baja",
+      "expected_stops": 3,
+      "planning_enabled": true,
+      "scalability_only": false,
+      "distance": {"path": "data/processed/expansion/matrices/baja_distance_km.csv", "sha256": "1E362A873D0B6EC2709DC5098F3C436EBA25621EE0005A8FF0FB8CDF5C34CBF0"},
+      "duration": {"path": "data/processed/expansion/matrices/baja_duration_min.csv", "sha256": "724B0EDB396EB8A46AB701D90FADB7D77BB374B2FD38DD52932F877A13FDBADA"}
+    },
+    {
+      "territory_id": "union_43",
+      "scope": "all",
+      "name": "Unión de 43 paradas",
+      "description": "Instancia experimental reservada para pruebas de escalabilidad; no representa una campaña única recomendada.",
+      "origin_row_id": "YANGAS",
+      "origin_node_id": "ORIGIN-UNION-YANGAS",
+      "expected_stops": 43,
+      "planning_enabled": false,
+      "scalability_only": true,
+      "distance": {"path": "data/processed/expansion/matrices/union_43_distance_km.csv", "sha256": "A63EFC199BE416A89DAE131CB9125077B9F448904EE5FC09804623432C4B2C0D"},
+      "duration": {"path": "data/processed/expansion/matrices/union_43_duration_min.csv", "sha256": "75E6A99ADCCF98F855DBC974C6A8DC5F988EFF42264855A3CED3A60919927D23"}
+    }
+  ]
+}

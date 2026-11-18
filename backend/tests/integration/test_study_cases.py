@@ -24,7 +24,7 @@ async def test_twenty_study_case_runs_are_feasible_and_traceable(project_root) -
         protocol = (await api.get("/api/v1/experiments/protocol")).json()
         assert tuple(protocol["seeds"]) == seeds
         for case_id, mode, day, service in cases:
-            scenario = {"mode": mode}
+            scenario = {"mode": mode, "territory_id": "pilot_original"}
             if mode == "custom":
                 scenario["stop_ids"] = [f"P{i:02d}" for i in range(1, 9)]
             for seed in seeds:
@@ -66,10 +66,10 @@ async def test_twenty_study_case_runs_are_feasible_and_traceable(project_root) -
 @pytest.mark.anyio
 async def test_four_main_demonstration_runs(project_root) -> None:
     cases = (
-        ("01", "expanded", None, None, 11),
-        ("02", "custom", None, None, 22),
-        ("03", "expanded", 240, 15, 33),
-        ("04", "conservative", 180, 20, 44),
+        ("01", "expanded", "srq_extended", 33, None, None, 11),
+        ("02", "custom", "srq_extended", 8, None, None, 22),
+        ("03", "expanded", "middle_upper", 7, 240, 15, 33),
+        ("04", "expanded", "lower_basin", 3, 180, 20, 44),
     )
     common = {
         "population_size": 100, "tournament_size": 3, "elite_count": 2,
@@ -81,8 +81,12 @@ async def test_four_main_demonstration_runs(project_root) -> None:
     async with AsyncClient(
         transport=ASGITransport(app=create_app(project_root)), base_url="http://test"
     ) as api:
-        for case_id, mode, day, service, seed in cases:
-            scenario = {"mode": mode, "stop_ids": [f"P{i:02d}" for i in range(1, 9)] if mode == "custom" else []}
+        for case_id, mode, territory, count, day, service, seed in cases:
+            scenario = {
+                "mode": mode,
+                "territory_id": territory,
+                "stop_ids": [f"SRQ-P{i:02d}" for i in range(1, 9)] if mode == "custom" else [],
+            }
             body = {
                 "scenario": scenario,
                 "method": "genetic_algorithm" if day is None else "limited_day_genetic_algorithm",
@@ -97,6 +101,7 @@ async def test_four_main_demonstration_runs(project_root) -> None:
             response = await api.post(path, json=body)
             assert response.status_code == 200, (case_id, response.text)
             payload = response.json()
+            assert payload["scenario"]["stop_count"] == count
             genes = payload["result"]["best_chromosome"]
             route = payload["route_plan"]
             assert len(genes) == payload["scenario"]["stop_count"]

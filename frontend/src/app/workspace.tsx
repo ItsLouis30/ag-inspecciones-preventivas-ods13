@@ -20,6 +20,8 @@ export interface StoredRun<Req> {
 }
 
 interface WorkspaceState {
+  territoryId: string;
+  setTerritoryId: (id: string) => void;
   customStopIds: string[];
   setCustomStopIds: (ids: string[]) => void;
   toggleCustomStop: (id: string) => void;
@@ -34,6 +36,7 @@ interface WorkspaceState {
 const WorkspaceContext = createContext<WorkspaceState | null>(null);
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
+  const [territoryId, setTerritoryId] = useState("srq_extended");
   const [customStopIds, setCustomStopIds] = useState<string[]>([]);
   const [tspRun, setTspRun] = useState<WorkspaceState["tspRun"]>(null);
   const [limitedDayRun, setLimitedDayRun] = useState<WorkspaceState["limitedDayRun"]>(null);
@@ -47,6 +50,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({
+      territoryId,
+      setTerritoryId,
       customStopIds,
       setCustomStopIds,
       toggleCustomStop,
@@ -57,7 +62,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       experimentRun,
       setExperimentRun,
     }),
-    [customStopIds, toggleCustomStop, tspRun, limitedDayRun, experimentRun],
+    [territoryId, customStopIds, toggleCustomStop, tspRun, limitedDayRun, experimentRun],
   );
 
   return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>;

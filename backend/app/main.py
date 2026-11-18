@@ -16,7 +16,7 @@ from app.domain.errors import DataValidationError
 from app.core.settings import load_api_settings
 from app.experiments import load_experiment_protocol
 from app.frontend import mount_compiled_frontend
-from app.geography import load_reference_dataset
+from app.geography import load_reference_dataset, load_territory_catalog
 
 
 DEFAULT_PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -49,9 +49,11 @@ def _code_revision(project_root: Path) -> str:
 def create_app(project_root: Path | None = None) -> FastAPI:
     root = (project_root or DEFAULT_PROJECT_ROOT).resolve()
     settings = load_api_settings()
+    pilot_dataset = load_reference_dataset(root)
     context = ApiContext(
         project_root=root,
-        dataset=load_reference_dataset(root),
+        pilot_dataset=pilot_dataset,
+        territories=load_territory_catalog(root, pilot_dataset),
         experiment_protocol=load_experiment_protocol(root / "config" / "ga_experiment_v1.json"),
         code_revision=_code_revision(root),
         settings=settings,
@@ -62,7 +64,7 @@ def create_app(project_root: Path | None = None) -> FastAPI:
             "API offline para escenarios, ATSP dirigido, algoritmo genético y jornada limitada. "
             "Las paradas no están validadas operativamente en campo."
         ),
-        version="0.6.0",
+        version="0.7.0",
     )
     application.state.context = context
     application.add_middleware(

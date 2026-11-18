@@ -6,9 +6,10 @@ import type { ScenarioSpec } from "@/types/api";
 /** Claves deterministas de consulta. */
 export const queryKeys = {
   health: ["health"] as const,
-  scenarios: ["scenarios"] as const,
-  stops: ["stops"] as const,
-  scenarioMap: (spec: ScenarioSpec) => ["scenario-map", spec.mode, [...spec.stop_ids].sort()] as const,
+  territories: ["territories"] as const,
+  scenarios: (territoryId: string) => ["scenarios", territoryId] as const,
+  stops: (territoryId: string) => ["stops", territoryId] as const,
+  scenarioMap: (spec: ScenarioSpec) => ["scenario-map", spec.territory_id, spec.mode, [...spec.stop_ids].sort()] as const,
   protocol: ["experiments", "protocol"] as const,
 };
 
@@ -21,18 +22,26 @@ export function useHealth() {
   });
 }
 
-export function useScenarios() {
+export function useTerritories() {
   return useQuery({
-    queryKey: queryKeys.scenarios,
-    queryFn: ({ signal }) => scenariosApi.list(signal),
+    queryKey: queryKeys.territories,
+    queryFn: ({ signal }) => scenariosApi.territories(signal),
     staleTime: Infinity,
   });
 }
 
-export function useStops() {
+export function useScenarios(territoryId: string) {
   return useQuery({
-    queryKey: queryKeys.stops,
-    queryFn: ({ signal }) => scenariosApi.stops(signal),
+    queryKey: queryKeys.scenarios(territoryId),
+    queryFn: ({ signal }) => scenariosApi.list(territoryId, signal),
+    staleTime: Infinity,
+  });
+}
+
+export function useStops(territoryId: string) {
+  return useQuery({
+    queryKey: queryKeys.stops(territoryId),
+    queryFn: ({ signal }) => scenariosApi.stops(territoryId, signal),
     staleTime: Infinity,
   });
 }

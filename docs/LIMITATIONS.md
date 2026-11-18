@@ -1,5 +1,13 @@
 # Advertencias y limitaciones
 
+## Alcance de la ampliación
+
+- Las 43 paradas son candidatas derivadas; ninguna acredita acceso operativo validado.
+- El catálogo contiene 39 accesos A y cuatro B. La categoría expresa plausibilidad cartográfica, no seguridad ni transitabilidad actual.
+- Las 47 FTR no pueden identificarse como “47 de los 52 puntos” anunciados por ANA: la correspondencia uno a uno con ese comunicado no está demostrada.
+- La unión de 43 paradas solo prueba conectividad y escalabilidad. No representa una campaña única recomendada.
+- Los orígenes de Yangas, Canta y Puente Piedra son experimentales.
+
 ## Fuentes incompletas
 
 Las FTR 0407, 0408, 0409 y 0410 fueron auditadas previamente, pero el lote SIGRID 22556 actualmente devuelve HTTP 404. Sus registros se mantienen en `config/missing_ftr_audit_snapshot.json` y están marcados como `audited_snapshot_source_unavailable`.

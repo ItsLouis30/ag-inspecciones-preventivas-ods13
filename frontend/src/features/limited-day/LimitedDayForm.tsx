@@ -75,7 +75,7 @@ export function LimitedDayForm({
   initialScenario?: ScenarioMode;
   onScenarioChange?: (mode: ScenarioMode) => void;
 }) {
-  const { limitedDayRun, setLimitedDayRun, customStopIds } = useWorkspace();
+  const { limitedDayRun, setLimitedDayRun, customStopIds, territoryId } = useWorkspace();
   const form = useForm<LimitedDayFormValues>({
     resolver: zodResolver(limitedDayFormSchema),
     defaultValues: limitedDayRun
@@ -96,7 +96,7 @@ export function LimitedDayForm({
 
   const onSubmit = form.handleSubmit((values) => {
     if (emptyCustom) return;
-    run.mutate(buildLimitedDayRequest(values, buildScenarioSpec(values.scenarioMode, customStopIds)), {
+    run.mutate(buildLimitedDayRequest(values, buildScenarioSpec(values.scenarioMode, customStopIds, territoryId)), {
       onError: (error) => {
         if (error instanceof ApiError) {
           error.issues.forEach((issue) => {

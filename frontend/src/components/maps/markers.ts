@@ -9,6 +9,11 @@ import L from "leaflet";
  */
 export type AccessMarkerState = "default" | "visit" | "omitted" | "dimmed";
 
+/** El código completo permanece en tooltip y ficha; el círculo usa su sufijo local. */
+export function shortMarkerId(id: string): string {
+  return id.split("-").at(-1) ?? id;
+}
+
 const COLORS = {
   river: "#2563EB",
   primary: "#0F766E",
@@ -44,7 +49,7 @@ export function accessIcon(label: string, state: AccessMarkerState, selected: bo
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
     tooltipAnchor: [size / 2, 0],
-    html: `<div style="width:${size}px;height:${size}px;border-radius:999px;display:flex;align-items:center;justify-content:center;font:600 ${fontSize}px/1 Inter Variable,system-ui,sans-serif;${style}${ring}transition:transform .15s;${selected ? "transform:scale(1.12);" : ""}">${escape(label)}</div>`,
+    html: `<div style="width:${size}px;height:${size}px;border-radius:999px;display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:visible;font:600 ${fontSize}px/1 Inter Variable,system-ui,sans-serif;${style}${ring}transition:transform .15s;${selected ? "transform:scale(1.12);" : ""}">${escape(label)}</div>`,
   });
 }
 

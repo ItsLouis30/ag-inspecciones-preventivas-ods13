@@ -22,13 +22,12 @@ import { OdsBadge } from "@/components/common/badges";
 import { MetricCard, MetricStrip } from "@/components/common/MetricCard";
 import { ErrorState } from "@/components/common/ErrorState";
 import { InspectionMap } from "@/components/maps/InspectionMap";
-import { useHealth, useScenarioMap, useScenarios, useStops } from "@/hooks/queries";
+import { useHealth, useScenarioMap, useScenarios, useStops, useTerritories } from "@/hooks/queries";
 import { useWorkspace } from "@/app/workspace";
 import { API_BASE_URL } from "@/services/apiClient";
 import { COMPLETE_DOCUMENT_WARNING, SCENARIO_DESCRIPTIONS, SCENARIO_LABELS } from "@/lib/labels";
 import { shortHash } from "@/lib/format";
-
-const EXPANDED = { mode: "expanded" as const, stop_ids: [] };
+import { NativeSelect } from "@/components/ui/form-controls";
 
 function ApiCard() {
   const health = useHealth();
@@ -77,10 +76,12 @@ function ApiCard() {
 }
 
 export function DashboardPage() {
-  const stops = useStops();
-  const scenarios = useScenarios();
-  const map = useScenarioMap(EXPANDED);
-  const { tspRun, limitedDayRun } = useWorkspace();
+  const { territoryId, setTerritoryId, setCustomStopIds, tspRun, limitedDayRun } = useWorkspace();
+  const territories = useTerritories();
+  const territory = territories.data?.find((item) => item.territory_id === territoryId);
+  const stops = useStops(territoryId);
+  const scenarios = useScenarios(territoryId);
+  const map = useScenarioMap({ mode: "expanded", stop_ids: [], territory_id: territoryId });
   const list = stops.data?.stops ?? [];
   const expanded = scenarios.data?.find((s) => s.mode === "expanded");
 
@@ -101,7 +102,7 @@ export function DashboardPage() {
               <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-[2.6rem]">
                 Planificación de inspecciones preventivas
               </h1>
-              <p className="mt-2 text-base text-muted-foreground sm:text-lg">Cuenca del río Chillón · Santa Rosa de Quives</p>
+              <p className="mt-2 text-base text-muted-foreground sm:text-lg">Cuenca del río Chillón · {territory?.name ?? "Santa Rosa de Quives ampliada"}</p>
             </div>
             <p className="max-w-2xl text-sm leading-relaxed text-foreground/80">
               Sistema académico que usa algoritmos genéticos, heurísticas y métodos exactos para ordenar recorridos de inspección
@@ -132,6 +133,13 @@ export function DashboardPage() {
           <Link to="/acerca" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">Ver limitaciones completas <ChevronRight className="size-3" aria-hidden /></Link>
         </Card>
       </div>
+
+      <Card className="grid gap-3 p-4 md:grid-cols-[220px_minmax(0,1fr)] md:items-center">
+        <div><p className="text-sm font-semibold">Ámbito de trabajo</p><p className="text-xs text-muted-foreground">Origen y matriz vial propios para cada subzona.</p></div>
+        <NativeSelect value={territoryId} onChange={(event) => { setTerritoryId(event.target.value); setCustomStopIds([]); }} aria-label="Ámbito territorial">
+          {(territories.data ?? []).filter((item) => item.planning_enabled).map((item) => <option key={item.territory_id} value={item.territory_id}>{item.name} · {item.stop_count} paradas</option>)}
+        </NativeSelect>
+      </Card>
 
       {stops.isError ? (
         <ErrorState error={stops.error} onRetry={() => stops.refetch()} />
@@ -200,13 +208,13 @@ export function DashboardPage() {
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="text-sm font-semibold">Personalizado</span>
-                  <span className="block text-xs text-muted-foreground">Elige entre 1 y 18 paradas</span>
+                  <span className="block text-xs text-muted-foreground">Elige entre 1 y {list.length} paradas</span>
                 </span>
                 <ArrowRight className="size-4 text-muted-foreground" aria-hidden />
               </Link>
             </li>
           </ul>
-          <p className="text-xs text-muted-foreground">{COMPLETE_DOCUMENT_WARNING}.</p>
+          {territoryId === "srq_extended" ? <p className="text-xs text-muted-foreground">{COMPLETE_DOCUMENT_WARNING}.</p> : null}
           {tspRun || limitedDayRun ? (
             <div className="rounded-xl bg-muted/60 p-3 text-xs">
               <p className="font-medium">Resultados de esta sesión</p>

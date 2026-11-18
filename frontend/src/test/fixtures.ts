@@ -55,6 +55,7 @@ export function makeStop(overrides: Partial<StopResponse> = {}): StopResponse {
 export const scenariosFixture: ScenarioSummary[] = [
   {
     scenario_id: "ds:conservative",
+    territory_id: "pilot_original",
     mode: "conservative",
     stop_count: 2,
     origin_id: "ORIGEN",
@@ -65,6 +66,7 @@ export const scenariosFixture: ScenarioSummary[] = [
   },
   {
     scenario_id: "ds:expanded",
+    territory_id: "pilot_original",
     mode: "expanded",
     stop_count: 3,
     origin_id: "ORIGEN",

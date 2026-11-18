@@ -1,5 +1,18 @@
 # Plan de implementación del backend
 
+> **Actualización territorial — noviembre de 2026.** Las Fases 1–7 del piloto están implementadas. La rama `feature/expansion-cuenca-chillon` añade un catálogo separado de 47 FTR/43 paradas, tres ámbitos públicos y una instancia de escalabilidad, preservando el protocolo histórico.
+
+## Fase 8 — Ampliación territorial
+
+- Catálogo versionado y verificado por SHA-256.
+- Ámbito predeterminado `srq_extended` con 33 paradas.
+- Ámbitos `middle_upper` —7— y `lower_basin` —3—.
+- `union_43` accesible solo a pruebas y CLI de escalabilidad.
+- `territory_id` retrocompatible en contratos de escenario.
+- Métodos exactos limitados a 18 paradas y 256 MB.
+- Piloto de 18 paradas reservado para el protocolo congelado y solicitudes `pilot_original`.
+- Frontend con selector territorial y escenarios visibles Completo/Personalizado.
+
 ## Sistema de planificación de recorridos de inspección preventiva — ODS 13.1
 
 ## 1. Propósito y alcance

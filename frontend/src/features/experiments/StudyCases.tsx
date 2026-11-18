@@ -27,7 +27,7 @@ export function StudyCases({ protocol }: { protocol?: ExperimentProtocol }) {
   const [selectedSeed, setSelectedSeed] = useState<number>(11);
   const [decoder, setDecoder] = useState<DecoderStrategy>("prefix");
   const [runs, setRuns] = useState<Record<string, RunState>>({});
-  const stops = useStops();
+  const stops = useStops("pilot_original");
   const selected = CASES.find((item) => item.id === caseId)!;
   const key = (id: string, seed: number, strategy: string) => `${id}:${seed}:${strategy}`;
   const strategy = selected.model === "day" ? decoder : "tsp";
@@ -37,7 +37,7 @@ export function StudyCases({ protocol }: { protocol?: ExperimentProtocol }) {
   async function execute(seed: number) {
     const runKey = key(caseId, seed, strategy);
     setRuns((before) => ({ ...before, [runKey]: { status: "running" } }));
-    const scenario: ScenarioSpec = { mode: selected.mode, stop_ids: selected.id === "02" ? ["P02", "P03", "P04", "P05", "P10", "P11", "P12", "P13", "P14", "P15", "P16", "P17", "P18"] : selected.mode === "custom" ? CUSTOM_IDS : [] };
+    const scenario: ScenarioSpec = { mode: selected.mode, stop_ids: selected.id === "02" ? ["P02", "P03", "P04", "P05", "P10", "P11", "P12", "P13", "P14", "P15", "P16", "P17", "P18"] : selected.mode === "custom" ? CUSTOM_IDS : [], territory_id: "pilot_original" };
     const evolution = { ...protocol?.evolution, population_size: protocol?.evolution.population_size ?? 100, tournament_size: protocol?.evolution.tournament_size ?? 3, elite_count: protocol?.evolution.elite_count ?? 2, max_generations: protocol?.evolution.max_generations ?? 500, max_evaluations: protocol?.evolution.max_evaluations ?? 50000, stagnation_generations: protocol?.evolution.stagnation_generations ?? 100, crossover_probability: protocol?.evolution.crossover_probability ?? 0.9, mutation_probability: protocol?.evolution.mutation_probability ?? 0.2, crossover_operator: protocol?.evolution.crossover_operator ?? "ox", mutation_operator: protocol?.evolution.mutation_operator ?? "inversion", seed } as const;
     try {
       const response = selected.model === "tsp"

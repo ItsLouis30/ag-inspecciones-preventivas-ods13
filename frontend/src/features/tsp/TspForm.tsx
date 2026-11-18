@@ -31,7 +31,7 @@ export function TspForm({
   initialScenario?: ScenarioMode;
   onScenarioChange?: (mode: ScenarioMode) => void;
 }) {
-  const { tspRun, setTspRun, customStopIds } = useWorkspace();
+  const { tspRun, setTspRun, customStopIds, territoryId } = useWorkspace();
   const form = useForm<TspFormValues>({
     resolver: zodResolver(tspFormSchema),
     defaultValues: tspRun
@@ -52,7 +52,7 @@ export function TspForm({
 
   const onSubmit = form.handleSubmit((values) => {
     if (emptyCustom) return;
-    run.mutate(buildTspRequest(values, buildScenarioSpec(values.scenarioMode, customStopIds)), {
+    run.mutate(buildTspRequest(values, buildScenarioSpec(values.scenarioMode, customStopIds, territoryId)), {
       onError: (error) => {
         if (error instanceof ApiError) {
           error.issues.forEach((issue) => {

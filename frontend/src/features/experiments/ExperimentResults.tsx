@@ -23,7 +23,7 @@ function HashRow({ label, value }: { label: string; value: string }) {
 }
 
 export function ExperimentResults({ result }: { result: ExperimentResultView }) {
-  const stops = useStops();
+  const stops = useStops("pilot_original");
   const stats = result.statistics;
   const refs = result.references;
   const [zoomed, setZoomed] = useState<"zoom" | "full">("full");

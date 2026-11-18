@@ -30,7 +30,7 @@ class ExactLimits(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     time_limit_s: float = Field(default=30.0, gt=0, le=120)
-    memory_limit_mb: float = Field(default=256.0, gt=0, le=512)
+    memory_limit_mb: float = Field(default=256.0, gt=0, le=256)
 
 
 class TspOptimizationRequest(BaseModel):

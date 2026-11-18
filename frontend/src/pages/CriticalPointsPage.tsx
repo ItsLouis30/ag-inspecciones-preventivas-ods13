@@ -8,17 +8,19 @@ import { SkeletonRows } from "@/components/common/LoadingState";
 import { Skeleton } from "@/components/ui/misc";
 import { InspectionMap } from "@/components/maps/InspectionMap";
 import { StopDetailPanel } from "@/components/maps/StopDetailPanel";
-import { useScenarioMap, useStops } from "@/hooks/queries";
+import { useScenarioMap, useStops, useTerritories } from "@/hooks/queries";
 import { DEFAULT_FILTERS, hazardLevels, isFiltering, matchesFilters } from "@/features/stops/filters";
 import { StopFiltersBar } from "@/features/stops/StopFiltersBar";
 import { StopListItem } from "@/features/stops/StopListItem";
 import { StopsTable } from "@/features/stops/StopsTable";
-
-const EXPANDED_SPEC = { mode: "expanded" as const, stop_ids: [] };
+import { useWorkspace } from "@/app/workspace";
+import { NativeSelect } from "@/components/ui/form-controls";
 
 export function CriticalPointsPage() {
-  const stopsQuery = useStops();
-  const mapQuery = useScenarioMap(EXPANDED_SPEC);
+  const { territoryId, setTerritoryId, setCustomStopIds } = useWorkspace();
+  const territories = useTerritories();
+  const stopsQuery = useStops(territoryId);
+  const mapQuery = useScenarioMap({ mode: "expanded", stop_ids: [], territory_id: territoryId });
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -54,8 +56,9 @@ export function CriticalPointsPage() {
           </span>
         }
         title="Puntos críticos"
-        description="Paradas de inspección derivadas de Fichas Técnicas Referenciales (FTR) en Santa Rosa de Quives. Cada punto distingue la referencia crítica oficial del acceso vehicular usado para planificar."
+        description="Paradas derivadas de Fichas Técnicas Referenciales (FTR) en la cuenca del Chillón. Cada punto distingue la referencia crítica del acceso vehicular usado para planificar."
       />
+      <Card className="grid gap-3 p-4 md:grid-cols-[220px_minmax(0,1fr)] md:items-center"><div><p className="text-sm font-semibold">Ámbito territorial</p><p className="text-xs text-muted-foreground">Explora una subzona con origen y matriz propios.</p></div><NativeSelect value={territoryId} onChange={(event) => { setTerritoryId(event.target.value); setCustomStopIds([]); setSelectedId(null); }} aria-label="Ámbito territorial">{(territories.data ?? []).filter((item) => item.planning_enabled).map((item) => <option key={item.territory_id} value={item.territory_id}>{item.name} · {item.stop_count} paradas</option>)}</NativeSelect></Card>
       <p className="rounded-lg bg-muted/60 px-4 py-2 text-xs text-muted-foreground"><strong>Acceso A:</strong> ubicación cartográficamente plausible. <strong>Acceso B:</strong> ubicación dudosa que requiere revisión. Ninguna categoría acredita una visita de campo.</p>
 
       {stopsQuery.isError ? (

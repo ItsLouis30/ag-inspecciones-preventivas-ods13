@@ -1,5 +1,13 @@
 # Metodología de preparación
 
+> **Ampliación territorial 2026-v1.** El procedimiento original del piloto se conserva sin cambios. La ampliación consolida 47 FTR y deriva 43 paradas en tres ámbitos independientes: `srq_extended` —33—, `middle_upper` —7— y `lower_basin` —3—. Los archivos se cargan mediante `expansion_dataset_manifest.json`, con hashes, orden de nodos y matrices propias.
+
+## 0. Separación entre piloto y ampliación
+
+El piloto histórico de 19 FTR, 18 paradas y matriz 19×19 sigue siendo la entrada del protocolo congelado. La aplicación general usa por defecto Santa Rosa de Quives ampliada. Esta separación evita reinterpretar resultados ya documentados y permite reproducirlos con `territory_id="pilot_original"`.
+
+Las nuevas matrices corresponden a estimaciones viales dirigidas consultadas el 17 de noviembre de 2026. Cada ámbito fija un origen experimental distinto: Yangas, Canta o Puente Piedra. La unión de 43 paradas usa Yangas únicamente para medir escalabilidad y no se considera una jornada territorial recomendada.
+
 ## 1. Unidad oficial y unidad derivada
 
 Una FTR representa normalmente un tramo crítico, no una parada vehicular. Las 19 FTR se conservan en `ftr_pilot.csv`; las 18 paradas derivadas se conservan por separado en `stops.csv`.

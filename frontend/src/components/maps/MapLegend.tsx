@@ -26,7 +26,7 @@ export function MapLegend({ showRoute, showOmitted, showCritical = true, showSch
           <Swatch>
             <span className="size-3.5 rounded-[4px] border-2 border-white bg-foreground shadow" />
           </Swatch>
-          Origen experimental (Yangas)
+          Origen experimental del ámbito
         </li>
         {showRoute ? (
           <li className="flex items-center gap-2">

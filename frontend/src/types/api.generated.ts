@@ -38,6 +38,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/scenarios/territories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Territories */
+        get: operations["list_territories_api_v1_scenarios_territories_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/scenarios/resolve": {
         parameters: {
             query?: never;
@@ -586,11 +603,15 @@ export interface components {
              * @default []
              */
             stop_ids: string[];
+            /** Territory Id */
+            territory_id?: string | null;
         };
         /** ScenarioSummary */
         ScenarioSummary: {
             /** Scenario Id */
             scenario_id: string;
+            /** Territory Id */
+            territory_id: string;
             /** Mode */
             mode: string;
             /** Stop Count */
@@ -670,6 +691,33 @@ export interface components {
             /** Warning */
             warning: string;
         };
+        /** TerritoryResponse */
+        TerritoryResponse: {
+            /** Territory Id */
+            territory_id: string;
+            /** Name */
+            name: string;
+            /** Description */
+            description: string;
+            /** Stop Count */
+            stop_count: number;
+            /** Origin Id */
+            origin_id: string;
+            /** Planning Enabled */
+            planning_enabled: boolean;
+            /** Scalability Only */
+            scalability_only: boolean;
+            /**
+             * Exact Tsp Max Stops
+             * @default 18
+             */
+            exact_tsp_max_stops: number;
+            /**
+             * Exact Limited Day Max Stops
+             * @default 18
+             */
+            exact_limited_day_max_stops: number;
+        };
         /** TspOptimizationRequest */
         TspOptimizationRequest: {
             scenario?: components["schemas"]["ScenarioSpec"];
@@ -732,7 +780,9 @@ export interface operations {
     };
     list_scenarios_api_v1_scenarios_get: {
         parameters: {
-            query?: never;
+            query?: {
+                territory_id?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -746,6 +796,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ScenarioSummary"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_territories_api_v1_scenarios_territories_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TerritoryResponse"][];
                 };
             };
         };
@@ -785,7 +864,9 @@ export interface operations {
     };
     list_stops_api_v1_scenarios_stops_get: {
         parameters: {
-            query?: never;
+            query?: {
+                territory_id?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -799,6 +880,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["StopListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

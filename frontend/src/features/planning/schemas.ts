@@ -52,7 +52,7 @@ export const DEFAULT_EVOLUTION: EvolutionParameters = {
 
 const exactSchema = z.object({
   time_limit_s: z.number({ error: "Introduce un número" }).gt(0, "Debe ser mayor que 0").max(120, "Máximo 120 s"),
-  memory_limit_mb: z.number({ error: "Introduce un número" }).gt(0, "Debe ser mayor que 0").max(512, "Máximo 512 MB"),
+  memory_limit_mb: z.number({ error: "Introduce un número" }).gt(0, "Debe ser mayor que 0").max(256, "Máximo 256 MB"),
 });
 
 export const DEFAULT_EXACT = { time_limit_s: 30, memory_limit_mb: 256 };

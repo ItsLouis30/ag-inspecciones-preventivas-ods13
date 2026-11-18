@@ -95,5 +95,35 @@ class ReferenceDataset:
         return {stop.stop_id: stop for stop in self.stops}
 
 
+@dataclass(frozen=True, slots=True)
+class TerritoryDataset:
+    """Ámbito territorial reproducible y su dataset dirigido asociado."""
+
+    territory_id: str
+    name: str
+    description: str
+    dataset: ReferenceDataset
+    planning_enabled: bool = True
+    scalability_only: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class TerritoryCatalog:
+    """Registro inmutable de ámbitos; el piloto histórico vive fuera del catálogo."""
+
+    default_territory_id: str
+    territories: tuple[TerritoryDataset, ...]
+
+    @property
+    def by_id(self) -> dict[str, TerritoryDataset]:
+        return {territory.territory_id: territory for territory in self.territories}
+
+    def get(self, territory_id: str) -> TerritoryDataset:
+        try:
+            return self.by_id[territory_id]
+        except KeyError as exc:
+            raise DataValidationError(f"Ámbito territorial desconocido: {territory_id!r}.") from exc
+
+
 from .matrix import DirectedMatrix  # noqa: E402  (evita ciclo en anotaciones)
 

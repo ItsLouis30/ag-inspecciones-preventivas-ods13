@@ -28,7 +28,7 @@ def client(project_root) -> AsyncClient:
 
 async def test_map_contract_distinguishes_critical_and_vehicle_coordinates(project_root) -> None:
     async with client(project_root) as api:
-        response = await api.post("/api/v1/scenarios/map", json={"mode": "expanded"})
+        response = await api.post("/api/v1/scenarios/map", json={"mode": "expanded", "territory_id": "pilot_original"})
     assert response.status_code == 200
     payload = response.json()
     assert payload["road_geometry_available"] is False
@@ -62,7 +62,7 @@ async def test_tsp_route_plan_has_consistent_ids_order_metrics_and_no_fake_road(
     async with client(project_root) as api:
         response = await api.post(
             "/api/v1/optimize/tsp",
-            json={"scenario": {"mode": "expanded"}, "method": "nearest_neighbor"},
+            json={"scenario": {"mode": "expanded", "territory_id": "pilot_original"}, "method": "nearest_neighbor"},
         )
     assert response.status_code == 200
     payload = response.json()
@@ -88,7 +88,7 @@ async def test_limited_day_contract_partitions_selected_and_omitted_stops(projec
         response = await api.post(
             "/api/v1/optimize/limited-day",
             json={
-                "scenario": {"mode": "expanded"},
+                "scenario": {"mode": "expanded", "territory_id": "pilot_original"},
                 "method": "priority_nearest_greedy",
                 "day_limit_min": "240",
                 "service_time_min": "15",
@@ -150,7 +150,7 @@ async def test_limited_genetic_history_exposes_lexicographic_components(project_
         response = await api.post(
             "/api/v1/optimize/limited-day",
             json={
-                "scenario": {"mode": "expanded"},
+                "scenario": {"mode": "expanded", "territory_id": "pilot_original"},
                 "method": "limited_day_genetic_algorithm",
                 "day_limit_min": "240",
                 "service_time_min": "15",
@@ -177,7 +177,7 @@ async def test_limited_genetic_history_exposes_lexicographic_components(project_
 
 async def test_api_selects_decoder_strategy_without_changing_default(project_root) -> None:
     base_request = {
-        "scenario": {"mode": "expanded"},
+        "scenario": {"mode": "expanded", "territory_id": "pilot_original"},
         "method": "limited_day_genetic_algorithm",
         "day_limit_min": "60",
         "service_time_min": "10",
@@ -229,7 +229,7 @@ async def test_csv_exports_preserve_route_and_omitted_rows(project_root) -> None
         limited = await api.post(
             "/api/v1/exports/limited-day.csv",
             json={
-                "scenario": {"mode": "expanded"},
+                "scenario": {"mode": "expanded", "territory_id": "pilot_original"},
                 "method": "priority_nearest_greedy",
                 "day_limit_min": "240",
                 "service_time_min": "15",

@@ -1,5 +1,25 @@
 # API REST — Fase 6
 
+> **Contrato territorial vigente — API 0.7.0.** `ScenarioSpec` admite `territory_id`. Si se omite, se usa `srq_extended`. Los valores públicos son `srq_extended`, `middle_upper` y `lower_basin`; `pilot_original` se conserva para reproducibilidad y `union_43` no está habilitado para planificación general.
+
+## Ámbitos territoriales
+
+`GET /api/v1/scenarios/territories` devuelve nombre, cantidad de paradas, origen, disponibilidad para planificación y límites exactos. La unión de 43 aparece con `planning_enabled=false` y `scalability_only=true`.
+
+Ejemplo de escenario completo en cuenca media/alta:
+
+```json
+{"mode":"expanded","stop_ids":[],"territory_id":"middle_upper"}
+```
+
+Ejemplo personalizado en Santa Rosa ampliada:
+
+```json
+{"mode":"custom","stop_ids":["SRQ-P01","SRQ-N01"],"territory_id":"srq_extended"}
+```
+
+Los métodos exactos mantienen un máximo de 18 paradas y 256 MB. Las instancias mayores devuelven estado `not_run` sin reservar las tablas exponenciales.
+
 ## Alcance
 
 La API expone los escenarios y optimizadores ya verificados. No contiene una segunda implementación de los algoritmos y no consulta servicios externos durante las solicitudes.

@@ -12,7 +12,7 @@ const LIMITATIONS = [
   },
   {
     title: "Accesibilidad",
-    text: "A y B son categorías cartográficas, no certificaciones. P01 y P07 permanecen dudosas; P10, P14, P17 y P18 pueden requerir aproximación a pie. No se verificaron portones, estacionamiento ni seguridad durante lluvias.",
+    text: "A y B son categorías cartográficas, no certificaciones. El catálogo ampliado conserva 39 accesos A y cuatro B; no se verificaron portones, estacionamiento ni seguridad durante lluvias.",
   },
   {
     title: "Red y tiempos",
@@ -20,7 +20,7 @@ const LIMITATIONS = [
   },
   {
     title: "Alcance institucional",
-    text: "Yangas es un origen experimental. No hay tiempos oficiales de inspección, ventanas horarias ni número real de brigadas. El recorrido no demuestra reducción cuantificada del riesgo.",
+    text: "Yangas, Canta y Puente Piedra son orígenes experimentales de sus ámbitos. No hay tiempos oficiales de inspección, ventanas horarias ni número real de brigadas. El recorrido no demuestra reducción cuantificada del riesgo.",
   },
   {
     title: "Representación geográfica",
@@ -56,8 +56,8 @@ export function AboutPage() {
           <div className="mt-2 grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl bg-muted/60 p-4">
               <Waves className="size-5 text-river" aria-hidden />
-              <p className="mt-2 text-sm font-semibold">Zona piloto</p>
-              <p className="text-xs text-muted-foreground">Santa Rosa de Quives, Canta, Lima · cuenca del río Chillón</p>
+              <p className="mt-2 text-sm font-semibold">Cobertura territorial</p>
+              <p className="text-xs text-muted-foreground">Santa Rosa ampliada, cuenca media/alta y cuenca baja del Chillón</p>
             </div>
             <div className="rounded-xl bg-muted/60 p-4">
               <Map className="size-5 text-primary" aria-hidden />
@@ -84,6 +84,12 @@ export function AboutPage() {
           </dl>
         </Card>
       </div>
+
+      <section className="grid gap-3 sm:grid-cols-3">
+        <Card className="p-5"><p className="text-3xl font-semibold text-primary">47</p><p className="mt-1 text-sm font-semibold">FTR consolidadas</p><p className="text-xs text-muted-foreground">43 originales recuperados y cuatro snapshots auditados.</p></Card>
+        <Card className="p-5"><p className="text-3xl font-semibold text-primary">43</p><p className="mt-1 text-sm font-semibold">Paradas candidatas únicas</p><p className="text-xs text-muted-foreground">33 en Santa Rosa, 7 en cuenca media/alta y 3 en cuenca baja.</p></Card>
+        <Card className="p-5"><p className="text-3xl font-semibold text-primary">3</p><p className="mt-1 text-sm font-semibold">Matrices territoriales</p><p className="text-xs text-muted-foreground">Distancias y tiempos dirigidos con un origen experimental por ámbito.</p></Card>
+      </section>
 
       <section className="grid gap-5 lg:grid-cols-2">
         <Card className="p-6"><h2 className="text-lg font-semibold">Problema y objetivo</h2><p className="mt-3 text-sm leading-relaxed text-foreground/80">Las fichas de la Autoridad Nacional del Agua identifican tramos expuestos a inundaciones y erosión fluvial. Para estudiar una campaña preventiva, este sistema propone en qué orden visitar los accesos derivados o cuáles priorizar cuando el tiempo disponible es limitado. Reducir distancia recorrida ayuda a organizar la visita, pero no equivale a prevenir una inundación.</p></Card>

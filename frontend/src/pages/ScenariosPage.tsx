@@ -9,13 +9,14 @@ import { PageHeader } from "@/components/common/PageHeader";
 import { ErrorState } from "@/components/common/ErrorState";
 import { LoadingState } from "@/components/common/LoadingState";
 import { InspectionMap } from "@/components/maps/InspectionMap";
-import { useScenarioMap, useScenarios, useStops } from "@/hooks/queries";
+import { useScenarioMap, useScenarios, useStops, useTerritories } from "@/hooks/queries";
 import { useWorkspace } from "@/app/workspace";
 import { scenariosApi } from "@/services/scenariosApi";
 import { COMPLETE_DOCUMENT_WARNING, SCENARIO_DESCRIPTIONS, SCENARIO_LABELS } from "@/lib/labels";
 import { cn } from "@/lib/utils";
 import type { ScenarioMode, ScenarioSummary } from "@/types/api";
 import { StopPicker } from "@/features/scenarios/StopPicker";
+import { NativeSelect } from "@/components/ui/form-controls";
 import { ScenarioSummaryPanel } from "@/features/scenarios/ScenarioSummaryPanel";
 import { useScenarioSpec } from "@/features/scenarios/useScenarioSpec";
 
@@ -80,9 +81,10 @@ export function ScenariosPage() {
     setParams({ modo: next }, { replace: true });
   };
 
-  const scenarios = useScenarios();
-  const stops = useStops();
-  const { customStopIds, setCustomStopIds } = useWorkspace();
+  const { territoryId, setTerritoryId, customStopIds, setCustomStopIds } = useWorkspace();
+  const territories = useTerritories();
+  const scenarios = useScenarios(territoryId);
+  const stops = useStops(territoryId);
   const spec = useScenarioSpec(mode);
   const mapQuery = useScenarioMap(spec);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -117,6 +119,26 @@ export function ScenariosPage() {
 
       {scenarios.isError ? <ErrorState error={scenarios.error} onRetry={() => scenarios.refetch()} /> : null}
 
+      <Card className="grid gap-3 p-4 md:grid-cols-[220px_minmax(0,1fr)] md:items-center">
+        <div>
+          <p className="text-sm font-semibold">Ámbito territorial</p>
+          <p className="text-xs text-muted-foreground">Cada ámbito usa su propio origen y matriz vial dirigida.</p>
+        </div>
+        <NativeSelect
+          value={territoryId}
+          onChange={(event) => {
+            setTerritoryId(event.target.value);
+            setCustomStopIds([]);
+            resolve.reset();
+          }}
+          aria-label="Ámbito territorial"
+        >
+          {(territories.data ?? []).filter((item) => item.planning_enabled).map((item) => (
+            <option key={item.territory_id} value={item.territory_id}>{item.name} · {item.stop_count} paradas</option>
+          ))}
+        </NativeSelect>
+      </Card>
+
       <div className="grid gap-3 md:grid-cols-2">
         {MODES.map((item) => {
           const summary = scenarios.data?.find((s) => s.mode === item);
@@ -134,7 +156,7 @@ export function ScenariosPage() {
         })}
       </div>
 
-      {mode === "expanded" ? <p className="text-xs text-muted-foreground">{COMPLETE_DOCUMENT_WARNING}.</p> : null}
+      {mode === "expanded" && territoryId === "srq_extended" ? <p className="text-xs text-muted-foreground">{COMPLETE_DOCUMENT_WARNING}.</p> : null}
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_420px]">
         <div className="min-w-0">

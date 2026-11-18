@@ -2,7 +2,9 @@
 
 ## Estado actual
 
-Aplicación React + TypeScript + Vite **implementada y conectada** a la API FastAPI. Consume los once endpoints reales; no contiene datos simulados ni lógica matemática del backend.
+Aplicación React + TypeScript + Vite **implementada y conectada** a la API FastAPI. Consume los contratos reales, incluido el catálogo territorial; no contiene datos simulados ni lógica matemática del backend.
+
+La navegación general muestra los escenarios **Completo** y **Personalizado** dentro del ámbito elegido. Santa Rosa de Quives ampliada —33 paradas— es el ámbito predeterminado; cuenca media/alta y cuenca baja pueden seleccionarse sin reconstruir matrices en el navegador.
 
 Requisito local: **Node.js 22.22 o superior**. La versión verificada es Node 22.23.5 con npm 11.7.0.
 

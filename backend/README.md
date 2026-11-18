@@ -1,5 +1,11 @@
 # Backend — Fases 1 a 7
 
+## Catálogo territorial ampliado
+
+La API 0.7.0 carga tres ámbitos de planificación: Santa Rosa ampliada —33 paradas—, cuenca media/alta —7— y cuenca baja —3—. El primero es predeterminado. El piloto histórico de 18 paradas no fue reemplazado: permanece como `pilot_original` para experimentos congelados. La unión `union_43` está bloqueada en los endpoints generales y se usa solo en pruebas de escalabilidad.
+
+Los métodos exactos aceptan como máximo 18 paradas y 256 MB. El AG, los métodos heurísticos y los dos modelos continúan usando las mismas implementaciones matemáticas.
+
 Base matemática offline para cargar, validar y representar escenarios ATSP, y compararlos mediante métodos heurísticos y exactos.
 
 ## Alcance implementado
