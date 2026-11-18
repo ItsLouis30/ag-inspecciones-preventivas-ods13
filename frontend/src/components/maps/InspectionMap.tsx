@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MapContainer, Marker, Polyline, Popup, TileLayer, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import { Crosshair, Diamond, Spline, WifiOff, Minus, Plus } from "lucide-react";
@@ -26,6 +26,8 @@ export interface InspectionMapProps {
   selectedId?: string | null;
   /** Coordenada de la visita activa en la reproducción esquemática. */
   focusCoordinate?: Coordinate | null;
+  /** Índice de la visita activa (incluye salida y retorno); null conserva el mapa original. */
+  playbackStep?: number | null;
   onSelect?: (stopId: string | null) => void;
   /** IDs atenuados por filtros visuales (no alteran escenarios). */
   dimmedIds?: Set<string>;
@@ -59,16 +61,24 @@ function FitBounds({ points, signature }: { points: [number, number][]; signatur
   return null;
 }
 
-function FocusVisit({ coordinate }: { coordinate?: Coordinate | null }) {
+function FocusVisit({ coordinate, points }: { coordinate?: Coordinate | null; points: [number, number][] }) {
   const map = useMap();
+  const hadFocus = useRef(false);
   useEffect(() => {
-    if (!coordinate) return;
+    if (!coordinate) {
+      if (hadFocus.current && points.length > 1) {
+        map.fitBounds(L.latLngBounds(points), { padding: [40, 40], maxZoom: 15 });
+      }
+      hadFocus.current = false;
+      return;
+    }
+    hadFocus.current = true;
     const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
     map.flyTo(toLatLng(coordinate), Math.max(map.getZoom(), 12), {
       animate: !reducedMotion,
       duration: 0.45,
     });
-  }, [coordinate, map]);
+  }, [coordinate, map, points]);
   return null;
 }
 
@@ -149,6 +159,7 @@ export function InspectionMap({
   route,
   selectedId,
   focusCoordinate,
+  playbackStep = null,
   onSelect,
   dimmedIds,
   className,
@@ -178,6 +189,10 @@ export function InspectionMap({
   );
 
   const schematic = route?.schematicPoints.map(toLatLng) ?? [];
+  const playbackActive = !!route && playbackStep !== null;
+  const originPlaybackState = playbackActive
+    ? playbackStep === 0 || playbackStep === route.orderedStopIds.length + 1 ? "current" : "visited"
+    : null;
   const nearby = selectedId ? stops.filter((stop) => {
     const selected = stops.find((item) => item.stop_id === selectedId);
     if (!selected) return false;
@@ -206,7 +221,7 @@ export function InspectionMap({
           }}
         />
         <FitBounds points={points} signature={signature} />
-        <FocusVisit coordinate={focusCoordinate} />
+        <FocusVisit coordinate={focusCoordinate} points={points} />
         <MapControls
           points={points}
           showCritical={showCritical}
@@ -216,7 +231,19 @@ export function InspectionMap({
           canSchematic={schematic.length > 1}
         />
 
-        {showSchematic && schematic.length > 1 ? (
+        {showSchematic && playbackActive && schematic.length === route.orderedStopIds.length + 2 ? (
+          schematic.slice(1).map((point, index) => (
+            <Polyline
+              key={`playback-leg-${index}`}
+              positions={[schematic[index], point]}
+              pathOptions={{ color: index < playbackStep ? MAP_COLORS.primary : "#94A3B8", weight: 2.5, opacity: index < playbackStep ? 0.9 : 0.5, dashArray: "6 8", lineCap: "round" }}
+            >
+              <Tooltip sticky className="map-label">
+                Conexión esquemática · {index < playbackStep ? "tramo recorrido" : "tramo pendiente"} · no es carretera
+              </Tooltip>
+            </Polyline>
+          ))
+        ) : showSchematic && schematic.length > 1 ? (
           <Polyline
             positions={schematic}
             pathOptions={{ color: MAP_COLORS.river, weight: 2.5, opacity: 0.85, dashArray: "6 8", lineCap: "round" }}
@@ -261,6 +288,9 @@ export function InspectionMap({
           const number = visitNumber.get(stop.stop_id);
           let state: AccessMarkerState = "default";
           if (route) state = number ? "visit" : omitted.has(stop.stop_id) ? "omitted" : "dimmed";
+          if (playbackActive && number) {
+            state = number === playbackStep ? "playback_current" : number < playbackStep ? "playback_visited" : "playback_pending";
+          }
           if (dimmedIds?.has(stop.stop_id)) state = "dimmed";
           const label = number ? String(number) : shortMarkerId(stop.stop_id);
           const selected = selectedId === stop.stop_id;
@@ -269,7 +299,7 @@ export function InspectionMap({
               key={`acc-${stop.stop_id}`}
               position={toLatLng(stop.vehicle_access.coordinates)}
               icon={accessIcon(label, state, selected)}
-              zIndexOffset={state === "visit" ? 500 : selected ? 800 : 0}
+              zIndexOffset={state === "playback_current" ? 1200 : state === "visit" ? 500 : selected ? 800 : 0}
               eventHandlers={{ click: () => onSelect?.(selected ? null : stop.stop_id) }}
               title={`${stop.stop_id} · ${stop.display_name}`}
               alt={`${stop.stop_id} ${stop.display_name}`}
@@ -286,7 +316,7 @@ export function InspectionMap({
         {origin ? (
           <Marker
             position={toLatLng(origin.routing_location.coordinates)}
-            icon={originIcon()}
+            icon={originIcon(originPlaybackState)}
             zIndexOffset={1000}
             eventHandlers={{ click: (event) => (event.target as L.Marker).closeTooltip() }}
           >
@@ -318,6 +348,8 @@ export function InspectionMap({
           showOmitted={!!route && route.omittedStopIds.length > 0}
           showCritical={showCritical}
           showSchematic={showSchematic && schematic.length > 1}
+          playbackActive={playbackActive}
+          originPlaybackState={originPlaybackState}
         />
       ) : null}
     </div>
@@ -328,6 +360,8 @@ export function InspectionMap({
           showOmitted={!!route && route.omittedStopIds.length > 0}
           showCritical={showCritical}
           showSchematic={showSchematic && schematic.length > 1}
+          playbackActive={playbackActive}
+          originPlaybackState={originPlaybackState}
         />
       ) : null}
     </div>

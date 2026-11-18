@@ -46,9 +46,11 @@ export function mainRequest(item: Case) {
 function RunDetail({ response, item }: { response: OptimizationResponse; item: Case }) {
   const [selectedStopId, setSelectedStopId] = useState<string | null>(null);
   const [focusCoordinate, setFocusCoordinate] = useState<Coordinate | null>(null);
-  const handlePlaybackStep = useCallback((visit: RouteVisit) => {
-    setSelectedStopId(visit.role === "inspection" ? visit.node_id : null);
-    setFocusCoordinate(visit.coordinates);
+  const [playbackStep, setPlaybackStep] = useState<number | null>(null);
+  const handlePlaybackStep = useCallback((visit: RouteVisit | null, index: number | null) => {
+    setSelectedStopId(visit?.role === "inspection" ? visit.node_id : null);
+    setFocusCoordinate(visit?.coordinates ?? null);
+    setPlaybackStep(index);
   }, []);
   const spec = mainRequest(item).body.scenario;
   const map = useScenarioMap(spec);
@@ -78,7 +80,7 @@ function RunDetail({ response, item }: { response: OptimizationResponse; item: C
     </Card>
     {Array.isArray(result.best_chromosome) ? <ChromosomeViewer genes={result.best_chromosome as string[]} route={plan.ordered_node_ids} stops={map.data?.stops} omitted={plan.omitted_stop_ids} seed={item.seed} distanceKm={plan.total_distance_km} veryHigh={item.model === "day" ? Number(result.very_high_count) : undefined} totalSelected={plan.selected_stop_ids.length} totalTimeMin={plan.total_duration_min} decoder={item.model === "day" ? "prefix" : undefined} /> : null}
     <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
-      <Card className="min-w-0 p-5"><h3 className="mb-3 text-sm font-semibold">Recorrido en el mapa</h3>{map.data ? <InspectionMap origin={map.data.origin} stops={map.data.stops} selectedId={selectedStopId} onSelect={setSelectedStopId} focusCoordinate={focusCoordinate} className="h-[380px] md:h-[460px]" initialShowCritical={false} initialShowSchematic route={{ orderedStopIds: plan.visits.filter((visit) => visit.role === "inspection").map((visit) => visit.node_id), omittedStopIds: plan.omitted_stop_ids, schematicPoints: plan.route_geometry.ordered_access_points }} /> : <p className="text-sm text-muted-foreground">Cargando puntos del escenario…</p>}<p className="mt-2 text-xs text-muted-foreground">La línea discontinua representa el orden de visitas, no una carretera real.</p></Card>
+      <Card className="min-w-0 p-5"><h3 className="mb-3 text-sm font-semibold">Recorrido en el mapa</h3>{map.data ? <InspectionMap origin={map.data.origin} stops={map.data.stops} selectedId={selectedStopId} onSelect={setSelectedStopId} focusCoordinate={focusCoordinate} playbackStep={playbackStep} className="h-[380px] md:h-[460px]" initialShowCritical={false} initialShowSchematic route={{ orderedStopIds: plan.visits.filter((visit) => visit.role === "inspection").map((visit) => visit.node_id), omittedStopIds: plan.omitted_stop_ids, schematicPoints: plan.route_geometry.ordered_access_points }} /> : <p className="text-sm text-muted-foreground">Cargando puntos del escenario…</p>}<p className="mt-2 text-xs text-muted-foreground">La línea discontinua representa el orden de visitas, no una carretera real.</p></Card>
       <section className="min-w-0 space-y-3" aria-label="Secuencia de visitas">
         <div><h3 className="text-base font-semibold">Secuencia de visitas</h3><p className="text-sm text-muted-foreground">Orden entregado por la API. Selecciona un punto para ver su ficha o reproduce la secuencia en el mapa.</p></div>
         <RoutePlayback visits={plan.visits} onStep={handlePlaybackStep} />

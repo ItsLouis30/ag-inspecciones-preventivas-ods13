@@ -79,6 +79,18 @@ describe("resultados y mapa", () => {
     expect(screen.getByText(/no validados en campo/)).toBeInTheDocument();
   });
 
+  it("muestra estados de visita y de tramos solo durante la reproducción", () => {
+    const { rerender } = render(<MapLegend showRoute showSchematic playbackActive originPlaybackState="current" />);
+    expect(screen.getByText("Parada visitada")).toBeInTheDocument();
+    expect(screen.getByText("Parada actual")).toBeInTheDocument();
+    expect(screen.getByText("Parada pendiente")).toBeInTheDocument();
+    expect(screen.getByText("Tramo recorrido · esquemático")).toBeInTheDocument();
+    expect(screen.getByText("Tramo pendiente · esquemático")).toBeInTheDocument();
+    rerender(<MapLegend showRoute showSchematic />);
+    expect(screen.queryByText("Parada actual")).not.toBeInTheDocument();
+    expect(screen.getByText("Conexión esquemática · no es carretera")).toBeInTheDocument();
+  });
+
   it("deduplica advertencias recibidas", () => {
     render(
       <TooltipProvider>

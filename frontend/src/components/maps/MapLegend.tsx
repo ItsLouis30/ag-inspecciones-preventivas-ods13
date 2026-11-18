@@ -5,6 +5,8 @@ interface LegendFlags {
   showOmitted?: boolean;
   showCritical?: boolean;
   showSchematic?: boolean;
+  playbackActive?: boolean;
+  originPlaybackState?: "visited" | "current" | null;
 }
 
 function Swatch({ children }: { children: React.ReactNode }) {
@@ -12,7 +14,7 @@ function Swatch({ children }: { children: React.ReactNode }) {
 }
 
 /** Leyenda visible: distingue origen, acceso derivado, referencia crítica y conexión esquemática. */
-export function MapLegend({ showRoute, showOmitted, showCritical = true, showSchematic, className }: LegendFlags & { className?: string }) {
+export function MapLegend({ showRoute, showOmitted, showCritical = true, showSchematic, playbackActive = false, originPlaybackState, className }: LegendFlags & { className?: string }) {
   return (
     <div
       className={cn(
@@ -24,11 +26,17 @@ export function MapLegend({ showRoute, showOmitted, showCritical = true, showSch
       <ul className="flex flex-col gap-1.5">
         <li className="flex items-center gap-2">
           <Swatch>
-            <span className="size-3.5 rounded-[4px] border-2 border-white bg-foreground shadow" />
+            <span className={cn("size-3.5 rounded-[4px] border-2 border-white shadow", originPlaybackState === "current" ? "bg-river ring-4 ring-river/25" : originPlaybackState === "visited" ? "bg-primary" : "bg-foreground")} />
           </Swatch>
           Origen experimental del ámbito
         </li>
-        {showRoute ? (
+        {showRoute && playbackActive ? (
+          <>
+            <li className="flex items-center gap-2"><Swatch><span className="size-3.5 rounded-full bg-primary" /></Swatch>Parada visitada</li>
+            <li className="flex items-center gap-2"><Swatch><span className="size-4 rounded-full bg-river ring-4 ring-river/25" /></Swatch>Parada actual</li>
+            <li className="flex items-center gap-2"><Swatch><span className="size-3.5 rounded-full border border-slate-300 bg-slate-100" /></Swatch>Parada pendiente</li>
+          </>
+        ) : showRoute ? (
           <li className="flex items-center gap-2">
             <Swatch>
               <span className="flex size-4 items-center justify-center rounded-full bg-river text-[8px] font-bold text-white">
@@ -61,7 +69,12 @@ export function MapLegend({ showRoute, showOmitted, showCritical = true, showSch
             Referencia crítica (FTR, UTM oficial)
           </li>
         ) : null}
-        {showSchematic ? (
+        {showSchematic && playbackActive ? (
+          <>
+            <li className="flex items-center gap-2"><Swatch><svg width="22" height="6" aria-hidden><line x1="1" y1="3" x2="21" y2="3" stroke="#0F766E" strokeWidth="2" strokeDasharray="4 3" /></svg></Swatch>Tramo recorrido · esquemático</li>
+            <li className="flex items-center gap-2"><Swatch><svg width="22" height="6" aria-hidden><line x1="1" y1="3" x2="21" y2="3" stroke="#94A3B8" strokeWidth="2" strokeDasharray="4 3" /></svg></Swatch>Tramo pendiente · esquemático</li>
+          </>
+        ) : showSchematic ? (
           <li className="flex items-center gap-2">
             <Swatch>
               <svg width="22" height="6" aria-hidden>

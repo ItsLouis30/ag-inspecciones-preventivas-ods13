@@ -56,14 +56,16 @@ export function PlanningWorkspace({
   const overlay = useRouteOverlay(response);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [focusCoordinate, setFocusCoordinate] = useState<Coordinate | null>(null);
+  const [playbackStep, setPlaybackStep] = useState<number | null>(null);
 
   const stopsById = new Map<string, StopResponse>((mapQuery.data?.stops ?? []).map((s) => [s.stop_id, s]));
   const selected = selectedId ? stopsById.get(selectedId) : undefined;
   const scenarioChanged = runScenario && !sameSpec(runScenario, previewSpec);
   const select = (id: string) => setSelectedId(id);
-  const handlePlaybackStep = useCallback((visit: RouteVisit) => {
-    setSelectedId(visit.role === "inspection" ? visit.node_id : null);
-    setFocusCoordinate(visit.coordinates);
+  const handlePlaybackStep = useCallback((visit: RouteVisit | null, index: number | null) => {
+    setSelectedId(visit?.role === "inspection" ? visit.node_id : null);
+    setFocusCoordinate(visit?.coordinates ?? null);
+    setPlaybackStep(index);
   }, []);
 
   return (
@@ -92,6 +94,7 @@ export function PlanningWorkspace({
               route={overlay}
               selectedId={selectedId}
               focusCoordinate={focusCoordinate}
+              playbackStep={playbackStep}
               onSelect={setSelectedId}
               className="h-[420px] lg:h-[600px]"
               initialShowCritical={false}
